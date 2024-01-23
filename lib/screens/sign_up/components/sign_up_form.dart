@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
 import '../../../constants.dart';
-import '../../complete_profile/complete_profile_screen.dart';
+import '../../register_success/register_success_screen.dart';
 import '../../../controllers/user.controller.dart';
+import '../../sign_in/sign_in_screen.dart';
 import 'package:quickalert/quickalert.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -145,16 +146,15 @@ class _SignUpFormState extends State<SignUpForm> {
                 try {
                   final data =
                       await registerAPI(email: email, password: password);
-                  if(data['error'] != null){
+                  if (data['error'] != null) {
                     QuickAlert.show(
                       context: context,
                       type: QuickAlertType.error,
                       text: data['error'],
                     );
+                    return;
                   }
-                  // Navigator.pushNamed(
-                  //           context, LoginSuccessScreen.routeName);
-                  Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                  Navigator.pushNamed(context, RegisterSuccessScreen.routeName);
                 } catch (error) {
                   QuickAlert.show(
                     context: context,

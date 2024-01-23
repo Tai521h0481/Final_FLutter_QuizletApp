@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-String baseUrl = "http://192.168.0.111:3000";
+String baseUrl = "http://192.168.83.67:3000";
 String register = baseUrl + "/android/users/register";
 String login = baseUrl + "/android/users/login";
 

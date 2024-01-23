@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/screens/init_screen.dart';
+import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 
-class LoginSuccessScreen extends StatelessWidget {
+class RegisterSuccessScreen extends StatelessWidget {
   static String routeName = "/login_success";
 
-  const LoginSuccessScreen({super.key});
+  const RegisterSuccessScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +22,7 @@ class LoginSuccessScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            "Login Success",
+            "Register Success",
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
@@ -33,9 +34,9 @@ class LoginSuccessScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, InitScreen.routeName);
+                Navigator.pushNamed(context, SignInScreen.routeName);
               },
-              child: const Text("Back to home"),
+              child: const Text("Back to Sign In"),
             ),
           ),
           const Spacer(),

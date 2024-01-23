@@ -38,6 +38,80 @@ class _InitScreenState extends State<InitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[currentSelectedIndex],
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        shape: const CircleBorder(),
+        onPressed: () {
+          showModalBottomSheet(
+            showDragHandle: true,
+            context: context,
+            builder: (BuildContext context) {
+              return Wrap(
+                children: <Widget>[
+                  Container(
+                    margin:
+                        EdgeInsets.only(left: 20, top: 5, right: 20, bottom: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: kSecondaryColor.withOpacity(0.1),
+                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.copy_all_sharp),
+                      title: Text(
+                        'Module',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        // Handle EDIT action
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin:
+                        EdgeInsets.only(left: 20, top: 5, right: 20, bottom: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: kSecondaryColor.withOpacity(0.1),
+                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.folder),
+                      title: Text(
+                        'Folder',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        // Handle ADD TOPIC action
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: 20, top: 5, right: 20, bottom: 30),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: kSecondaryColor.withOpacity(0.1),
+                    ),
+                    child: ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text(
+                        'Classroom',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onTap: () {
+                        // Handle REMOVE action
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomNavigationBar(
         onTap: updateCurrentIndex,
         currentIndex: currentSelectedIndex,
@@ -62,39 +136,39 @@ class _InitScreenState extends State<InitScreen> {
             ),
             label: "Home",
           ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/icons/Heart Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                inActiveIconColor,
-                BlendMode.srcIn,
+          const BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(right: 32),
+              child: Icon(
+                Icons.search,
+                color: inActiveIconColor,
               ),
             ),
-            activeIcon: SvgPicture.asset(
-              "assets/icons/Heart Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                kPrimaryColor,
-                BlendMode.srcIn,
+            activeIcon: Padding(
+              padding: EdgeInsets.only(right: 32),
+              child: Icon(
+                Icons.search,
+                color: kPrimaryColor,
               ),
             ),
             label: "Fav",
           ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/icons/Chat bubble Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                inActiveIconColor,
-                BlendMode.srcIn,
+          const BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(left: 32),
+              child: Icon(
+                Icons.folder,
+                color: inActiveIconColor,
               ),
             ),
-            activeIcon: SvgPicture.asset(
-              "assets/icons/Chat bubble Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                kPrimaryColor,
-                BlendMode.srcIn,
+            activeIcon: Padding(
+              padding: EdgeInsets.only(left: 32),
+              child: Icon(
+                Icons.folder,
+                color: kPrimaryColor,
               ),
             ),
-            label: "Chat",
+            label: "Library",
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
