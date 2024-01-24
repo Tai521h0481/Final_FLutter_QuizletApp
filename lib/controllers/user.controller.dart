@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-
-String baseUrl = "http://192.168.83.67:3000";
-String register = baseUrl + "/android/users/register";
-String login = baseUrl + "/android/users/login";
+import 'config.dart';
 
 Future<Map<String, dynamic>> registerAPI({required email, required password}) async {
   var response = await http.post(
@@ -27,6 +24,19 @@ Future<Map<String, dynamic>> loginAPI({required email, required password}) async
     body: jsonEncode({
       "email": email,
       "password": password,
+    }),
+  );
+
+  final Map<String, dynamic> data = json.decode(response.body);
+  return data;
+}
+
+Future<Map<String, dynamic>> recoverPassword ({required email}) async {
+  var response = await http.post(
+    Uri.parse(recover_Password),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode({
+      "email": email,
     }),
   );
 

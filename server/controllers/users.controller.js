@@ -35,13 +35,14 @@ const sendEmail = (email, password, res) => {
 }
 
 const createUser = async (req, res) => {
-    let { email, password, username, almaMater, profileImage } = req.body;
+    let { email, password, profileImage } = req.body;
     try {
         email = email.toLowerCase();
+        let username = email.split('@')[0];
         if (!profileImage) {
             profileImage = gravatar.url(email, { s: avatarSize, r: 'x', d: 'retro', protocol: 'https' });
         }
-        const user = await Users.create({ email, password, profileImage });
+        const user = await Users.create({ email, password, profileImage, username });
         user.password = undefined;
         res.status(200).json({ user, code: 200});
     } catch (error) {

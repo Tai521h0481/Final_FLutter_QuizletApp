@@ -1,4 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shop_app/controllers/user.controller.dart';
+import 'package:shop_app/helper/keyboard.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
@@ -54,8 +61,6 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
             decoration: const InputDecoration(
               labelText: "Email",
               hintText: "Enter your email",
-              // If  you are using latest version of flutter then lable text and hint text shown like this
-              // if you r using flutter less then 1.20.* then maybe this is not working properly
               floatingLabelBehavior: FloatingLabelBehavior.always,
               suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
             ),
@@ -64,9 +69,37 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
           FormError(errors: errors),
           const SizedBox(height: 8),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                // Do what you want to do
+                _formKey.currentState!.save();
+                KeyboardUtil.hideKeyboard(context);
+                print("Email: $email");
+                EasyLoading.show(status: 'loading...');
+                try {
+                  final data = await recoverPassword(email: email)
+                      .timeout(const Duration(seconds: 15));
+                  EasyLoading.dismiss();
+                  if (data['error'] != null) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      text: data['error'],
+                    );
+                    return;
+                  }
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.success,
+                    text: data['message'],
+                  );
+                } catch (e) {
+                  EasyLoading.dismiss();
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.info,
+                    text: 'Cannot connect to server',
+                  );
+                }
               }
             },
             child: const Text("Continue"),

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/favorite/favorite_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
@@ -34,6 +37,14 @@ class _InitScreenState extends State<InitScreen> {
     const ProfileScreen()
   ];
 
+  Future<Map<String, dynamic>?> getUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userJson = prefs.getString('data');
+    if (userJson == null) return null;
+    Map<String, dynamic> userData = json.decode(userJson);
+    return userData;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +53,12 @@ class _InitScreenState extends State<InitScreen> {
         child: const Icon(Icons.add),
         shape: const CircleBorder(),
         onPressed: () {
+          print("Data: ${getUserInfo()}");
+          getUserInfo().then((data) {
+            if (data != null) {
+              print(data['_id']);
+            }
+          });
           showModalBottomSheet(
             showDragHandle: true,
             context: context,

@@ -24,17 +24,21 @@ class SpecialOffers extends StatelessWidget {
           child: Row(
             children: [
               SpecialOfferCard(
-                image: "assets/images/Image Banner 2.png",
-                category: "Smartphone",
-                numOfBrands: 18,
+                image:
+                    "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
+                title: "Smartphone",
+                words: 18,
+                name: "asfag",
                 press: () {
                   Navigator.pushNamed(context, ProductsScreen.routeName);
                 },
               ),
               SpecialOfferCard(
-                image: "assets/images/Image Banner 3.png",
-                category: "Fashion",
-                numOfBrands: 24,
+                image:
+                    "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
+                title: "Fashion",
+                words: 24,
+                name: "abcacs",
                 press: () {
                   Navigator.pushNamed(context, ProductsScreen.routeName);
                 },
@@ -51,14 +55,15 @@ class SpecialOffers extends StatelessWidget {
 class SpecialOfferCard extends StatelessWidget {
   const SpecialOfferCard({
     Key? key,
-    required this.category,
+    required this.title,
     required this.image,
-    required this.numOfBrands,
+    required this.words,
     required this.press,
+    required this.name,
   }) : super(key: key);
 
-  final String category, image;
-  final int numOfBrands;
+  final String title, image, name;
+  final int words;
   final GestureTapCallback press;
 
   @override
@@ -69,51 +74,67 @@ class SpecialOfferCard extends StatelessWidget {
         onTap: press,
         child: SizedBox(
           width: 242,
-          height: 100,
+          height: 110,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Stack(
-              children: [
-                Image.asset(
-                  image,
-                  fit: BoxFit.cover,
-                ),
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.black54,
-                        Colors.black38,
-                        Colors.black26,
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
-                  child: Text.rich(
-                    TextSpan(
-                      style: const TextStyle(color: Colors.white),
-                      children: [
-                        TextSpan(
-                          text: "$category\n",
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.withOpacity(0.2),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 5,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
                         ),
-                        TextSpan(text: "$numOfBrands Brands")
-                      ],
-                    ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 5),
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.purple.withOpacity(0.1),
+                        ),
+                        child: Text(
+                          "$words Vocabulary",
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 10,
+                        backgroundImage: NetworkImage(image),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        name,
+                        style: TextStyle(
+                            color: const Color.fromARGB(255, 73, 73, 73),
+                            fontSize: 12),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

@@ -1,6 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/init_screen.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
@@ -143,20 +148,38 @@ class _SignFormState extends State<SignForm> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         KeyboardUtil.hideKeyboard(context);
-      
-                        final data = await loginAPI(email: email, password: password);
-                        if(data['error'] != null){
+                        EasyLoading.show(status: 'loading...');
+                        try {
+                          final data =
+                              await loginAPI(email: email, password: password)
+                                  .timeout(const Duration(seconds: 15));
+                          EasyLoading.dismiss();
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          if (data['error'] != null) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              text: data['error'],
+                            );
+                            return;
+                          } else if (remember == true) {
+                            await prefs.setString('token', data['token']);
+                          }
+                          final dataUser = json.encode(data['user']);
+                          await prefs.setString('data', dataUser);
+                          Navigator.pushNamed(context, InitScreen.routeName);
+                        } catch (e) {
+                          EasyLoading.dismiss();
                           QuickAlert.show(
                             context: context,
-                            type: QuickAlertType.error,
-                            text: data['error'],
+                            type: QuickAlertType.info,
+                            text: 'Cannot connect to server',
                           );
-                          return;
                         }
-                        Navigator.pushNamed(context, InitScreen.routeName);
                       }
                     },
-                    child: Text(
+                    child: const Text(
                       "Continue",
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
@@ -169,8 +192,8 @@ class _SignFormState extends State<SignForm> {
                 child: GestureDetector(
                   onTap: () async {
                     var prefs = await SharedPreferences.getInstance();
-                    var userId = prefs.getString('userId') ?? '';
-                    if (userId.isEmpty) {
+                    var token = prefs.getString('token') ?? '';
+                    if (token.isEmpty) {
                       QuickAlert.show(
                         context: context,
                         type: QuickAlertType.info,
@@ -218,8 +241,8 @@ class _SignFormState extends State<SignForm> {
 
     if (isAuthenticated) {
       final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getString('userId') ?? '';
-
+      final token = prefs.getString('token') ?? '';
+      print(token);
       // Navigator.pushReplacement(
       //   context,
       //   MaterialPageRoute(builder: (context) => HomePage(userId: userId)),
