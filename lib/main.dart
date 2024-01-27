@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -20,9 +23,24 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TNN App',
       theme: AppTheme.lightTheme(context),
-      initialRoute: SplashScreen.routeName,
+      initialRoute: mainScreen(),
       routes: routes,
       builder: EasyLoading.init(),
     );
+  }
+
+  dynamic getInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('data');
+    return data;
+  }
+
+  String mainScreen() {
+    getInfo().then((value) {
+      if (value == null) {
+        return SplashScreen.routeName;
+      } 
+    });
+    return InitScreen.routeName;
   }
 }

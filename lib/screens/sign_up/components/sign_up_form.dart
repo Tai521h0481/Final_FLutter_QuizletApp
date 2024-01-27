@@ -162,7 +162,6 @@ class _SignUpFormState extends State<SignUpForm> {
                     text: 'Something went wrong!',
                   );
                 }
-                // Navigator.pushNamed(context, CompleteProfileScreen.routeName);
               }
             },
             child: const Text("Continue"),

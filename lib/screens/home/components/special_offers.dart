@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/products/products_screen.dart';
+import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
+// import 'package:shop_app/screens/products/products_screen.dart';
 
 import 'section_title.dart';
 
@@ -15,7 +16,7 @@ class SpecialOffers extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SectionTitle(
-            title: "Special for you",
+            title: "Sets",
             press: () {},
           ),
         ),
@@ -30,7 +31,7 @@ class SpecialOffers extends StatelessWidget {
                 words: 18,
                 name: "asfag",
                 press: () {
-                  Navigator.pushNamed(context, ProductsScreen.routeName);
+                  Navigator.pushNamed(context, FlipCardScreen.routeName);
                 },
               ),
               SpecialOfferCard(
@@ -40,7 +41,7 @@ class SpecialOffers extends StatelessWidget {
                 words: 24,
                 name: "abcacs",
                 press: () {
-                  Navigator.pushNamed(context, ProductsScreen.routeName);
+                  Navigator.pushNamed(context, FlipCardScreen.routeName);
                 },
               ),
               const SizedBox(width: 20),
@@ -97,21 +98,27 @@ class SpecialOfferCard extends StatelessWidget {
                       Text(
                         title,
                         style: const TextStyle(
-                          fontSize: 15,
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 5),
-                        padding: EdgeInsets.all(2),
+                        margin: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.purple.withOpacity(0.1),
                         ),
-                        child: Text(
-                          "$words Vocabulary",
-                          style: TextStyle(color: Colors.black, fontSize: 12),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Text(
+                            "$words terms",
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 72, 71, 71),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ],
@@ -122,14 +129,15 @@ class SpecialOfferCard extends StatelessWidget {
                         radius: 10,
                         backgroundImage: NetworkImage(image),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Text(
                         name,
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 73, 73, 73),
-                            fontSize: 12),
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 73, 73, 73),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13),
                       ),
                     ],
                   )

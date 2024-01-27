@@ -164,10 +164,10 @@ class _SignFormState extends State<SignForm> {
                             );
                             return;
                           } else if (remember == true) {
-                            await prefs.setString('token', data['token']);
+                            final dataUser = json.encode(data['user']);
+                            await prefs.setString('data', dataUser);
                           }
-                          final dataUser = json.encode(data['user']);
-                          await prefs.setString('data', dataUser);
+                          await prefs.setString('token', data['token']);
                           Navigator.pushNamed(context, InitScreen.routeName);
                         } catch (e) {
                           EasyLoading.dismiss();
