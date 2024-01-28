@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:shop_app/screens/flipcard/components/buildCard.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Header extends StatelessWidget {
   final PageController pageController;
   final int currentPage;
-  final List<Widget> Function(int, int) buildPageIndicators;
+  final List<dynamic> vocabularies; // Add this line
 
-  const Header({super.key, 
+  const Header({
+    Key? key, 
     required this.pageController,
     required this.currentPage,
-    required this.buildPageIndicators,
-  });
+    required this.vocabularies, // Add this line
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,12 @@ class Header extends StatelessWidget {
           height: 250,
           child: PageView.builder(
             controller: pageController,
-            itemCount: 4,
+            itemCount: vocabularies.length,
             itemBuilder: (context, index) {
+              var vocabulary = vocabularies[index];
+              String frontText = vocabulary['englishWord'];
+              String backText = vocabulary['vietnameseWord'];
+
               return AnimatedBuilder(
                 animation: pageController,
                 builder: (context, child) {
@@ -42,17 +48,27 @@ class Header extends StatelessWidget {
                 },
                 child: FlipCard(
                   direction: FlipDirection.VERTICAL,
-                  front: buildCard('Front $index'),
-                  back: buildCard('Back $index'),
+                  front: buildCard(frontText),
+                  back: buildCard(backText),
                 ),
               );
             },
           ),
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: buildPageIndicators(currentPage, 10),
+        SmoothPageIndicator(
+          controller: pageController,
+          count: vocabularies.length,
+          effect: const ScrollingDotsEffect(
+            activeDotScale: 1.5,
+            radius: 8,
+            spacing: 6,
+            dotWidth: 6,
+            dotHeight: 6,
+            paintStyle: PaintingStyle.fill,
+            strokeWidth: 1.5,
+            dotColor: Colors.grey,
+            activeDotColor: Colors.blue
+          ),
         ),
       ],
     );

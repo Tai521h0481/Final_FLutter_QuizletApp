@@ -63,4 +63,36 @@ Future<Map<String, dynamic>> getTopicByUserAPI(String token) async {
   }
 }
 
+Future<Map<String, dynamic>> getTopicByID(String id, String token) async {
+  var response = await http.get(
+    Uri.parse(getTopic + id),
+    headers: {
+      'token': '$token',
+    },
+  );
 
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+    print('Response body: ${response.body}');
+    throw Exception('Failed to load topics: Server responded with ${response.statusCode}');
+  }
+}
+
+Future<Map<String, dynamic>> getVocabularyByTopicId(String id, String token) async {
+  var response = await http.get(
+    Uri.parse(getVocabByTopicId + id),
+    headers: {
+      'token': '$token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+    print('Response body: ${response.body}');
+    throw Exception('Failed to load topics: Server responded with ${response.statusCode}');
+  }
+}

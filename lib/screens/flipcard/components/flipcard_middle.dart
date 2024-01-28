@@ -56,7 +56,7 @@ class Middle extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon, color: iconColor),
         title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-        onTap: () {}, // Thêm hành động của bạn
+        onTap: () {},
       ),
     );
   }

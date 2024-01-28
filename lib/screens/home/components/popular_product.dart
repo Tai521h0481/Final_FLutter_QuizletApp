@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/screens/home/components/special_offers.dart';
+import 'package:shop_app/screens/home/components/special_folders.dart';
 
-import '../../../components/product_card.dart';
-import '../../../models/Product.dart';
-import '../../details/details_screen.dart';
 import '../../products/products_screen.dart';
 import 'section_title.dart';
 
@@ -17,7 +14,7 @@ class PopularProducts extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SectionTitle(
-            title: "Popular Products",
+            title: "Folders",
             press: () {
               Navigator.pushNamed(context, ProductsScreen.routeName);
             },
@@ -27,36 +24,7 @@ class PopularProducts extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              // ...List.generate(
-              //   demoProducts.length,
-              //   (index) {
-              //     if (demoProducts[index].isPopular) {
-              //       return Padding(
-              //           padding: const EdgeInsets.only(left: 20),
-              //           // child: ProductCard(
-              //           //   product: demoProducts[index],
-              //           //   onPress: () => Navigator.pushNamed(
-              //           //     context,
-              //           //     DetailsScreen.routeName,
-              //           //     arguments: ProductDetailsArguments(
-              //           //         product: demoProducts[index]),
-              //           //   ),
-              //           // ),
-              //           SpecialOfferCard(
-              //             image: "assets/images/Image Banner 2.png",
-              //             title: "Smartphone",
-              //             words: 18,
-              //             press: () {
-              //               Navigator.pushNamed(
-              //                   context, ProductsScreen.routeName);
-              //             },
-              //           ));
-              //     }
-
-              //     return const SizedBox.shrink();
-              //   },
-              // ),
-              SpecialOfferCard(
+              SpecialFolder(
                 image: "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
                 title: "Smartphone",
                 words: 18,
@@ -65,7 +33,7 @@ class PopularProducts extends StatelessWidget {
                   Navigator.pushNamed(context, ProductsScreen.routeName);
                 },
               ),
-              SpecialOfferCard(
+              SpecialFolder(
                 image: "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
                 title: "Fashion",
                 words: 24,
