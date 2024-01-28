@@ -1,13 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
-// import 'package:shop_app/screens/products/products_screen.dart';
+import 'dart:convert';
 
 import 'section_title.dart';
 
-class SpecialOffers extends StatelessWidget {
-  const SpecialOffers({
-    Key? key,
-  }) : super(key: key);
+class SpecialOffers extends StatefulWidget {
+  const SpecialOffers({Key? key}) : super(key: key);
+
+  @override
+  _SpecialOffersState createState() => _SpecialOffersState();
+}
+
+class _SpecialOffersState extends State<SpecialOffers> {
+  List<dynamic> topics = [];
+  Map<String, dynamic> userInfo = {};
+
+  @override
+  void initState() {
+    super.initState();
+    loadTopics();
+  }
+
+  Future<void> loadTopics() async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+
+    if (token.isEmpty) {
+      print('Token is empty. Cannot load topics.');
+      return;
+    }
+
+    try {
+      var data = await getTopicByUserAPI(token);
+      setState(() {
+        topics = data['user']['topicId'] ?? [];
+        userInfo = data['user'] ?? {};
+      });
+    } catch (e) {
+      print('Exception occurred while loading topics: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,37 +50,24 @@ class SpecialOffers extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SectionTitle(
-            title: "Sets",
-            press: () {},
-          ),
+          child: SectionTitle(title: "Sets", press: () {}),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: [
-              SpecialOfferCard(
-                image:
-                    "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
-                title: "Smartphone",
-                words: 18,
-                name: "asfag",
+            children: List.generate(
+              topics.length,
+              (index) => SpecialOfferCard(
+                image: userInfo["profileImage"] ?? '',
+                title: topics[index]["topicNameEnglish"] ?? '',
+                words: topics[index]["vocabularyCount"] ?? 0,
+                name: userInfo["username"] ?? '',
                 press: () {
-                  Navigator.pushNamed(context, FlipCardScreen.routeName);
+                  Navigator.pushNamed(context, FlipCardScreen.routeName,
+                      arguments: topics[index]["_id"]);
                 },
               ),
-              SpecialOfferCard(
-                image:
-                    "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
-                title: "Fashion",
-                words: 24,
-                name: "abcacs",
-                press: () {
-                  Navigator.pushNamed(context, FlipCardScreen.routeName);
-                },
-              ),
-              const SizedBox(width: 20),
-            ],
+            ),
           ),
         ),
       ],
@@ -74,14 +96,18 @@ class SpecialOfferCard extends StatelessWidget {
       child: GestureDetector(
         onTap: press,
         child: SizedBox(
-          width: 242,
-          height: 110,
+          width: 300,
+          height: 140,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.grey.withOpacity(0.2),
+                  width: 2,
+                ),
               ),
               padding: const EdgeInsets.symmetric(
                 horizontal: 10,
@@ -123,23 +149,26 @@ class SpecialOfferCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 10,
-                        backgroundImage: NetworkImage(image),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        name,
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 73, 73, 73),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13),
-                      ),
-                    ],
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 15,
+                          backgroundImage: NetworkImage(image),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          name,
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 73, 73, 73),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),

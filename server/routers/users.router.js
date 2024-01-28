@@ -14,7 +14,8 @@ const { createUser, addAchieveToUser,
         uploadImage,
         passwordRecovery,
         getAllUsers,
-        getUserById } = require('../controllers/users.controller');
+        getUserById,
+        getTopicByUser } = require('../controllers/users.controller');
 
 // create Account (tested)
 usersRouter.post('/register', validateInput(['email', 'password']), isCreated(Users), createUser);
@@ -30,8 +31,11 @@ usersRouter.put('/profiles/password/:id', authentication, validateInput(['passwo
 usersRouter.put('/profiles/:id', authentication, isExistId(Users), updateUser);
 // upload profile image (tested)
 usersRouter.put('/profiles/change-profile-image/:id', authentication, isExistId(Users), uploadImg.single('image'), uploadImage);
-// get all users (tested)
+
+usersRouter.get('/get-topic-by-user', authentication, getTopicByUser);
+
 usersRouter.get("/", getAllUsers);
+
 // get user by id (tested)
 usersRouter.get("/:id", isExistId(Users), getUserById);
 // create achievement (tested)

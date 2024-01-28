@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'TNN App',
       theme: AppTheme.lightTheme(context),
       initialRoute: mainScreen(),
+      // initialRoute: SplashScreen.routeName,
       routes: routes,
       builder: EasyLoading.init(),
     );
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
     getInfo().then((value) {
       if (value == null) {
         return SplashScreen.routeName;
-      } 
+      }
     });
     return InitScreen.routeName;
   }

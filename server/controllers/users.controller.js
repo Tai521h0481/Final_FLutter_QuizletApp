@@ -161,6 +161,20 @@ const getUserById = async (req, res) =>{
     }
 }
 
+const getTopicByUser = async (req, res) => {
+    const userId = req.user.data._id;
+    try {
+        const user = await Users.findById(userId).populate('topicId');
+        if(!user){
+            res.status(404).json({error: "User not found"});
+            return;
+        }
+        res.status(200).json({user});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 const addAchieveToUser = async (req, res) => {
     const achieveId = req.query.achieveId || req.params.achieveId;
     const userId = req.user._id;
@@ -188,5 +202,6 @@ module.exports = {
     passwordRecovery,
     getAllUsers,
     getUserById,
-    addAchieveToUser
+    addAchieveToUser,
+    getTopicByUser
 };

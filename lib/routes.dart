@@ -25,5 +25,8 @@ final Map<String, WidgetBuilder> routes = {
   DetailsScreen.routeName: (context) => const DetailsScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
   RegisterSuccessScreen.routeName: (context) => const RegisterSuccessScreen(),
-  FlipCardScreen.routeName: (context) => const FlipCardScreen(),
+  FlipCardScreen.routeName: (context) {
+    final topicId = ModalRoute.of(context)!.settings.arguments as String;
+    return FlipCardScreen(topicId: topicId);
+  },
 };

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/flipcard/components/buildPageIndicators.dart';
 import 'components/flipcard_header.dart';
 import 'components/flipcard_bottom.dart';
 import 'components/flipcard_middle.dart';
 
 class FlipCardScreen extends StatefulWidget {
   static String routeName = "/flipcards";
-  const FlipCardScreen({Key? key}) : super(key: key);
+  final String topicId;
+
+  const FlipCardScreen({Key? key, required this.topicId}) : super(key: key);
 
   @override
   _FlipCardScreenState createState() => _FlipCardScreenState();
@@ -26,6 +29,8 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
         });
       }
     });
+
+    print("Topic ID: ${widget.topicId}");
   }
 
   @override
@@ -68,39 +73,6 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  List<Widget> buildPageIndicators(int currentPage, int pageCount) {
-    List<Widget> list = [];
-    int start = currentPage - 2;
-    int end = currentPage + 2;
-
-    if (start < 0) {
-      end -= start;
-      start = 0;
-    }
-    if (end > pageCount - 1) {
-      start -= (end - (pageCount - 1));
-      end = pageCount - 1;
-    }
-
-    for (int i = start; i <= end; i++) {
-      list.add(buildIndicator(i == currentPage));
-    }
-    return list;
-  }
-
-  Widget buildIndicator(bool isActive) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      height: 6,
-      width: isActive ? 20 : 6,
-      decoration: BoxDecoration(
-        color: isActive ? Colors.blue : Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(3),
       ),
     );
   }

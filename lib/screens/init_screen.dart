@@ -66,15 +66,15 @@ class _InitScreenState extends State<InitScreen> {
               return Wrap(
                 children: <Widget>[
                   Container(
-                    margin:
-                        EdgeInsets.only(left: 20, top: 5, right: 20, bottom: 5),
+                    margin: const EdgeInsets.only(
+                        left: 20, top: 5, right: 20, bottom: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: kSecondaryColor.withOpacity(0.1),
                     ),
                     child: ListTile(
-                      leading: Icon(Icons.copy_all_sharp),
-                      title: Text(
+                      leading: const Icon(Icons.copy_all_sharp),
+                      title: const Text(
                         'Module',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -85,15 +85,15 @@ class _InitScreenState extends State<InitScreen> {
                     ),
                   ),
                   Container(
-                    margin:
-                        EdgeInsets.only(left: 20, top: 5, right: 20, bottom: 5),
+                    margin: const EdgeInsets.only(
+                        left: 20, top: 5, right: 20, bottom: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: kSecondaryColor.withOpacity(0.1),
                     ),
                     child: ListTile(
-                      leading: Icon(Icons.folder),
-                      title: Text(
+                      leading: const Icon(Icons.folder),
+                      title: const Text(
                         'Folder',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
@@ -104,15 +104,15 @@ class _InitScreenState extends State<InitScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(
+                    margin: const EdgeInsets.only(
                         left: 20, top: 5, right: 20, bottom: 30),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: kSecondaryColor.withOpacity(0.1),
                     ),
                     child: ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text(
+                      leading: const Icon(Icons.person),
+                      title: const Text(
                         'Classroom',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),

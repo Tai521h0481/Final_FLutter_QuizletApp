@@ -18,20 +18,23 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            children: [
-              HomeHeader(),
-              DiscountBanner(),
-              
-              SpecialOffers(),
-              SizedBox(height: 20),
-              PopularProducts(),
-              SizedBox(height: 20),
-            ],
+        child: Container(
+          color: const Color(0xFFF6F7FB),
+          height: double.infinity,
+          child: const SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              children: [
+                HomeHeader(),
+                DiscountBanner(),
+                SpecialOffers(),
+                SizedBox(height: 20),
+                PopularProducts(),
+                SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
