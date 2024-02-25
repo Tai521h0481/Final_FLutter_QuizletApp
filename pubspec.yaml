@@ -44,6 +44,8 @@ dependencies:
   flip_card: ^0.7.0
   flutter_tts: ^3.8.5
   smooth_page_indicator: ^1.1.0
+  get: ^4.6.6
+  line_awesome_flutter: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/profile/profile_edit_screen.dart';
 
 import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
@@ -17,11 +18,45 @@ class ProfileScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 50),
               const ProfilePic(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              const Text(
+                "John Doe",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                "abc@gmail.com",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFDC204),
+                  borderRadius: BorderRadius.circular(29),
+                ),
+                child: const Text(
+                  "Upgrade to Premium",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
               ProfileMenu(
                 text: "My Account",
                 icon: "assets/icons/User Icon.svg",
-                press: () => {},
+                press: () {
+                  Navigator.pushNamed(context, ProfileEditScreen.routeName);
+                },
               ),
               ProfileMenu(
                 text: "Achievements",

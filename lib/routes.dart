@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/products/products_screen.dart';
+import 'package:shop_app/screens/profile/profile_edit_screen.dart';
 
 import 'screens/details/details_screen.dart';
 import 'screens/forgot_password/forgot_password_screen.dart';
@@ -24,9 +25,11 @@ final Map<String, WidgetBuilder> routes = {
   ProductsScreen.routeName: (context) => const ProductsScreen(),
   DetailsScreen.routeName: (context) => const DetailsScreen(),
   ProfileScreen.routeName: (context) => const ProfileScreen(),
+  ProfileEditScreen.routeName: (context) => const ProfileEditScreen(),
   RegisterSuccessScreen.routeName: (context) => const RegisterSuccessScreen(),
   FlipCardScreen.routeName: (context) {
     final topicId = ModalRoute.of(context)!.settings.arguments as String;
     return FlipCardScreen(topicId: topicId);
   },
+
 };
