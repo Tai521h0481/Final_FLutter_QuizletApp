@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class Middle extends StatelessWidget {
   final Widget listTile;
-
-  Middle({required this.listTile});
+  final String title;
+  Middle({required this.listTile, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +23,17 @@ class Middle extends StatelessWidget {
         listTile,
         SizedBox(height: 10),
         ListView(
-          physics:
-              NeverScrollableScrollPhysics(),
-          shrinkWrap: true, 
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
           children: <Widget>[
-            buildListTile(Icons.copy_all, 'Flashcards',
-                Color.fromARGB(255, 91, 25, 184)),
-            buildListTile(Icons.school, 'Learn', Color.fromARGB(255, 91, 25, 184)),
-            buildListTile(Icons.check_circle, 'Test', Color.fromARGB(255, 91, 25, 184)),
-            buildListTile(Icons.layers, 'Match', Color.fromARGB(255, 91, 25, 184)),
+            buildListTile(
+                Icons.copy_all, 'Flashcards', Color.fromARGB(255, 91, 25, 184)),
+            buildListTile(
+                Icons.school, 'Learn', Color.fromARGB(255, 91, 25, 184)),
+            buildListTile(
+                Icons.check_circle, 'Test', Color.fromARGB(255, 91, 25, 184)),
+            buildListTile(
+                Icons.layers, 'Match', Color.fromARGB(255, 91, 25, 184)),
           ],
         ),
       ],

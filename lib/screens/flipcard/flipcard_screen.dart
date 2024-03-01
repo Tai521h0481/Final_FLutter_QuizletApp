@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/user.controller.dart';
@@ -10,24 +8,24 @@ import 'components/flipcard_middle.dart';
 class FlipCardScreen extends StatefulWidget {
   static String routeName = "/flipcards";
   final String topicId;
-
   const FlipCardScreen({Key? key, required this.topicId}) : super(key: key);
 
   @override
   _FlipCardScreenState createState() => _FlipCardScreenState();
 }
 
+
 class _FlipCardScreenState extends State<FlipCardScreen> {
   PageController pageController = PageController(viewportFraction: 0.9);
   int currentPage = 0;
-  Map<String, dynamic> userData = {};
+  Map<String, dynamic> userInfo = {};
   String token = '';
-  Map<String, dynamic> topicData = {};
+  Map<String, dynamic> topics = {};
 
   @override
   void initState() {
     super.initState();
-    getUserInfo();
+    loadTopics();
     pageController.addListener(() {
       int next = pageController.page!.round();
       if (currentPage != next) {
@@ -38,31 +36,31 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
     });
   }
 
-  void getUserInfo() async {
+  Future<void> loadTopics() async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
+
+    if (token.isEmpty) {
+      print('Token is empty. Cannot load topics.');
+      return;
+    }
+
     try {
-      final prefs = await SharedPreferences.getInstance();
-      String? userJson = prefs.getString('data');
-      String? tk = prefs.getString('token');
-      if (userJson != null) {
-        Map<String, dynamic> data = json.decode(userJson);
+      await getTopicByUserAPI(token).then((value) => setState(() {
+            userInfo = value['user'] ?? {};
+            print('User info: $userInfo');
+          }));
+      await getVocabularyByTopicId(widget.topicId, token).then((value) {
         if (mounted) {
           setState(() {
-            userData = data;
-            token = tk ?? '';
-
-            getVocabularyByTopicId(widget.topicId, token).then((value) {
-              if (mounted) {
-                setState(() {
-                  topicData = value ?? {};
-                  print('Topic data: $topicData');
-                });
-              }
-            });
+            topics = value ?? {};
+            print('Topics: $topics');
           });
         }
-      }
+        ;
+      });
     } catch (e) {
-      print('Error loading user info: $e');
+      print('Exception occurred while loading topics: $e');
     }
   }
 
@@ -93,17 +91,18 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
                 Header(
                   pageController: pageController,
                   currentPage: currentPage,
-                  vocabularies: topicData['vocabularies'] ?? [],
+                  vocabularies: topics['vocabularies'] ?? [],
                 ),
                 Middle(
-                  listTile: const ListTile(
+                  title: 'Title',
+                  listTile: ListTile(
                     leading: CircleAvatar(
                       backgroundImage:
-                          AssetImage('assets/images/Profile Image.png'),
+                        NetworkImage(userInfo['profileImage'] ?? ''),
                     ),
                     title: Text(
-                      'Topic Name',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      userInfo['username'] ?? '',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
