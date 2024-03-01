@@ -3,8 +3,10 @@ const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
 const rootRouter = require('./routers');
+const cors = require('cors');
 const PORT = process.env.PORT || 3000;
 app.use(express.json()); 
+app.use(cors());
 app.use("/android", rootRouter);
 const {MONGO_URL} = process.env;
 

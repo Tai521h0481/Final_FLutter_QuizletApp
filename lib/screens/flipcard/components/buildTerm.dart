@@ -22,7 +22,14 @@ class _CreateTermState extends State<CreateTerm> {
   }
 
   Future<void> _speak(String text) async {
-    await flutterTts.speak(text);
+    await flutterTts.awaitSpeakCompletion(true);
+    await flutterTts.speak(text).then((_) {
+      if (mounted) {
+        setState(() {
+          isVolumeOn = false; // Cập nhật trạng thái khi hoàn thành đọc
+        });
+      }
+    });
   }
 
   @override
@@ -49,7 +56,7 @@ class _CreateTermState extends State<CreateTerm> {
                   flutterTts.stop();
                 }
               });
-            }, 
+            },
             child: Container(
               margin: EdgeInsets.all(40),
               child: Center(
@@ -95,7 +102,9 @@ class _CreateTermState extends State<CreateTerm> {
                 });
               },
               child: Icon(
-                isVolumeOn ? Icons.volume_up_outlined : Icons.volume_off_outlined,
+                isVolumeOn
+                    ? Icons.volume_up_outlined
+                    : Icons.volume_off_outlined,
                 color: Colors.grey,
               ),
             ),

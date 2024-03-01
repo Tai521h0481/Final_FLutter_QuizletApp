@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
 
 import 'components/profile_menu.dart';
@@ -6,6 +7,12 @@ import 'components/profile_pic.dart';
 
 class ProfileScreen extends StatelessWidget {
   static String routeName = "/profile";
+  static 
+  void initState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('data') ?? '';
+    print(data);
+  }
 
   const ProfileScreen({super.key});
   @override

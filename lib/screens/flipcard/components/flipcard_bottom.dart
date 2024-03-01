@@ -19,8 +19,9 @@ class Bottom extends StatelessWidget {
         ),
         CreateTerm("Your Text Here"),
         CreateTerm("Your Text Here"),
+        CreateTerm("DEF"),
         CreateTerm("Your Text Here"),
-        CreateTerm("Fuck off"),
+
         SizedBox(height: 20),
       ],
     );
