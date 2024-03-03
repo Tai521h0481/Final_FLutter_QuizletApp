@@ -14,7 +14,6 @@ class FlipCardScreen extends StatefulWidget {
   _FlipCardScreenState createState() => _FlipCardScreenState();
 }
 
-
 class _FlipCardScreenState extends State<FlipCardScreen> {
   PageController pageController = PageController(viewportFraction: 0.9);
   int currentPage = 0;
@@ -55,6 +54,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
           setState(() {
             topics = value ?? {};
             print('Topics: $topics');
+            print('Vocabularies: ${topics['vocabularies']}');
           });
         }
         ;
@@ -98,7 +98,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
                   listTile: ListTile(
                     leading: CircleAvatar(
                       backgroundImage:
-                        NetworkImage(userInfo['profileImage'] ?? ''),
+                          NetworkImage(userInfo['profileImage'] ?? ''),
                     ),
                     title: Text(
                       userInfo['username'] ?? '',
@@ -106,7 +106,10 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
                     ),
                   ),
                 ),
-                const Bottom(),
+                Bottom(
+                  currentPage: currentPage,
+                  vocabularies: topics['vocabularies'] ?? [],
+                ),
               ],
             ),
           ),

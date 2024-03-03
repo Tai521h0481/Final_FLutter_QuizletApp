@@ -6,13 +6,13 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class Header extends StatelessWidget {
   final PageController pageController;
   final int currentPage;
-  final List<dynamic> vocabularies; // Add this line
+  final List<dynamic> vocabularies;
 
   const Header({
     Key? key, 
     required this.pageController,
     required this.currentPage,
-    required this.vocabularies, // Add this line
+    required this.vocabularies,
   }) : super(key: key);
 
   @override
