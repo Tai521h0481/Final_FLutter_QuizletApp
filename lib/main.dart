@@ -10,47 +10,30 @@ import 'theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  final initialRoute = await getInitialRoute();
+  runApp(MyApp(initialRoute: initialRoute));
+}
+
+Future<String> getInitialRoute() async {
+  final prefs = await SharedPreferences.getInstance();
+  final data = prefs.getString('data');
+  print("data : $data");
+  return data == null ? SplashScreen.routeName : InitScreen.routeName;
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String initialRoute;
+  const MyApp({super.key, required this.initialRoute});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'TNN App',
       theme: AppTheme.lightTheme(context),
-      initialRoute: mainScreen(),
-      // initialRoute: SplashScreen.routeName,
+      initialRoute: initialRoute,
       routes: routes,
       builder: EasyLoading.init(),
     );
-  }
-
-  dynamic getInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getString('data');
-    // if (data == null) return null;
-    print("data : " + data.toString());
-    return data;
-  }
-
-  String mainScreen() {
-    // getInfo().then((value) {
-    //   print("value : " + value);
-    //   if (value == null) {
-    //     return SplashScreen.routeName;
-    //   }
-    // });
-    // return InitScreen.routeName;
-    final data = getInfo();
-    print("result : " + data.toString());
-    if(data == null) {
-      return SplashScreen.routeName;
-    }
-    return SplashScreen.routeName;
   }
 }

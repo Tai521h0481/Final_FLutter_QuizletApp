@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
@@ -6,43 +8,48 @@ import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   static String routeName = "/profile";
-  Map<String, dynamic> userInfo = {};
-  String token = '';
-  Map<String, dynamic> topics = {};
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String _userName = "John Doe";
+  String _userEmail = "abc@gmail.com";
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
 
   Future<void> loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
-    final data = prefs.getString('data') ?? '';
-    print(data);
+    final dataString = prefs.getString('data') ?? '';
+
     if (token.isEmpty) {
       print('Token is empty. Cannot load topics.');
       return;
     }
 
-    try {
-      // await getTopicByUserAPI(token).then((value) => setState(() {
-      //       userInfo = value['user'] ?? {};
-      //       print('User info: $userInfo');
-      //     }));
-      // await getVocabularyByTopicId(widget.topicId, token).then((value) {
-      //   if (mounted) {
-      //     setState(() {
-      //       topics = value ?? {};
-      //       print('Topics: $topics');
-      //       print('Vocabularies: ${topics['vocabularies']}');
-      //     });
-      //   }
-      //   ;
-      // });
-    } catch (e) {
-      print('Exception occurred while loading topics: $e');
+    if (dataString.isNotEmpty) {
+      try {
+        final Map<String, dynamic> data = json.decode(dataString);
+        setState(() {
+          _userName = data["username"] ?? "Default Name";
+          _userEmail = data["email"] ?? "default@email.com";
+        });
+      } catch (e) {
+        print('Error parsing user data: $e');
+      }
+    } else {
+      print('User data is empty.');
     }
   }
 
-  ProfileScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,17 +61,17 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 50),
               const ProfilePic(),
               const SizedBox(height: 10),
-              const Text(
-                "John Doe",
-                style: TextStyle(
+              Text(
+                _userName,
+                style: const TextStyle(
                   fontSize: 20,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Text(
-                "abc@gmail.com",
-                style: TextStyle(
+              Text(
+                _userEmail,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),

@@ -1,18 +1,64 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileEditScreen extends StatelessWidget {
+class ProfileEditScreen extends StatefulWidget {
   static String routeName = "/profile_edit";
   const ProfileEditScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<ProfileEditScreen> createState() => _ProfileEditScreenState();
+}
 
+class _ProfileEditScreenState extends State<ProfileEditScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  // Controller for password is not included since it's typically not safe to display or edit passwords directly in forms
+  String? _profileImageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    // Assuming 'data' is a JSON string stored in SharedPreferences
+    final dataString = prefs.getString('data') ?? '';
+
+    if (dataString.isNotEmpty) {
+      try {
+        final Map<String, dynamic> data = json.decode(dataString);
+        setState(() {
+          _usernameController.text = data["username"] ?? "";
+          _emailController.text = data["email"] ?? "";
+          _profileImageUrl = data["profileImage"];
+        });
+      } catch (e) {
+        print('Error parsing user data: $e');
+      }
+    } else {
+      print('User data is empty.');
+    }
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(LineAwesomeIcons.angle_left),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SingleChildScrollView(
@@ -20,94 +66,65 @@ class ProfileEditScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // -- IMAGE with ICON
-              Stack(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: const Image(
-                          image: AssetImage('assets/images/Profile Image.png')),
+              if (_profileImageUrl != null)
+                Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: NetworkImage(_profileImageUrl!),
+                      backgroundColor: Colors.transparent,
                     ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 35,
-                      height: 35,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Color(0xFFFFE500), // Change color as needed
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          LineAwesomeIcons.pen,
+                          color: Colors.white,
+                        ),
                       ),
-                      child: const Icon(LineAwesomeIcons.camera,
-                          color: Colors.black, size: 20),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              const SizedBox(height: 30),
+              TextFormField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  prefixIcon: Icon(LineAwesomeIcons.user),
+                ),
               ),
-              const SizedBox(height: 50),
-
-              // -- Form Fields
-              Form(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Full Name',
-                          prefixIcon: Icon(LineAwesomeIcons.user),
-                          hintText: "ac",
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(LineAwesomeIcons.envelope_1),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Phone No',
-                          prefixIcon: Icon(LineAwesomeIcons.phone),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.fingerprint),
-                          suffixIcon: IconButton(
-                            icon: Icon(LineAwesomeIcons.eye_slash),
-                            onPressed: () {
-                              
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {}, 
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Color(0xFFFFE500), 
-                            shape: StadiumBorder(),
-                          ),
-                          child: Text('Save',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                    ],
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  prefixIcon: Icon(LineAwesomeIcons.envelope),
+                ),
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  // Implement save functionality here
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                ),
+                child: const Text(
+                  'Save Changes',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
