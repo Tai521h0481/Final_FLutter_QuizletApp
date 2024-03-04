@@ -95,7 +95,7 @@ const changePassword = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const id = req.params.id || req.query.id;
-    const { almaMater, username } = req.body;
+    const { username } = req.body;
     try {
         const check = await Users.findById(id);
         if(check.username !== username){

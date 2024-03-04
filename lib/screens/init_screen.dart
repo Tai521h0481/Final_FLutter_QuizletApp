@@ -34,7 +34,7 @@ class _InitScreenState extends State<InitScreen> {
     const Center(
       child: Text("Chat"),
     ),
-    const ProfileScreen()
+    ProfileScreen()
   ];
 
   Future<Map<String, dynamic>?> getUserInfo() async {
@@ -48,6 +48,7 @@ class _InitScreenState extends State<InitScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: pages[currentSelectedIndex],
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),

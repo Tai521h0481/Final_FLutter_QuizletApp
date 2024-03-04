@@ -28,6 +28,7 @@ class SearchField extends StatelessWidget {
             hintText: "Topic, Folder",
             hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
             prefixIcon: const Icon(Icons.search),
+            suffixIcon: Icon(Icons.camera_alt_outlined)
           ),
         ),
       ),

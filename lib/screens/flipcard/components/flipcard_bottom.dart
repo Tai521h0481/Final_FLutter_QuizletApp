@@ -16,13 +16,22 @@ class Bottom extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Text(
-            'Terms',
-            style: TextStyle(
-                fontSize: 17, fontWeight: FontWeight.w800, color: Colors.black),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Text(
+                'Terms',
+                style: TextStyle(
+                    fontSize: 17, fontWeight: FontWeight.w800, color: Colors.black),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Icon(Icons.sort),
+            )
+          ],
         ),
         SizedBox(
           height: 250,

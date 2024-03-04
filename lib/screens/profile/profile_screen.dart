@@ -1,20 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
+import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 
 import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
 
 class ProfileScreen extends StatelessWidget {
   static String routeName = "/profile";
-  static 
-  void initState() async {
+  Map<String, dynamic> userInfo = {};
+  String token = '';
+  Map<String, dynamic> topics = {};
+
+  Future<void> loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
     final data = prefs.getString('data') ?? '';
     print(data);
+    if (token.isEmpty) {
+      print('Token is empty. Cannot load topics.');
+      return;
+    }
+
+    try {
+      // await getTopicByUserAPI(token).then((value) => setState(() {
+      //       userInfo = value['user'] ?? {};
+      //       print('User info: $userInfo');
+      //     }));
+      // await getVocabularyByTopicId(widget.topicId, token).then((value) {
+      //   if (mounted) {
+      //     setState(() {
+      //       topics = value ?? {};
+      //       print('Topics: $topics');
+      //       print('Vocabularies: ${topics['vocabularies']}');
+      //     });
+      //   }
+      //   ;
+      // });
+    } catch (e) {
+      print('Exception occurred while loading topics: $e');
+    }
   }
 
-  const ProfileScreen({super.key});
+  ProfileScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +106,13 @@ class ProfileScreen extends StatelessWidget {
               ProfileMenu(
                 text: "Log Out",
                 icon: "assets/icons/Log out.svg",
-                press: () {},
+                press: () async {
+                  SharedPreferences preferences =
+                      await SharedPreferences.getInstance();
+                  preferences.clear();
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, SignInScreen.routeName, (route) => false);
+                },
               ),
             ],
           ),

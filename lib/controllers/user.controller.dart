@@ -59,7 +59,8 @@ Future<Map<String, dynamic>> getTopicByUserAPI(String token) async {
   } else {
     print('Request failed with status: ${response.statusCode}.');
     print('Response body: ${response.body}');
-    throw Exception('Failed to load topics: Server responded with ${response.statusCode}');
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
   }
 }
 
@@ -76,11 +77,13 @@ Future<Map<String, dynamic>> getTopicByID(String id, String token) async {
   } else {
     print('Request failed with status: ${response.statusCode}.');
     print('Response body: ${response.body}');
-    throw Exception('Failed to load topics: Server responded with ${response.statusCode}');
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
   }
 }
 
-Future<Map<String, dynamic>> getVocabularyByTopicId(String id, String token) async {
+Future<Map<String, dynamic>> getVocabularyByTopicId(
+    String id, String token) async {
   var response = await http.get(
     Uri.parse(getVocabByTopicId + id),
     headers: {
@@ -93,6 +96,51 @@ Future<Map<String, dynamic>> getVocabularyByTopicId(String id, String token) asy
   } else {
     print('Request failed with status: ${response.statusCode}.');
     print('Response body: ${response.body}');
-    throw Exception('Failed to load topics: Server responded with ${response.statusCode}');
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
+  }
+}
+
+// update user
+Future<Map<String, dynamic>> updateUser(
+    String id, String token, String username) async {
+  var response = await http.put(
+    Uri.parse(updateUsername + id),
+    headers: {
+      'token': '$token',
+    },
+    body: jsonEncode({
+      "username": username,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+    print('Response body: ${response.body}');
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
+  }
+}
+
+// upload avatar
+Future<Map<String, dynamic>> uploadAvatar(
+    String id, String token, String username) async {
+  var response = await http.put(
+    Uri.parse(uploadAvatarUrl + id),
+    headers: {
+      'token': '$token',
+    },
+    // body: add image
+  );
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+    print('Response body: ${response.body}');
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
   }
 }

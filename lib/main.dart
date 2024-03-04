@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TNN App',
       theme: AppTheme.lightTheme(context),
-      // initialRoute: mainScreen(),
-      initialRoute: SplashScreen.routeName,
+      initialRoute: mainScreen(),
+      // initialRoute: SplashScreen.routeName,
       routes: routes,
       builder: EasyLoading.init(),
     );
@@ -33,15 +33,24 @@ class MyApp extends StatelessWidget {
   dynamic getInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString('data');
+    // if (data == null) return null;
+    print("data : " + data.toString());
     return data;
   }
 
   String mainScreen() {
-    getInfo().then((value) {
-      if (value == null) {
-        return SplashScreen.routeName;
-      }
-    });
-    return InitScreen.routeName;
+    // getInfo().then((value) {
+    //   print("value : " + value);
+    //   if (value == null) {
+    //     return SplashScreen.routeName;
+    //   }
+    // });
+    // return InitScreen.routeName;
+    final data = getInfo();
+    print("result : " + data.toString());
+    if(data == null) {
+      return SplashScreen.routeName;
+    }
+    return SplashScreen.routeName;
   }
 }

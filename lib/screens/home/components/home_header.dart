@@ -23,8 +23,8 @@ class HomeHeader extends StatelessWidget {
                   'TNN App',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ),
