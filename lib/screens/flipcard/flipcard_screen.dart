@@ -74,7 +74,6 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
             Navigator.pop(context);
           },
         ),
-        title: const Text('Flip Card'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.more_horiz),

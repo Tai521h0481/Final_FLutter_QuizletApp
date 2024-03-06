@@ -16,8 +16,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String _userName = "John Doe";
-  String _userEmail = "abc@gmail.com";
+  String _userName = "User";
+  String _userEmail = "user@gmail.com";
+  String _profileImageUrl = "";
 
   @override
   void initState() {
@@ -41,6 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() {
           _userName = data["username"] ?? "Default Name";
           _userEmail = data["email"] ?? "default@email.com";
+          _profileImageUrl = data["profileImage"];
         });
       } catch (e) {
         print('Error parsing user data: $e');
@@ -59,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               const SizedBox(height: 50),
-              const ProfilePic(),
+              ProfilePic(profileImageUrl: _profileImageUrl),
               const SizedBox(height: 10),
               Text(
                 _userName,
@@ -116,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 press: () async {
                   SharedPreferences preferences =
                       await SharedPreferences.getInstance();
-                  preferences.clear();
+                  await preferences.remove("data");
                   Navigator.pushNamedAndRemoveUntil(
                       context, SignInScreen.routeName, (route) => false);
                 },

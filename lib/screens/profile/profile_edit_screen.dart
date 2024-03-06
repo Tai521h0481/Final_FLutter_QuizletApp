@@ -15,7 +15,6 @@ class ProfileEditScreen extends StatefulWidget {
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  // Controller for password is not included since it's typically not safe to display or edit passwords directly in forms
   String? _profileImageUrl;
 
   @override
@@ -81,7 +80,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                          color: Colors.blue,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -103,9 +102,25 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Email',
                   prefixIcon: Icon(LineAwesomeIcons.envelope),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: TextFormField(
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    hintText: "Change Password",
+                    hintStyle: TextStyle(fontWeight: FontWeight.bold),
+                    prefixIcon: Icon(LineAwesomeIcons.fingerprint),
+                    suffixIcon: Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.blue,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
@@ -114,11 +129,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   // Implement save functionality here
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).primaryColor,
+                  primary: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 ),
                 child: const Text(
                   'Save Changes',
