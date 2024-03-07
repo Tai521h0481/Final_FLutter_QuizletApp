@@ -54,11 +54,9 @@ Future<Map<String, dynamic>> getTopicByUserAPI(String token) async {
     },
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 && response.statusCode != 500) {
     return json.decode(response.body);
-  } else {
-    print('Request failed with status: ${response.statusCode}.');
-    print('Response body: ${response.body}');
+  } else{
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -72,11 +70,9 @@ Future<Map<String, dynamic>> getTopicByID(String id, String token) async {
     },
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 && response.statusCode != 500) {
     return json.decode(response.body);
-  } else {
-    print('Request failed with status: ${response.statusCode}.');
-    print('Response body: ${response.body}');
+  } else{
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -91,11 +87,9 @@ Future<Map<String, dynamic>> getVocabularyByTopicId(
     },
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 && response.statusCode != 500) {
     return json.decode(response.body);
-  } else {
-    print('Request failed with status: ${response.statusCode}.');
-    print('Response body: ${response.body}');
+  } else{
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -107,7 +101,8 @@ Future<Map<String, dynamic>> changePassword(
   var response = await http.put(
     Uri.parse(changePasswordUrl + id),
     headers: {
-      'token': '$token',
+      'Content-Type': 'application/json', // Explicitly set the content type
+      'token': '$token', // Use a more standard Authorization header
     },
     body: jsonEncode({
       "password": oldPassword,
@@ -115,11 +110,9 @@ Future<Map<String, dynamic>> changePassword(
     }),
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 || response.statusCode != 500) {
     return json.decode(response.body);
-  } else {
-    print('Request failed with status: ${response.statusCode}.');
-    print('Response body: ${response.body}');
+  } else{
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -138,11 +131,9 @@ Future<Map<String, dynamic>> updateUser(
     }),
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 && response.statusCode != 500) {
     return json.decode(response.body);
-  } else {
-    print('Request failed with status: ${response.statusCode}.');
-    print('Response body: ${response.body}');
+  } else{
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -159,11 +150,9 @@ Future<Map<String, dynamic>> uploadAvatar(
     // body: add image
   );
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 && response.statusCode != 500) {
     return json.decode(response.body);
-  } else {
-    print('Request failed with status: ${response.statusCode}.');
-    print('Response body: ${response.body}');
+  } else{
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }

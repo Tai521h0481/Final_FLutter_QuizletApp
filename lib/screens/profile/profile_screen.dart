@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
     final dataString = prefs.getString('data') ?? '';
-
+    print("data: $dataString");
     if (token.isEmpty) {
       print('Token is empty. Cannot load topics.');
       return;

@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/user.controller.dart';
+import 'package:shop_app/screens/profile/profile_screen.dart';
 
 class ProfileChangePassword extends StatefulWidget {
   static String routeName = "/profile_change_password";
@@ -15,7 +20,8 @@ class _ProfileChangePasswordState extends State<ProfileChangePassword> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -27,14 +33,36 @@ class _ProfileChangePasswordState extends State<ProfileChangePassword> {
 
   void _tryChangePassword() async {
     if (_formKey.currentState!.validate()) {
-      print('Old Password: ${_oldPasswordController.text}');
-      print('New Password: ${_newPasswordController.text}');
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.success,
-        text: "Your password has been successfully changed.",
-      );
-      await changePassword(id, token, _oldPasswordController.text, _newPasswordController.text)
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString('token') ?? '';
+      final dataString = prefs.getString('data') ?? '';
+      if (token.isNotEmpty && dataString.isNotEmpty) {
+        final Map<String, dynamic> data = json.decode(dataString);
+        String id = data['_id'];
+        EasyLoading.show(status: 'loading...');
+        await changePassword(id, token, _oldPasswordController.text,
+                _newPasswordController.text)
+            .then((value) {
+          EasyLoading.dismiss();
+          if ((value?['message'] ?? '') != '') {
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.success,
+              text: value['message'],
+              onConfirmBtnTap: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    ProfileScreen.routeName, (Route<dynamic> route) => false);
+              },
+            );
+          } else {
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.error,
+              text: value['error'],
+            );
+          }
+        });
+      }
     }
   }
 
