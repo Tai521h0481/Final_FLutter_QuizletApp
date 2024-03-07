@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/products/products_screen.dart';
+import 'package:shop_app/screens/profile/components/profile_change_password.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
 
 import 'screens/details/details_screen.dart';
@@ -31,5 +32,5 @@ final Map<String, WidgetBuilder> routes = {
     final topicId = ModalRoute.of(context)!.settings.arguments as String;
     return FlipCardScreen(topicId: topicId);
   },
-
+  ProfileChangePassword.routeName: (context) => const ProfileChangePassword(),
 };

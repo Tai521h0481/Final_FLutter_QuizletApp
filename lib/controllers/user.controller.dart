@@ -101,6 +101,30 @@ Future<Map<String, dynamic>> getVocabularyByTopicId(
   }
 }
 
+// change password
+Future<Map<String, dynamic>> changePassword(
+    String id, String token, String oldPassword, String newPassword) async {
+  var response = await http.put(
+    Uri.parse(changePasswordUrl + id),
+    headers: {
+      'token': '$token',
+    },
+    body: jsonEncode({
+      "password": oldPassword,
+      "newPassword": newPassword,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    print('Request failed with status: ${response.statusCode}.');
+    print('Response body: ${response.body}');
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
+  }
+}
+
 // update user
 Future<Map<String, dynamic>> updateUser(
     String id, String token, String username) async {

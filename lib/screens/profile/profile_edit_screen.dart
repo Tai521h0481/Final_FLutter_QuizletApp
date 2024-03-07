@@ -2,7 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/screens/profile/components/profile_change_password.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   static String routeName = "/profile_edit";
@@ -79,11 +82,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                       child: Container(
                         width: 40,
                         height: 40,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.blue,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           LineAwesomeIcons.pen,
                           color: Colors.white,
                         ),
@@ -107,11 +110,29 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   labelText: 'Email',
                   prefixIcon: Icon(LineAwesomeIcons.envelope),
                 ),
+                onTap: () {
+                  const snackBar = SnackBar(
+                    content: Text("Email cannot be changed"),
+                    duration:
+                        Duration(seconds: 2), // Thời gian hiển thị SnackBar
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                },
               ),
               const SizedBox(height: 20),
-              Expanded(
+              InkWell(
+                onTap: () {
+                  //
+                },
+                borderRadius: BorderRadius.circular(30),
                 child: TextFormField(
                   readOnly: true,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      ProfileChangePassword.routeName,
+                    );
+                  },
                   decoration: const InputDecoration(
                     hintText: "Change Password",
                     hintStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -125,9 +146,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  // Implement save functionality here
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                   shape: RoundedRectangleBorder(
