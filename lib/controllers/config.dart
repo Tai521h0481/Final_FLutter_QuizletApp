@@ -7,7 +7,7 @@ String login = users + "/login";
 String recover_Password = users + "/recover-password";
 String getTopicByUser = users + "/get-topic-by-user";
 String updateUsername = users + "/profiles";
-String uploadAvatarUrl = users + "/change-profile-image";
+String uploadAvatarUrl = users + "/profiles/change-profile-image/";
 String changePasswordUrl = users + "/profiles/password/";
 
 // topic

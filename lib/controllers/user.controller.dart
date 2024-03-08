@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'config.dart';
@@ -54,9 +55,9 @@ Future<Map<String, dynamic>> getTopicByUserAPI(String token) async {
     },
   );
 
-  if (response.statusCode == 200 && response.statusCode != 500) {
+  if (response.statusCode == 200 || response.statusCode != 500) {
     return json.decode(response.body);
-  } else{
+  } else {
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -70,9 +71,9 @@ Future<Map<String, dynamic>> getTopicByID(String id, String token) async {
     },
   );
 
-  if (response.statusCode == 200 && response.statusCode != 500) {
+  if (response.statusCode == 200 || response.statusCode != 500) {
     return json.decode(response.body);
-  } else{
+  } else {
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -87,9 +88,9 @@ Future<Map<String, dynamic>> getVocabularyByTopicId(
     },
   );
 
-  if (response.statusCode == 200 && response.statusCode != 500) {
+  if (response.statusCode == 200 || response.statusCode != 500) {
     return json.decode(response.body);
-  } else{
+  } else {
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -101,8 +102,8 @@ Future<Map<String, dynamic>> changePassword(
   var response = await http.put(
     Uri.parse(changePasswordUrl + id),
     headers: {
-      'Content-Type': 'application/json', // Explicitly set the content type
-      'token': '$token', // Use a more standard Authorization header
+      'Content-Type': 'application/json',
+      'token': '$token',
     },
     body: jsonEncode({
       "password": oldPassword,
@@ -112,7 +113,7 @@ Future<Map<String, dynamic>> changePassword(
 
   if (response.statusCode == 200 || response.statusCode != 500) {
     return json.decode(response.body);
-  } else{
+  } else {
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -124,6 +125,7 @@ Future<Map<String, dynamic>> updateUser(
   var response = await http.put(
     Uri.parse(updateUsername + id),
     headers: {
+      'Content-Type': 'application/json',
       'token': '$token',
     },
     body: jsonEncode({
@@ -131,9 +133,9 @@ Future<Map<String, dynamic>> updateUser(
     }),
   );
 
-  if (response.statusCode == 200 && response.statusCode != 500) {
+  if (response.statusCode == 200 || response.statusCode != 500) {
     return json.decode(response.body);
-  } else{
+  } else {
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
   }
@@ -141,19 +143,22 @@ Future<Map<String, dynamic>> updateUser(
 
 // upload avatar
 Future<Map<String, dynamic>> uploadAvatar(
-    String id, String token, String username) async {
-  var response = await http.put(
-    Uri.parse(uploadAvatarUrl + id),
-    headers: {
-      'token': '$token',
-    },
-    // body: add image
-  );
+    String id, String token, File imageFile) async {
+  var uri = Uri.parse(uploadAvatarUrl + id);
 
-  if (response.statusCode == 200 && response.statusCode != 500) {
-    return json.decode(response.body);
-  } else{
+  var request = http.MultipartRequest('PUT', uri)
+    ..headers.addAll({
+      'token': '$token',
+    })
+    ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+  var response = await request.send();
+
+  if (response.statusCode == 200 || response.statusCode != 500) {
+    final responseString = await response.stream.bytesToString();
+    return json.decode(responseString);
+  } else {
     throw Exception(
-        'Failed to load topics: Server responded with ${response.statusCode}');
+        'Failed to upload avatar: Server responded with ${response.statusCode}');
   }
 }

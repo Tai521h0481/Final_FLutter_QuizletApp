@@ -1,10 +1,12 @@
 import 'dart:convert';
-
+import 'dart:io'; // Import this for File
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // Make sure to add image_picker in your pubspec.yaml
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/profile/components/profile_change_password.dart';
 
 class ProfileEditScreen extends StatefulWidget {
@@ -18,7 +20,10 @@ class ProfileEditScreen extends StatefulWidget {
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  String? _initialUsername;
   String? _profileImageUrl;
+  String? _token;
+  String? _id;
 
   @override
   void initState() {
@@ -28,8 +33,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   Future<void> loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
-    // Assuming 'data' is a JSON string stored in SharedPreferences
     final dataString = prefs.getString('data') ?? '';
+    _token = prefs.getString('token') ?? '';
 
     if (dataString.isNotEmpty) {
       try {
@@ -38,12 +43,67 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           _usernameController.text = data["username"] ?? "";
           _emailController.text = data["email"] ?? "";
           _profileImageUrl = data["profileImage"];
+          _initialUsername = data["username"];
+          _id = data["_id"];
         });
       } catch (e) {
         print('Error parsing user data: $e');
       }
     } else {
       print('User data is empty.');
+    }
+  }
+
+  void _saveChanges() {
+    if (_usernameController.text.isEmpty ||
+        _usernameController.text == _initialUsername) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        text: "Username cannot be empty or unchanged",
+      );
+      return;
+    }
+
+    print('Saving changes...');
+  }
+
+  Future<void> _changeProfileImage() async {
+    final ImagePicker _picker = ImagePicker();
+    await showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return SafeArea(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text('Photo Library'),
+                    onTap: () {
+                      _pickImage(ImageSource.gallery);
+                      Navigator.of(context).pop();
+                    }),
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: const Text('Camera'),
+                  onTap: () {
+                    _pickImage(ImageSource.camera);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      await uploadAvatar(_id!, _token!, imageFile).then((value) => 
+        print("Uploaded image: $value")
+      );
     }
   }
 
@@ -86,9 +146,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                           color: Colors.blue,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
-                          LineAwesomeIcons.pen,
-                          color: Colors.white,
+                        child: InkWell(
+                          onTap: () {
+                            _changeProfileImage();
+                          },
+                          child: const Icon(
+                            LineAwesomeIcons.pen,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -113,8 +178,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 onTap: () {
                   const snackBar = SnackBar(
                     content: Text("Email cannot be changed"),
-                    duration:
-                        Duration(seconds: 2), // Thời gian hiển thị SnackBar
+                    duration: Duration(seconds: 2),
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 },
