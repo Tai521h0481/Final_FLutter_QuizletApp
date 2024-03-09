@@ -45,6 +45,10 @@ class _SpecialOffersState extends State<SpecialOffers> {
 
   @override
   Widget build(BuildContext context) {
+    if (topics.isEmpty) {
+      return Container();
+    }
+
     return Column(
       children: [
         Padding(

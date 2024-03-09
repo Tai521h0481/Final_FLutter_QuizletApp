@@ -1,13 +1,14 @@
 import 'dart:convert';
-import 'dart:io'; // Import this for File
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // Make sure to add image_picker in your pubspec.yaml
+import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/profile/components/profile_change_password.dart';
+import 'package:shop_app/screens/profile/profile_screen.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   static String routeName = "/profile_edit";
@@ -54,18 +55,43 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     }
   }
 
-  void _saveChanges() {
+  void _saveChanges() async {
     if (_usernameController.text.isEmpty ||
         _usernameController.text == _initialUsername) {
       QuickAlert.show(
         context: context,
-        type: QuickAlertType.error,
+        type: QuickAlertType.info,
         text: "Username cannot be empty or unchanged",
       );
       return;
     }
 
-    print('Saving changes...');
+    await updateUser(_id!, _token!, _usernameController.text)
+        .then((value) async {
+      if ((value?['message'] ?? '') != '') {
+        final prefs = await SharedPreferences.getInstance();
+        final dataUser = json.encode(value['user']);
+        prefs.setString("data", dataUser);
+        setState(() {
+          _initialUsername = _usernameController.text;
+        });
+        await QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: value['message'],
+          onConfirmBtnTap: () {
+            Navigator.of(context).pop();
+          },
+        );
+        Navigator.pop(context, true);
+      } else {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          text: value['error'],
+        );
+      }
+    });
   }
 
   Future<void> _changeProfileImage() async {
@@ -99,11 +125,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
+    print("pickedFile: $pickedFile");
+
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
-      await uploadAvatar(_id!, _token!, imageFile).then((value) => 
-        print("Uploaded image: $value")
-      );
+      print("imageFile: $imageFile");
+      await uploadAvatar(_id!, _token!, imageFile);
+      // .then((value) => print("Uploaded image: $value"));
     }
   }
 
@@ -210,7 +238,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _saveChanges();
+                },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                   shape: RoundedRectangleBorder(

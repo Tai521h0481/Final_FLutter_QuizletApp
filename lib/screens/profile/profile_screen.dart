@@ -98,8 +98,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ProfileMenu(
                 text: "My Account",
                 icon: "assets/icons/User Icon.svg",
-                press: () {
-                  Navigator.pushNamed(context, ProfileEditScreen.routeName);
+                press: () async {
+                  final result = await Navigator.pushNamed(
+                      context, ProfileEditScreen.routeName);
+                  if (result == true) {
+                    loadUserData();
+                  }
                 },
               ),
               ProfileMenu(
