@@ -48,6 +48,7 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   animated_bottom_navigation_bar: ^1.3.3
   image_picker: ^1.0.7
+  dio: ^5.4.1
 
 dev_dependencies:
   flutter_test:

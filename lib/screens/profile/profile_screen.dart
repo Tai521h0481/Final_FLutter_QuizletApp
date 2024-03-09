@@ -30,7 +30,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
     final dataString = prefs.getString('data') ?? '';
-    print("data: $dataString");
     if (token.isEmpty) {
       print('Token is empty. Cannot load topics.');
       return;
@@ -99,11 +98,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 text: "My Account",
                 icon: "assets/icons/User Icon.svg",
                 press: () async {
-                  final result = await Navigator.pushNamed(
+                  await Navigator.pushNamed(
                       context, ProfileEditScreen.routeName);
-                  if (result == true) {
-                    loadUserData();
-                  }
+                  loadUserData();
                 },
               ),
               ProfileMenu(

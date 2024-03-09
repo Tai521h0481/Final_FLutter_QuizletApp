@@ -26,12 +26,6 @@ const storage = new CloudinaryStorage({
 
 const uploadImg = multer({
   storage: storage,
-  fileFilter: function (req, file, cb) {
-    if (!file.mimetype.startsWith('image/')) {
-      return cb(new Error('Not an image!'), false);
-    }
-    cb(null, true);
-  },
   limits: {
     fileSize
   }

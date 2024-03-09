@@ -1,4 +1,4 @@
-String IP = "52.221.210.100";
+String IP = "192.168.3.117";
 String baseUrl = "http://$IP:3001/android";
 
 String users = baseUrl + "/users";

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -8,7 +9,6 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/profile/components/profile_change_password.dart';
-import 'package:shop_app/screens/profile/profile_screen.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   static String routeName = "/profile_edit";
@@ -97,41 +97,65 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   Future<void> _changeProfileImage() async {
     final ImagePicker _picker = ImagePicker();
     await showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return SafeArea(
-            child: Wrap(
-              children: <Widget>[
-                ListTile(
-                    leading: const Icon(Icons.photo_library),
-                    title: const Text('Photo Library'),
-                    onTap: () {
-                      _pickImage(ImageSource.gallery);
-                      Navigator.of(context).pop();
-                    }),
-                ListTile(
-                  leading: const Icon(Icons.photo_camera),
-                  title: const Text('Camera'),
-                  onTap: () {
-                    _pickImage(ImageSource.camera);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () async {
+                  _pickImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () async {
+                  _pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().pickImage(source: source);
-    print("pickedFile: $pickedFile");
+    final ImagePicker _picker = ImagePicker();
+    XFile? pickedImage = await _picker.pickImage(source: source);
 
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
-      print("imageFile: $imageFile");
-      await uploadAvatar(_id!, _token!, imageFile);
-      // .then((value) => print("Uploaded image: $value"));
+    if (pickedImage != null) {
+      File imageFile = File(pickedImage.path);
+      const snackBar = SnackBar(
+        content: Text("Uploading..."),
+        duration: Duration(seconds: 2),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      var value = await uploadAvatar(_id!, _token!, imageFile);
+      if ((value?['message'] ?? '') != '') {
+        final prefs = await SharedPreferences.getInstance();
+        final dataUser = json.encode(value['user']);
+        prefs.setString("data", dataUser);
+        setState(() {
+          _profileImageUrl = value['user']['profileImage'];
+        });
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          text: value['message'],
+        );
+      } else {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          text: value['error'],
+        );
+      }
     }
   }
 

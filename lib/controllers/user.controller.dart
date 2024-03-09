@@ -134,7 +134,6 @@ Future<Map<String, dynamic>> updateUser(
   );
 
   if (response.statusCode == 200 || response.statusCode != 500) {
-    print(response.body);
     return json.decode(response.body);
     // final Map<String, dynamic> data = json.decode(response.body);
     // return data;
@@ -145,45 +144,26 @@ Future<Map<String, dynamic>> updateUser(
 }
 
 // upload avatar
-// Future<Map<String, dynamic>> uploadAvatar(
-//     String id, String token, File imageFile) async {
-//   var uri = Uri.parse(uploadAvatarUrl + id);
-
-//   var request = http.MultipartRequest('PUT', uri)
-//     ..headers.addAll({
-//       'token': '$token',
-//     })
-//     ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
-
-//   var response = await request.send();
-
-//   if (response.statusCode == 200 || response.statusCode != 500) {
-//     final responseString = await response.stream.bytesToString();
-//     return json.decode(responseString);
-//   } else {
-//     // throw Exception(
-//     //     'Failed to upload avatar: Server responded with ${response.statusCode}');
-//   }
-// }
-
-Future<void> uploadAvatar(
+Future<Map<String, dynamic>> uploadAvatar(
     String id, String token, File imageFile) async {
   var uri = Uri.parse(uploadAvatarUrl + id);
 
-  var request = http.MultipartRequest('PUT', uri)
-    ..headers.addAll({
-      'token': '$token',
-    })
-    ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+  var request = http.MultipartRequest('PUT', uri);
+  request.headers['token'] = token;
+  request.files.add(
+    await http.MultipartFile.fromPath(
+      'image',
+      imageFile.path,
+    ),
+  );
 
-  var response = await request.send();
+  final response = await request.send();
 
-  // if (response.statusCode == 200 || response.statusCode != 500) {
+  if (response.statusCode == 200 || response.statusCode != 500) {
     final responseString = await response.stream.bytesToString();
-    // return json.decode(responseString);
-  // } else {
-  //   // throw Exception(
-  //   //     'Failed to upload avatar: Server responded with ${response.statusCode}');
-  // }
-  print("responseString: $responseString");
+    return json.decode(responseString);
+  } else {
+    throw Exception(
+        'Failed to upload avatar: Server responded with ${response.statusCode}');
+  }
 }
