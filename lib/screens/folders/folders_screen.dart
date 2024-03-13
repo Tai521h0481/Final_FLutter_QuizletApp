@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 import 'package:shop_app/screens/home/components/special_cards.dart';
 
@@ -13,6 +14,7 @@ class FolderScreen extends StatefulWidget {
 class _FolderScreenState extends State<FolderScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _showBackToTopButton = false;
+  String _token = '';
 
   @override
   void initState() {
@@ -26,6 +28,12 @@ class _FolderScreenState extends State<FolderScreen> {
         }
       });
     });
+    loadData();
+  }
+
+  Future<void> loadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('token') ?? '';
   }
 
   @override
@@ -41,6 +49,12 @@ class _FolderScreenState extends State<FolderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map;
+    List<dynamic> topics = args['topics'];
+    String _title = args['title'];
+    String _username = args['username'];
+    String _profileImage = args['image'];
+    int _sets = args['sets'];
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -89,7 +103,7 @@ class _FolderScreenState extends State<FolderScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Title',
+                        _title,
                         style: const TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -105,7 +119,7 @@ class _FolderScreenState extends State<FolderScreen> {
                     child: Row(
                       children: [
                         Text(
-                          '1 set',
+                          '$_sets sets',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -121,11 +135,11 @@ class _FolderScreenState extends State<FolderScreen> {
                         CircleAvatar(
                           radius: 18,
                           backgroundImage: NetworkImage(
-                              "https://res.cloudinary.com/dfxqz0959/image/upload/v1710005544/cloudFinalAndroid/wtdzw0iejjznll9dzyo7.jpg"),
+                              _profileImage,),
                         ),
                         SizedBox(width: 10),
                         Text(
-                          "Name",
+                          _username,
                           style: const TextStyle(
                               color: Color.fromARGB(255, 73, 73, 73),
                               fontWeight: FontWeight.bold,

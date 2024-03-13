@@ -84,15 +84,24 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFFF6F7FB),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 30,
+            color: Color(0xFF444E66),
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.more_horiz),
+            icon: const Icon(
+              Icons.more_horiz,
+              size: 30,
+              color: Color(0xFF444E66),
+            ),
             onPressed: () {},
           ),
         ],

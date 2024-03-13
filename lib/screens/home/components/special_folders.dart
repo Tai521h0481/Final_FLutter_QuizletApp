@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SpecialFolder extends StatelessWidget {
+  
   const SpecialFolder({
     Key? key,
     required this.title,
@@ -8,10 +9,11 @@ class SpecialFolder extends StatelessWidget {
     required this.words,
     required this.press,
     required this.name,
+    required this.sets,
   }) : super(key: key);
 
   final String title, image, name;
-  final int words;
+  final int words, sets;
   final GestureTapCallback press;
 
   @override
@@ -64,7 +66,7 @@ class SpecialFolder extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          '1 set',
+                          '$sets set',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,

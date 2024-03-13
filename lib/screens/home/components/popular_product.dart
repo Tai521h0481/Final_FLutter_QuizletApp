@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/folder.dart';
+import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
+import 'package:shop_app/screens/folders/folders_screen.dart';
 import 'package:shop_app/screens/home/components/special_folders.dart';
 
 import '../../products/products_screen.dart';
@@ -17,6 +20,7 @@ class PopularProducts extends StatefulWidget {
 
 class _PopularProductsState extends State<PopularProducts> {
   List<dynamic> folders = [];
+  Map<String, dynamic> userInfo = {};
 
   @override
   void initState() {
@@ -34,8 +38,8 @@ class _PopularProductsState extends State<PopularProducts> {
     }
 
     try {
-      final Map<String, dynamic> data = json.decode(dataString);
-      var res = await getFolderByID(data["_id"], token);
+      userInfo = json.decode(dataString);
+      var res = await getFolderByID(userInfo["_id"], token);
       setState(() {
         folders = res['folders'] ?? [];
       });
@@ -46,6 +50,8 @@ class _PopularProductsState extends State<PopularProducts> {
 
   @override
   Widget build(BuildContext context) {
+    var image = userInfo["profileImage"] ?? '';
+    var name = userInfo["username"] ?? '';
     return Column(
       children: [
         Padding(
@@ -62,42 +68,29 @@ class _PopularProductsState extends State<PopularProducts> {
           child: Row(
             children: List.generate(
               folders.length,
-              (index) => SectionTitle(
-                title: folders[index]['folderNameEnglish'],
+              (index) => SpecialFolder(
+                image: image,
+                title: folders[index]["folderNameEnglish"] ?? '',
+                words: folders[index]["topicCount"] ?? 0,
+                name: name,
+                sets: folders[index]["topicCount"] ?? 0,
                 press: () {
-                  // Navigator.pushNamed(
-                  //   context,
-                  //   FlipCardScreen.routeName,
-                  //   arguments: topics[index]["_id"],
-                  // );
+                  Navigator.pushNamed(
+                    context,
+                    FolderScreen.routeName,
+                    arguments: {
+                      'topics': folders[index]["topicInFolderId"],
+                      'title': folders[index]["folderNameEnglish"],
+                      'username' : name,
+                      'image' : "$image",
+                      'sets': folders[index]["topicCount"]
+                    },
+                  );
                 },
               ),
             ),
-            // children: [
-            //   SpecialFolder(
-            //     image:
-            //         "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
-            //     title: "Smartphone",
-            //     words: 18,
-            //     name: "xinzhao",
-            //     press: () {
-            //       Navigator.pushNamed(context, ProductsScreen.routeName);
-            //     },
-            //   ),
-            //   SpecialFolder(
-            //     image:
-            //         "https://s.gravatar.com/avatar/3438c2ed73b30d9314358437c0115705?s=100&r=x&d=retro",
-            //     title: "Fashion",
-            //     words: 24,
-            //     name: "xinzhao",
-            //     press: () {
-            //       Navigator.pushNamed(context, ProductsScreen.routeName);
-            //     },
-            //   ),
-            //   const SizedBox(width: 20),
-            // ],
           ),
-        )
+        ),
       ],
     );
   }

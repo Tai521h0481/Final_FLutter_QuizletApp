@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               ProfileMenu(
                 text: "Achievements",
-                icon: "assets/icons/Bell.svg",
+                icon: "assets/icons/achievement icon.svg",
                 press: () {},
               ),
               ProfileMenu(

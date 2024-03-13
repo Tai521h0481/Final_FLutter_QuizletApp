@@ -14,6 +14,7 @@ String createAchivementUrl = users + "/achievement/";
 // topic
 String topic = baseUrl + "/topics";
 String getTopic = topic + "/";
+String getTopicById = topic + "/";
 
 // vocab
 String vocab = baseUrl + "/vocabularies";

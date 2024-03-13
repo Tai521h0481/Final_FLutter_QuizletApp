@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class TopicInFolder extends StatelessWidget {
+  
   const TopicInFolder({
     Key? key,
-    required this.title,
-    required this.image,
-    required this.words,
-    required this.press,
-    required this.name,
-  }) : super(key: key);
+     required this.title,
+     required this.image,
+     required this.words,
+     required this.press,
+     required this.name,
+  });
 
   final String title, image, name;
   final int words;

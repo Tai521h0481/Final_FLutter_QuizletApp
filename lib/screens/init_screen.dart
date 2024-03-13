@@ -31,6 +31,7 @@ class _InitScreenState extends State<InitScreen> {
   final pages = [
     const HomeScreen(),
     const FavoriteScreen(),
+    Container(),
     const Center(
       child: Text("Chat"),
     ),
@@ -45,167 +46,137 @@ class _InitScreenState extends State<InitScreen> {
     return userData;
   }
 
+  Future show() {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: <Widget>[
+            Container(
+              margin:
+                  const EdgeInsets.only(left: 20, top: 5, right: 20, bottom: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: kSecondaryColor.withOpacity(0.1),
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.copy_all_sharp),
+                title: const Text(
+                  'Module',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  // Handle EDIT action
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Container(
+              margin:
+                  const EdgeInsets.only(left: 20, top: 5, right: 20, bottom: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: kSecondaryColor.withOpacity(0.1),
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.folder),
+                title: const Text(
+                  'Folder',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  // Handle ADD TOPIC action
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                  left: 20, top: 5, right: 20, bottom: 30),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: kSecondaryColor.withOpacity(0.1),
+              ),
+              child: ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text(
+                  'Classroom',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  // Handle REMOVE action
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: pages[currentSelectedIndex],
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        shape: const CircleBorder(),
-        onPressed: () {
-          print("Data: ${getUserInfo()}");
-          getUserInfo().then((data) {
-            if (data != null) {
-              print(data['_id']);
-            }
-          });
-          showModalBottomSheet(
-            showDragHandle: true,
-            context: context,
-            builder: (BuildContext context) {
-              return Wrap(
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.only(
-                        left: 20, top: 5, right: 20, bottom: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: kSecondaryColor.withOpacity(0.1),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(Icons.copy_all_sharp),
-                      title: const Text(
-                        'Module',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        // Handle EDIT action
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                        left: 20, top: 5, right: 20, bottom: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: kSecondaryColor.withOpacity(0.1),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(Icons.folder),
-                      title: const Text(
-                        'Folder',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        // Handle ADD TOPIC action
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                        left: 20, top: 5, right: 20, bottom: 30),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: kSecondaryColor.withOpacity(0.1),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text(
-                        'Classroom',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        // Handle REMOVE action
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: updateCurrentIndex,
-        currentIndex: currentSelectedIndex,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/icons/Shop Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                inActiveIconColor,
-                BlendMode.srcIn,
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/Shop Icon.svg",
+                color: currentSelectedIndex == 0
+                    ? Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                width: 22,
+                height: 22,
               ),
+              onPressed: () => updateCurrentIndex(0),
             ),
-            activeIcon: SvgPicture.asset(
-              "assets/icons/Shop Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                kPrimaryColor,
-                BlendMode.srcIn,
+            IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/Discover Icon.svg",
+                color: currentSelectedIndex == 1
+                    ? Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                width: 25,
+                height: 25,
               ),
+              onPressed: () => updateCurrentIndex(1),
             ),
-            label: "Home",
-          ),
-          const BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(right: 32),
-              child: Icon(
-                Icons.search,
+            IconButton(
+              icon: Icon(
+                Icons.add_circle_outline_sharp,
                 color: inActiveIconColor,
+                size: 55 - 10,
               ),
+              onPressed: () => show(),
             ),
-            activeIcon: Padding(
-              padding: EdgeInsets.only(right: 32),
-              child: Icon(
-                Icons.search,
-                color: kPrimaryColor,
+            IconButton(
+              icon: SvgPicture.asset(
+                "assets/icons/folder icon.svg",
+                color: currentSelectedIndex == 3
+                    ? Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                width: 25,
+                height: 25,
               ),
+              onPressed: () => updateCurrentIndex(3),
             ),
-            label: "Fav",
-          ),
-          const BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(left: 32),
-              child: Icon(
-                Icons.folder,
-                color: inActiveIconColor,
+            IconButton(
+              icon: Icon(
+                Icons.account_circle_outlined,
+                color: currentSelectedIndex == 4
+                    ? Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                size: 32,
               ),
+              onPressed: () => updateCurrentIndex(4),
             ),
-            activeIcon: Padding(
-              padding: EdgeInsets.only(left: 32),
-              child: Icon(
-                Icons.folder,
-                color: kPrimaryColor,
-              ),
-            ),
-            label: "Library",
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/icons/User Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                inActiveIconColor,
-                BlendMode.srcIn,
-              ),
-            ),
-            activeIcon: SvgPicture.asset(
-              "assets/icons/User Icon.svg",
-              colorFilter: const ColorFilter.mode(
-                kPrimaryColor,
-                BlendMode.srcIn,
-              ),
-            ),
-            label: "Fav",
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
