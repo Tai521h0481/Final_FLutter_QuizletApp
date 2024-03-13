@@ -32,8 +32,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TNN App',
       theme: AppTheme.lightTheme(context),
-      // initialRoute: initialRoute,
-      initialRoute: FolderScreen.routeName,
+      initialRoute: initialRoute,
       routes: routes,
       builder: EasyLoading.init(),
     );

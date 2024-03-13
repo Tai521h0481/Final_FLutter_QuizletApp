@@ -20,6 +20,13 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
   Map<String, dynamic> userInfo = {};
   String token = '';
   Map<String, dynamic> topics = {};
+  final ScrollController _scrollController = ScrollController();
+  bool _showBackToTopButton = false;
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
+  }
 
   @override
   void initState() {
@@ -32,6 +39,15 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
           currentPage = next;
         });
       }
+    });
+    _scrollController.addListener(() {
+      setState(() {
+        if (_scrollController.offset >= 200) {
+          _showBackToTopButton = true;
+        } else {
+          _showBackToTopButton = false;
+        }
+      });
     });
   }
 
@@ -82,44 +98,50 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            color: const Color(0xFFF6F7FB),
-            child: Column(
-              children: <Widget>[
-                Header(
-                  pageController: pageController,
-                  currentPage: currentPage,
-                  vocabularies: topics['vocabularies'] ?? [],
-                ),
-                Middle(
-                  title: 'Title',
-                  listTile: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(userInfo['profileImage'] ?? ''),
-                    ),
-                    title: Text(
-                      userInfo['username'] ?? '',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+        child: Container(
+          color: const Color(0xFFF6F7FB),
+          child: ListView(
+            controller: _scrollController,
+            children: <Widget>[
+              Header(
+                pageController: pageController,
+                currentPage: currentPage,
+                vocabularies: topics['vocabularies'] ?? [],
+              ),
+              Middle(
+                title: 'Title',
+                listTile: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage:
+                        NetworkImage(userInfo['profileImage'] ?? ''),
+                  ),
+                  title: Text(
+                    userInfo['username'] ?? '',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                Bottom(
-                  currentPage: currentPage,
-                  vocabularies: topics['vocabularies'] ?? [],
-                ),
-              ],
-            ),
+              ),
+              Bottom(
+                currentPage: currentPage,
+                vocabularies: topics['vocabularies'] ?? [],
+              ),
+            ],
           ),
         ),
       ),
+      floatingActionButton: _showBackToTopButton
+          ? FloatingActionButton(
+              onPressed: _scrollToTop,
+              child: Icon(Icons.arrow_upward),
+            )
+          : null,
     );
   }
 
   @override
   void dispose() {
     pageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }

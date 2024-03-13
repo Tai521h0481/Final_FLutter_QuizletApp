@@ -16,10 +16,10 @@ class Bottom extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
                 'Terms',
@@ -33,23 +33,14 @@ class Bottom extends StatelessWidget {
             )
           ],
         ),
-        SizedBox(
-          height: 250,
-          width: double.infinity,
-          child: PageView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: vocabularies.length,
-            itemBuilder: (context, index) {
-              return CreateTerm(vocabularies[index]["englishWord"]);
-            },
-          ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: vocabularies.length,
+          itemBuilder: (context, index) {
+            return CreateTerm(vocabularies[index]["englishWord"]);
+          },
         ),
-
-        // CreateTerm("Your Text Here"),
-        // CreateTerm("Your Text Here"),
-        // CreateTerm("DEF"),
-        // CreateTerm("Your Text Here"),
-
         const SizedBox(height: 20),
       ],
     );
