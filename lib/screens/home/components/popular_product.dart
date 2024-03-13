@@ -79,7 +79,7 @@ class _PopularProductsState extends State<PopularProducts> {
                     context,
                     FolderScreen.routeName,
                     arguments: {
-                      'topics': folders[index]["topicInFolderId"],
+                      'folderID': folders[index]["_id"],
                       'title': folders[index]["folderNameEnglish"],
                       'username' : name,
                       'image' : "$image",

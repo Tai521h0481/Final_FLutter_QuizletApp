@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/controllers/topic.dart';
+import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
-import 'package:shop_app/screens/home/components/special_cards.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({super.key});
@@ -14,26 +15,40 @@ class FolderScreen extends StatefulWidget {
 class _FolderScreenState extends State<FolderScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _showBackToTopButton = false;
-  String _token = '';
+  List<dynamic> topicDetails = [];
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      setState(() {
-        if (_scrollController.offset >= 200) {
-          _showBackToTopButton = true;
-        } else {
-          _showBackToTopButton = false;
-        }
-      });
+      if (_scrollController.offset >= 200) {
+        setState(() => _showBackToTopButton = true);
+      } else {
+        setState(() => _showBackToTopButton = false);
+      }
     });
-    loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ModalRoute.of(context)?.settings.arguments != null) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map;
+        String folderID = args['folderID'];
+        loadTopicDetails(folderID);
+      }
+    });
   }
 
-  Future<void> loadData() async {
+  Future<void> loadTopicDetails(String id) async {
     final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('token') ?? '';
+    String token = prefs.getString('token') ?? '';
+
+    try {
+      Map<String, dynamic> data = await getTopicByFolderID(id, token);
+      List<dynamic> topicsFromAPI = data['topics'];
+      setState(() {
+        topicDetails = topicsFromAPI;
+      });
+    } catch (e) {
+      print("Failed to load topic details: $e");
+    }
   }
 
   @override
@@ -50,11 +65,11 @@ class _FolderScreenState extends State<FolderScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map;
-    List<dynamic> topics = args['topics'];
     String _title = args['title'];
     String _username = args['username'];
     String _profileImage = args['image'];
     int _sets = args['sets'];
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -135,7 +150,8 @@ class _FolderScreenState extends State<FolderScreen> {
                         CircleAvatar(
                           radius: 18,
                           backgroundImage: NetworkImage(
-                              _profileImage,),
+                            _profileImage,
+                          ),
                         ),
                         SizedBox(width: 10),
                         Text(
@@ -173,14 +189,23 @@ class _FolderScreenState extends State<FolderScreen> {
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: 6,
+                itemCount: topicDetails.length,
                 itemBuilder: (context, index) {
+                  var topic = topicDetails[index]['topic'];
+                  
                   return TopicInFolder(
-                    image: "https://res.cloudinary.com/...",
-                    title: 'Food',
-                    words: 12,
-                    name: 'TaiNguyen',
-                    press: () {},
+                    image: topic['ownerId']['profileImage'] ??
+                        "", // Adjust based on your data structure
+                    title: topic['topicNameEnglish'] ?? 'Title',
+                    words: topic['vocabularyCount'] ?? 0,
+                    name: topic['ownerId']['username'] ?? 'Name',
+                    press: () {
+                      Navigator.pushNamed(
+                        context,
+                        FlipCardScreen.routeName,
+                        arguments: topic["_id"],
+                      );
+                    },
                   );
                 },
               ),

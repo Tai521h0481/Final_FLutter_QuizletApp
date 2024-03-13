@@ -63,14 +63,11 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
     try {
       await getTopicByUserAPI(token).then((value) => setState(() {
             userInfo = value['user'] ?? {};
-            print('User info: $userInfo');
           }));
       await getVocabularyByTopicId(widget.topicId, token).then((value) {
         if (mounted) {
           setState(() {
             topics = value ?? {};
-            print('Topics: $topics');
-            print('Vocabularies: ${topics['vocabularies']}');
           });
         }
         ;
@@ -111,6 +108,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
           color: const Color(0xFFF6F7FB),
           child: ListView(
             controller: _scrollController,
+            physics: ClampingScrollPhysics(),
             children: <Widget>[
               Header(
                 pageController: pageController,
