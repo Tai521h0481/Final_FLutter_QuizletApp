@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/screens/folders/folders_screen.dart';
 // import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TNN App',
       theme: AppTheme.lightTheme(context),
-      initialRoute: initialRoute,
+      // initialRoute: initialRoute,
+      initialRoute: FolderScreen.routeName,
       routes: routes,
       builder: EasyLoading.init(),
     );

@@ -9,6 +9,7 @@ String getTopicByUser = users + "/get-topic-by-user";
 String updateUsername = users + "/profiles/";
 String uploadAvatarUrl = users + "/profiles/change-profile-image/";
 String changePasswordUrl = users + "/profiles/password/";
+String createAchivementUrl = users + "/achievement/";
 
 // topic
 String topic = baseUrl + "/topics";
@@ -17,3 +18,12 @@ String getTopic = topic + "/";
 // vocab
 String vocab = baseUrl + "/vocabularies";
 String getVocabByTopicId = vocab + "/topics/";
+
+//folder
+String folder = baseUrl + "/folders";
+String getFolderByUser = folder + "/users/";
+String createFolder = folder + "/";
+String addTopicToFolder = folder + ":id/topics/:topicId";
+String editFolde = folder + "/";
+String deleteFolder = folder + "/";
+String deleteTopicInFolder = folder + ":id/topics/:topicId";

@@ -167,3 +167,26 @@ Future<Map<String, dynamic>> uploadAvatar(
         'Failed to upload avatar: Server responded with ${response.statusCode}');
   }
 }
+
+// create achivement 
+Future<Map<String, dynamic>> createAchivementAPI(String token, String achivementID) async {
+  var uri = Uri.parse(createAchivementUrl + achivementID);
+
+  var response = await http.post(
+    uri,
+    headers: {
+      'Content-Type': 'application/json',
+      'token': '$token',
+    },
+    body: jsonEncode({
+      "achieveId": achivementID,
+    }),
+  );
+
+  if (response.statusCode == 200 || response.statusCode != 500) {
+    return json.decode(response.body);
+  } else {
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
+  }
+}
