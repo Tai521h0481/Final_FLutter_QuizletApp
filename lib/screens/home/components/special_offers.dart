@@ -66,11 +66,14 @@ class _SpecialOffersState extends State<SpecialOffers> {
                 words: topics[index]["vocabularyCount"] ?? 0,
                 name: userInfo["username"] ?? '',
                 press: () {
-                  Navigator.pushNamed(
-                    context,
-                    FlipCardScreen.routeName,
-                    arguments: topics[index]["_id"],
-                  );
+                  Navigator.pushNamed(context, FlipCardScreen.routeName,
+                      arguments: {
+                        "_id": topics[index]["_id"],
+                        "title": topics[index]["topicNameEnglish"],
+                        'image': userInfo["profileImage"] ?? '',
+                        'username': userInfo["username"] ?? '',
+                        'terms': topics[index]["vocabularyCount"].toString() ?? '',
+                      });
                 },
               ),
             ),

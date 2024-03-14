@@ -8,7 +8,7 @@ import 'package:shop_app/screens/favorite/favorite_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/profile/profile_screen.dart';
 
-const Color inActiveIconColor = Color(0xFFB6B6B6);
+const Color inActiveIconColor = Color(0xFF5C667A);
 
 class InitScreen extends StatefulWidget {
   const InitScreen({super.key});
@@ -61,7 +61,7 @@ class _InitScreenState extends State<InitScreen> {
                 color: kSecondaryColor.withOpacity(0.1),
               ),
               child: ListTile(
-                leading: const Icon(Icons.copy_all_sharp),
+                leading: const Icon(Icons.flip_to_front_rounded),
                 title: const Text(
                   'Module',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -80,7 +80,7 @@ class _InitScreenState extends State<InitScreen> {
                 color: kSecondaryColor.withOpacity(0.1),
               ),
               child: ListTile(
-                leading: const Icon(Icons.folder),
+                leading: const Icon(Icons.folder_copy_outlined),
                 title: const Text(
                   'Folder',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -99,7 +99,7 @@ class _InitScreenState extends State<InitScreen> {
                 color: kSecondaryColor.withOpacity(0.1),
               ),
               child: ListTile(
-                leading: const Icon(Icons.person),
+                leading: const Icon(Icons.person_outline_outlined),
                 title: const Text(
                   'Classroom',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -120,63 +120,72 @@ class _InitScreenState extends State<InitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: pages[currentSelectedIndex],
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/Shop Icon.svg",
-                color: currentSelectedIndex == 0
-                    ? Color(0xFF4C56FF)
-                    : inActiveIconColor,
-                width: 22,
-                height: 22,
-              ),
-              onPressed: () => updateCurrentIndex(0),
-            ),
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/Discover Icon.svg",
-                color: currentSelectedIndex == 1
-                    ? Color(0xFF4C56FF)
-                    : inActiveIconColor,
-                width: 25,
-                height: 25,
-              ),
-              onPressed: () => updateCurrentIndex(1),
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.add_circle_outline_sharp,
-                color: inActiveIconColor,
-                size: 55 - 10,
-              ),
-              onPressed: () => show(),
-            ),
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/folder icon.svg",
-                color: currentSelectedIndex == 3
-                    ? Color(0xFF4C56FF)
-                    : inActiveIconColor,
-                width: 25,
-                height: 25,
-              ),
-              onPressed: () => updateCurrentIndex(3),
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.account_circle_outlined,
-                color: currentSelectedIndex == 4
-                    ? Color(0xFF4C56FF)
-                    : inActiveIconColor,
-                size: 32,
-              ),
-              onPressed: () => updateCurrentIndex(4),
-            ),
-          ],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFFF3F7F8),
+        selectedItemColor: const Color(0xFF4C56FF),
+        unselectedItemColor: inActiveIconColor,
+        currentIndex: currentSelectedIndex,
+        selectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Roboto',
+          fontSize: 9,
         ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Roboto',
+          fontSize: 9,
+        ),
+        onTap: (index) {
+          if (index == 2) {
+            show();
+          } else {
+            updateCurrentIndex(index);
+          }
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/icons/Shop Icon.svg",
+                color: currentSelectedIndex == 0
+                    ? const Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                width: 25,
+                height: 25),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/icons/telescope.svg",
+                color: currentSelectedIndex == 1
+                    ? const Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                width: 25,
+                height: 25),
+            label: 'Discover',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/icons/circle-plus.svg",
+                color: inActiveIconColor, width: 35, height: 35),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/icons/folder-open.svg",
+                color: currentSelectedIndex == 3
+                    ? const Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                width: 25,
+                height: 25),
+            label: 'Library',
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset("assets/icons/circle-user.svg",
+                color: currentSelectedIndex == 4
+                    ? const Color(0xFF4C56FF)
+                    : inActiveIconColor,
+                width: 25,
+                height: 25),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }

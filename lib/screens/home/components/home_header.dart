@@ -13,7 +13,7 @@ class HomeHeader extends StatelessWidget {
       child: ClipPath(
         clipper: CustomShapeClipper(),
         child: Container(
-          color: const Color(0xFF4355FF),
+          color: const Color(0xFF4055FC),
           child: Stack(
             children: [
               const Positioned(

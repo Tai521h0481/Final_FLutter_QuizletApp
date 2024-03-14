@@ -13,7 +13,7 @@ class Middle extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
-            'Title',
+            title,
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -21,19 +21,19 @@ class Middle extends StatelessWidget {
           ),
         ),
         listTile,
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         ListView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           children: <Widget>[
+            buildListTile(Icons.copy_all, 'Flashcards',
+                 const Color(0xFF3F56FF)),
             buildListTile(
-                Icons.copy_all, 'Flashcards', Color.fromARGB(255, 91, 25, 184)),
+                Icons.school, 'Learn', const Color(0xFF3F56FF)),
+            buildListTile(Icons.check_circle, 'Test',
+                const Color(0xFF3F56FF)),
             buildListTile(
-                Icons.school, 'Learn', Color.fromARGB(255, 91, 25, 184)),
-            buildListTile(
-                Icons.check_circle, 'Test', Color.fromARGB(255, 91, 25, 184)),
-            buildListTile(
-                Icons.layers, 'Match', Color.fromARGB(255, 91, 25, 184)),
+                Icons.layers, 'Match', const Color(0xFF3F56FF)),
           ],
         ),
       ],
@@ -42,7 +42,7 @@ class Middle extends StatelessWidget {
 
   Widget buildListTile(IconData icon, String title, Color iconColor) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -51,13 +51,13 @@ class Middle extends StatelessWidget {
             color: Colors.grey.withOpacity(0.1),
             spreadRadius: 2,
             blurRadius: 4,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: ListTile(
         leading: Icon(icon, color: iconColor),
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         onTap: () {},
       ),
     );

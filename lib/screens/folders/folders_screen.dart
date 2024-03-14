@@ -13,20 +13,11 @@ class FolderScreen extends StatefulWidget {
 }
 
 class _FolderScreenState extends State<FolderScreen> {
-  final ScrollController _scrollController = ScrollController();
-  bool _showBackToTopButton = false;
   List<dynamic> topicDetails = [];
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.offset >= 200) {
-        setState(() => _showBackToTopButton = true);
-      } else {
-        setState(() => _showBackToTopButton = false);
-      }
-    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ModalRoute.of(context)?.settings.arguments != null) {
         final args = ModalRoute.of(context)?.settings.arguments as Map;
@@ -49,17 +40,6 @@ class _FolderScreenState extends State<FolderScreen> {
     } catch (e) {
       print("Failed to load topic details: $e");
     }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollToTop() {
-    _scrollController.animateTo(0,
-        duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
   }
 
   @override
@@ -105,7 +85,6 @@ class _FolderScreenState extends State<FolderScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          controller: _scrollController,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(15.0),
@@ -168,7 +147,9 @@ class _FolderScreenState extends State<FolderScreen> {
                     height: 10,
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _showBottomSheet(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: Color(0xFF4454FF),
                       shape: BeveledRectangleBorder(
@@ -192,7 +173,7 @@ class _FolderScreenState extends State<FolderScreen> {
                 itemCount: topicDetails.length,
                 itemBuilder: (context, index) {
                   var topic = topicDetails[index]['topic'];
-                  
+
                   return TopicInFolder(
                     image: topic['ownerId']['profileImage'] ??
                         "", // Adjust based on your data structure
@@ -213,12 +194,96 @@ class _FolderScreenState extends State<FolderScreen> {
           ],
         ),
       ),
-      floatingActionButton: _showBackToTopButton
-          ? FloatingActionButton(
-              onPressed: _scrollToTop,
-              child: Icon(Icons.arrow_upward),
-            )
-          : null,
+    );
+  }
+
+  Future<void> _showBottomSheet(BuildContext context) async {
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        'Sort terms',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                        color: Colors.grey.shade300,
+                        child: const SizedBox(
+                            height: 1.0, width: double.infinity)),
+                    ListTile(
+                      title: const Text(
+                        'In original order',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color(0xFF3F56FF)),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Container(
+                        color: Colors.grey.shade300,
+                        child: const SizedBox(
+                            height: 1.0, width: double.infinity)),
+                    ListTile(
+                      title: const Text('Alphabetically',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Color(0xFF3F56FF))),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10.0),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white,
+                ),
+                child: ListTile(
+                  title: const Text(
+                    'Cancel',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF3F56FF),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18.0,
+                      letterSpacing: -1.0,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              const SizedBox(height: 30.0)
+            ],
+          ),
+        );
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      backgroundColor:
+          Colors.transparent, // Đặt là transparent để có thể tùy chỉnh
     );
   }
 }

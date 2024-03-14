@@ -30,10 +30,7 @@ final Map<String, WidgetBuilder> routes = {
   ProfileScreen.routeName: (context) => ProfileScreen(),
   ProfileEditScreen.routeName: (context) => const ProfileEditScreen(),
   RegisterSuccessScreen.routeName: (context) => const RegisterSuccessScreen(),
-  FlipCardScreen.routeName: (context) {
-    final topicId = ModalRoute.of(context)!.settings.arguments as String;
-    return FlipCardScreen(topicId: topicId);
-  },
   ProfileChangePassword.routeName: (context) => const ProfileChangePassword(),
+  FlipCardScreen.routeName: (context) => const FlipCardScreen(),
   FolderScreen.routeName: (context) => const FolderScreen(),
 };

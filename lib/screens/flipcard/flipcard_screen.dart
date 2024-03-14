@@ -7,8 +7,7 @@ import 'components/flipcard_middle.dart';
 
 class FlipCardScreen extends StatefulWidget {
   static String routeName = "/flipcards";
-  final String topicId;
-  const FlipCardScreen({Key? key, required this.topicId}) : super(key: key);
+  const FlipCardScreen({Key? key}) : super(key: key);
 
   @override
   _FlipCardScreenState createState() => _FlipCardScreenState();
@@ -20,35 +19,23 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
   Map<String, dynamic> userInfo = {};
   String token = '';
   Map<String, dynamic> topics = {};
-  final ScrollController _scrollController = ScrollController();
-  bool _showBackToTopButton = false;
-
-  void _scrollToTop() {
-    _scrollController.animateTo(0,
-        duration: Duration(milliseconds: 200), curve: Curves.easeInOut);
-  }
+  late String topicId;
 
   @override
   void initState() {
     super.initState();
-    loadTopics();
-    pageController.addListener(() {
-      int next = pageController.page!.round();
-      if (currentPage != next) {
-        setState(() {
-          currentPage = next;
-        });
-      }
-    });
-    _scrollController.addListener(() {
-      setState(() {
-        if (_scrollController.offset >= 200) {
-          _showBackToTopButton = true;
-        } else {
-          _showBackToTopButton = false;
-        }
-      });
-    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map && args.containsKey("_id")) {
+      topicId = args["_id"];
+      loadTopics();
+    } else {
+      print('Invalid arguments. Cannot load topics.');
+    }
   }
 
   Future<void> loadTopics() async {
@@ -64,7 +51,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
       await getTopicByUserAPI(token).then((value) => setState(() {
             userInfo = value['user'] ?? {};
           }));
-      await getVocabularyByTopicId(widget.topicId, token).then((value) {
+      await getVocabularyByTopicId(topicId, token).then((value) {
         if (mounted) {
           setState(() {
             topics = value ?? {};
@@ -79,6 +66,11 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map;
+    String _title = args['title'];
+    String _username = args['username'];
+    String _image = args['image'];
+    String _terms = args['terms'];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF6F7FB),
@@ -107,8 +99,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
         child: Container(
           color: const Color(0xFFF6F7FB),
           child: ListView(
-            controller: _scrollController,
-            physics: ClampingScrollPhysics(),
+            physics: AlwaysScrollableScrollPhysics(),
             children: <Widget>[
               Header(
                 pageController: pageController,
@@ -116,15 +107,22 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
                 vocabularies: topics['vocabularies'] ?? [],
               ),
               Middle(
-                title: 'Title',
+                title: _title,
                 listTile: ListTile(
                   leading: CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(userInfo['profileImage'] ?? ''),
+                    backgroundImage: NetworkImage(_image),
                   ),
                   title: Text(
-                    userInfo['username'] ?? '',
+                    _username,
                     style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    '$_terms terms',
+                    style: const TextStyle(
+                        color: Colors.grey,
+                        fontFamily: 'Roboto',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -136,19 +134,12 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
           ),
         ),
       ),
-      floatingActionButton: _showBackToTopButton
-          ? FloatingActionButton(
-              onPressed: _scrollToTop,
-              child: Icon(Icons.arrow_upward),
-            )
-          : null,
     );
   }
 
   @override
   void dispose() {
     pageController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 }
