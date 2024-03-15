@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/screens/achievements/achievement_screen.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 
@@ -106,7 +107,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ProfileMenu(
                 text: "Achievements",
                 icon: "assets/icons/achievement icon.svg",
-                press: () {},
+                press: () {
+                  Navigator.pushNamed(context, AchievementScreen.routeName);
+                },
               ),
               ProfileMenu(
                 text: "Settings",

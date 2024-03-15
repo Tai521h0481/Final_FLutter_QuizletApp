@@ -11,14 +11,14 @@ import 'package:shop_app/screens/home/components/special_folders.dart';
 import '../../products/products_screen.dart';
 import 'section_title.dart';
 
-class PopularProducts extends StatefulWidget {
-  const PopularProducts({super.key});
+class Folders extends StatefulWidget {
+  const Folders({super.key});
 
   @override
-  State<PopularProducts> createState() => _PopularProductsState();
+  State<Folders> createState() => _PopularProductsState();
 }
 
-class _PopularProductsState extends State<PopularProducts> {
+class _PopularProductsState extends State<Folders> {
   List<dynamic> folders = [];
   Map<String, dynamic> userInfo = {};
 

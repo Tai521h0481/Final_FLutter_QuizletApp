@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
+import 'package:shop_app/screens/home/components/new_user.dart';
 import 'package:shop_app/screens/home/components/special_cards.dart';
 
 import 'section_title.dart';
 
-class SpecialOffers extends StatefulWidget {
-  const SpecialOffers({Key? key}) : super(key: key);
+class Topics extends StatefulWidget {
+  const Topics({Key? key}) : super(key: key);
 
   @override
   _SpecialOffersState createState() => _SpecialOffersState();
 }
 
-class _SpecialOffersState extends State<SpecialOffers> {
+class _SpecialOffersState extends State<Topics> {
   List<dynamic> topics = [];
   Map<String, dynamic> userInfo = {};
 
@@ -46,7 +47,7 @@ class _SpecialOffersState extends State<SpecialOffers> {
   @override
   Widget build(BuildContext context) {
     if (topics.isEmpty) {
-      return Container();
+      return NewUser();
     }
 
     return Column(
@@ -72,7 +73,8 @@ class _SpecialOffersState extends State<SpecialOffers> {
                         "title": topics[index]["topicNameEnglish"],
                         'image': userInfo["profileImage"] ?? '',
                         'username': userInfo["username"] ?? '',
-                        'terms': topics[index]["vocabularyCount"].toString() ?? '',
+                        'terms':
+                            topics[index]["vocabularyCount"].toString() ?? '',
                       });
                 },
               ),

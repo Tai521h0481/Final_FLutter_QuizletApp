@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'components/discount_banner.dart';
+import 'components/banner.dart';
 import 'components/home_header.dart';
-import 'components/popular_product.dart';
-import 'components/special_offers.dart';
+import 'components/folders.dart';
+import 'components/topics.dart';
 
 class HomeScreen extends StatelessWidget {
   static String routeName = "/home";
@@ -24,9 +24,9 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               DiscountBanner(),
-              SpecialOffers(),
+              Topics(),
               SizedBox(height: 20),
-              PopularProducts(),
+              Folders(),
               SizedBox(height: 20),
             ],
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/components/product_card.dart';
-import 'package:shop_app/models/Product.dart';
+import 'package:shop_app/components/achivement_card.dart';
+import 'package:shop_app/models/Achievement.dart';
 
 import '../details/details_screen.dart';
 
@@ -26,13 +26,13 @@ class ProductsScreen extends StatelessWidget {
               mainAxisSpacing: 20,
               crossAxisSpacing: 16,
             ),
-            itemBuilder: (context, index) => ProductCard(
-              product: demoProducts[index],
+            itemBuilder: (context, index) => AchievementCard(
+              achievement: demoProducts[index],
               onPress: () => Navigator.pushNamed(
                 context,
                 DetailsScreen.routeName,
                 arguments:
-                    ProductDetailsArguments(product: demoProducts[index]),
+                    AchievementDetailsArguments(achievement: demoProducts[index]),
               ),
             ),
           ),

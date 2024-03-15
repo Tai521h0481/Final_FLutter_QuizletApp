@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/favorite/favorite_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
+import 'package:shop_app/screens/library/library_screen.dart';
 import 'package:shop_app/screens/profile/profile_screen.dart';
 
 const Color inActiveIconColor = Color(0xFF5C667A);
@@ -32,9 +33,7 @@ class _InitScreenState extends State<InitScreen> {
     const HomeScreen(),
     const FavoriteScreen(),
     Container(),
-    const Center(
-      child: Text("Chat"),
-    ),
+    LibraryScreen(),
     ProfileScreen()
   ];
 
@@ -122,7 +121,7 @@ class _InitScreenState extends State<InitScreen> {
       body: pages[currentSelectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFFF3F7F8),
+        backgroundColor: Colors.white,
         selectedItemColor: const Color(0xFF4C56FF),
         unselectedItemColor: inActiveIconColor,
         currentIndex: currentSelectedIndex,

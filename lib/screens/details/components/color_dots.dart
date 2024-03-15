@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/models/Achievement.dart';
 
 import '../../../components/rounded_icon_btn.dart';
 import '../../../constants.dart';
-import '../../../models/Product.dart';
 
 class ColorDots extends StatelessWidget {
   const ColorDots({
     Key? key,
-    required this.product,
+    required this.achievement,
   }) : super(key: key);
 
-  final Product product;
+  final Achievement achievement;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,9 @@ class ColorDots extends StatelessWidget {
       child: Row(
         children: [
           ...List.generate(
-            product.colors.length,
+            achievement.colors.length,
             (index) => ColorDot(
-              color: product.colors[index],
+              color: achievement.colors[index],
               isSelected: index == selectedColor,
             ),
           ),

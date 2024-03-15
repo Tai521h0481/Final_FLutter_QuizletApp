@@ -1,7 +1,10 @@
 import 'package:flutter/widgets.dart';
+import 'package:shop_app/screens/achievements/achievement_screen.dart';
+import 'package:shop_app/screens/achievements/components/achievement.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 import 'package:shop_app/screens/folders/folders_screen.dart';
+import 'package:shop_app/screens/library/library_screen.dart';
 import 'package:shop_app/screens/products/products_screen.dart';
 import 'package:shop_app/screens/profile/components/profile_change_password.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
@@ -26,11 +29,13 @@ final Map<String, WidgetBuilder> routes = {
   SignUpScreen.routeName: (context) => const SignUpScreen(),
   HomeScreen.routeName: (context) => const HomeScreen(),
   ProductsScreen.routeName: (context) => const ProductsScreen(),
-  DetailsScreen.routeName: (context) => const DetailsScreen(),
+  AchievementComponent.routeName: (context) => const AchievementComponent(),
   ProfileScreen.routeName: (context) => ProfileScreen(),
   ProfileEditScreen.routeName: (context) => const ProfileEditScreen(),
   RegisterSuccessScreen.routeName: (context) => const RegisterSuccessScreen(),
   ProfileChangePassword.routeName: (context) => const ProfileChangePassword(),
   FlipCardScreen.routeName: (context) => const FlipCardScreen(),
   FolderScreen.routeName: (context) => const FolderScreen(),
+  LibraryScreen.routeName: (context) => const LibraryScreen(),
+  AchievementScreen.routeName:(context) => const AchievementScreen(),
 };

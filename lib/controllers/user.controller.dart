@@ -168,9 +168,9 @@ Future<Map<String, dynamic>> uploadAvatar(
   }
 }
 
-// create achivement 
-Future<Map<String, dynamic>> createAchivementAPI(String token, String achivementID) async {
-  var uri = Uri.parse(createAchivementUrl + achivementID);
+// create achievement 
+Future<Map<String, dynamic>> createAchievementAPI(String token, String achievementID) async {
+  var uri = Uri.parse(createAchievementUrl + achievementID);
 
   var response = await http.post(
     uri,
@@ -179,7 +179,7 @@ Future<Map<String, dynamic>> createAchivementAPI(String token, String achivement
       'token': '$token',
     },
     body: jsonEncode({
-      "achieveId": achivementID,
+      "achieveId": achievementID,
     }),
   );
 

@@ -1,7 +1,9 @@
-import 'Product.dart';
+
+
+import 'package:shop_app/models/Achievement.dart';
 
 class Cart {
-  final Product product;
+  final Achievement product;
   final int numOfItem;
 
   Cart({required this.product, required this.numOfItem});

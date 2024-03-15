@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shop_app/models/Achievement.dart';
-import 'package:shop_app/screens/achievements/components/achievement.dart';
+import 'package:shop_app/screens/details/components/color_dots.dart';
+import 'package:shop_app/screens/details/components/achievement_description.dart';
 import 'package:shop_app/screens/details/components/achievement_images.dart';
+import 'package:shop_app/screens/details/components/top_rounded_container.dart';
 
-import 'components/color_dots.dart';
-import 'components/achievement_description.dart';
-import 'components/top_rounded_container.dart';
 
-class DetailsScreen extends StatelessWidget {
-  static String routeName = "/achievements";
+class AchievementComponent extends StatelessWidget {
+  static String routeName = "/achievement_details";
 
-  const DetailsScreen({super.key});
+  const AchievementComponent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +105,7 @@ class DetailsScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
               },
-              child: const Text("Add To Cart"),
+              child: const Text("Set as Avatar"),
             ),
           ),
         ),

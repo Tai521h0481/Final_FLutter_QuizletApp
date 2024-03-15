@@ -9,7 +9,7 @@ String getTopicByUser = users + "/get-topic-by-user";
 String updateUsername = users + "/profiles/";
 String uploadAvatarUrl = users + "/profiles/change-profile-image/";
 String changePasswordUrl = users + "/profiles/password/";
-String createAchivementUrl = users + "/achievement/";
+String createAchievementUrl = users + "/achievement/";
 
 // topic
 String topic = baseUrl + "/topics";

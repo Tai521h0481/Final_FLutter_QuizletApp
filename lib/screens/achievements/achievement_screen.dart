@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:shop_app/components/achivement_card.dart';
 import 'package:shop_app/models/Achievement.dart';
+import 'package:shop_app/screens/achievements/components/achievement.dart';
 
-import '../details/details_screen.dart';
 
-class FavoriteScreen extends StatelessWidget {
-  const FavoriteScreen({super.key});
+class AchievementScreen extends StatelessWidget {
+  static String routeName = "/achievement";
+  const AchievementScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(LineAwesomeIcons.angle_left),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: Column(
         children: [
           Text(
-            "Favorites",
+            "Achievements",
             style: Theme.of(context).textTheme.titleLarge,
           ),
           Expanded(
@@ -31,7 +39,7 @@ class FavoriteScreen extends StatelessWidget {
                   achievement: demoProducts[index],
                   onPress: () => Navigator.pushNamed(
                     context,
-                    DetailsScreen.routeName,
+                    AchievementComponent.routeName,
                     arguments:
                         AchievementDetailsArguments(achievement: demoProducts[index]),
                   ),

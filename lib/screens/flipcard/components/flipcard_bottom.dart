@@ -86,7 +86,7 @@ class _BottomState extends State<Bottom> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.white,
+                  color: Color(0xFFEDEDEF),
                 ),
                 child: Column(
                   children: [
@@ -101,8 +101,9 @@ class _BottomState extends State<Bottom> {
                       ),
                     ),
                     Container(
-                        color: Colors.grey.shade300,
-                        child: const SizedBox(height: 1.0, width: double.infinity)),
+                        color: Color(0xFFB2B2B2),
+                        child: const SizedBox(
+                            height: 1.0, width: double.infinity)),
                     ListTile(
                       title: const Text(
                         'In original order',
@@ -117,8 +118,9 @@ class _BottomState extends State<Bottom> {
                       },
                     ),
                     Container(
-                        color: Colors.grey.shade300,
-                        child: const SizedBox(height: 1.0, width: double.infinity)),
+                        color: Color(0xFFB2B2B2),
+                        child: const SizedBox(
+                            height: 1.0, width: double.infinity)),
                     ListTile(
                       title: const Text('Alphabetically',
                           textAlign: TextAlign.center,

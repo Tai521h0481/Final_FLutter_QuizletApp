@@ -175,17 +175,19 @@ class _FolderScreenState extends State<FolderScreen> {
                   var topic = topicDetails[index]['topic'];
 
                   return TopicInFolder(
-                    image: topic['ownerId']['profileImage'] ??
-                        "", // Adjust based on your data structure
+                    image: topic['ownerId']['profileImage'] ?? "",
                     title: topic['topicNameEnglish'] ?? 'Title',
                     words: topic['vocabularyCount'] ?? 0,
                     name: topic['ownerId']['username'] ?? 'Name',
                     press: () {
-                      Navigator.pushNamed(
-                        context,
-                        FlipCardScreen.routeName,
-                        arguments: topic["_id"],
-                      );
+                      Navigator.pushNamed(context, FlipCardScreen.routeName,
+                          arguments: {
+                            "_id": topic["_id"],
+                            "title": topic["topicNameEnglish"],
+                            'image': topic['ownerId']['profileImage'] ?? '',
+                            'username': topic['ownerId']['username'] ?? '',
+                            'terms': topic['vocabularyCount'].toString() ?? '',
+                          });
                     },
                   );
                 },
@@ -213,20 +215,6 @@ class _FolderScreenState extends State<FolderScreen> {
                 ),
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text(
-                        'Sort terms',
-                        style: TextStyle(
-                          fontSize: 12.0,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                        color: Colors.grey.shade300,
-                        child: const SizedBox(
-                            height: 1.0, width: double.infinity)),
                     ListTile(
                       title: const Text(
                         'In original order',
@@ -283,7 +271,7 @@ class _FolderScreenState extends State<FolderScreen> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       backgroundColor:
-          Colors.transparent, // Đặt là transparent để có thể tùy chỉnh
+          Colors.transparent,
     );
   }
 }
