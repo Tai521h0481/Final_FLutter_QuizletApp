@@ -24,10 +24,11 @@ class AchievementCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onPress,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             AspectRatio(
-              aspectRatio: 1.02,
+              aspectRatio: aspectRetio,
               child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -42,42 +43,17 @@ class AchievementCard extends StatelessWidget {
               achievement.title,
               style: Theme.of(context).textTheme.bodyMedium,
               maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "\$${achievement.price}",
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: kPrimaryColor,
-                  ),
+            Center(
+              child: Text(
+                "\$${achievement.price}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: kPrimaryColor,
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap: () {},
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    height: 24,
-                    width: 24,
-                    decoration: BoxDecoration(
-                      color: achievement.isFavourite
-                          ? kPrimaryColor.withOpacity(0.15)
-                          : kSecondaryColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: SvgPicture.asset(
-                      "assets/icons/Heart Icon_2.svg",
-                      colorFilter: ColorFilter.mode(
-                          achievement.isFavourite
-                              ? const Color(0xFFFF4848)
-                              : const Color(0xFFDBDEE4),
-                          BlendMode.srcIn),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             )
           ],
         ),

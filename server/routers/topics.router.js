@@ -21,7 +21,8 @@ const {getTopicById,
     userLearnPublicTopic,
     getFolderByTopicId,
     getBookmarkVocabInTopic,
-    getAllPublicTopics} = require('../controllers/topics.controller');
+    getAllPublicTopics,
+    findPublicTopic} = require('../controllers/topics.controller');
 
 // get all topics (tested)
 topicsRouter.get("/", getAllTopics);

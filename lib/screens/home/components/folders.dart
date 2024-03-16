@@ -8,7 +8,6 @@ import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 import 'package:shop_app/screens/folders/folders_screen.dart';
 import 'package:shop_app/screens/home/components/special_folders.dart';
 
-import '../../products/products_screen.dart';
 import 'section_title.dart';
 
 class Folders extends StatefulWidget {
@@ -59,7 +58,7 @@ class _PopularProductsState extends State<Folders> {
           child: SectionTitle(
             title: "Folders",
             press: () {
-              Navigator.pushNamed(context, ProductsScreen.routeName);
+              
             },
           ),
         ),

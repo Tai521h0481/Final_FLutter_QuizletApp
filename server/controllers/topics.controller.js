@@ -250,6 +250,20 @@ const viewTopicIsPublic = async (req, res) => {
     }
 }
 
+const findPublicTopic = async (req, res) => {
+    const userId = req.params.userId || req.query.userId;
+    try {
+        const publicTopics = await Topic.find({ isPublic: true, userId: { $ne: userId } })
+        if(publicTopics.length === 0){
+            res.status(404).json({error: "Topics not found"});
+            return;
+        }
+        res.status(200).json({publicTopics});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 const userLearnPublicTopic = async (req, res) => {
     const topicId = req.params.id || req.query.id;
     const userId = req.user.data._id;       
@@ -322,5 +336,6 @@ module.exports = {
     userLearnPublicTopic,
     getFolderByTopicId,
     getBookmarkVocabInTopic,
-    getAllPublicTopics
+    getAllPublicTopics,
+    findPublicTopic
 }

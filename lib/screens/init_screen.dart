@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/constants.dart';
-import 'package:shop_app/screens/favorite/favorite_screen.dart';
+import 'package:shop_app/screens/discover/discover_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/library/library_screen.dart';
 import 'package:shop_app/screens/profile/profile_screen.dart';
+import 'package:shop_app/screens/studyset/studyset_screen.dart';
 
 const Color inActiveIconColor = Color(0xFF5C667A);
 
@@ -31,7 +32,7 @@ class _InitScreenState extends State<InitScreen> {
 
   final pages = [
     const HomeScreen(),
-    const FavoriteScreen(),
+    const DiscoverScreen(),
     Container(),
     LibraryScreen(),
     ProfileScreen()
@@ -62,12 +63,13 @@ class _InitScreenState extends State<InitScreen> {
               child: ListTile(
                 leading: const Icon(Icons.flip_to_front_rounded),
                 title: const Text(
-                  'Module',
+                  'Study Set',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                onTap: () {
-                  // Handle EDIT action
+                onTap: () async {
                   Navigator.pop(context);
+
+                  await Navigator.pushNamed(context, StudySetScreen.routeName);
                 },
               ),
             ),
