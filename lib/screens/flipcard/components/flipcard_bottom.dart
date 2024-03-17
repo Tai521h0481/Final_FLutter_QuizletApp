@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/screens/flipcard/components/buildTerm.dart';
 
 class Bottom extends StatefulWidget {
-  Bottom({
+  final int currentPage;
+  final List<dynamic> vocabularies;
+
+  const Bottom({
     Key? key,
     required this.vocabularies,
     required this.currentPage,
   }) : super(key: key);
-
-  final int currentPage;
-  final List<dynamic> vocabularies;
 
   @override
   State<Bottom> createState() => _BottomState();
@@ -17,6 +17,40 @@ class Bottom extends StatefulWidget {
 
 class _BottomState extends State<Bottom> {
   String _currentSort = 'Original';
+  List<dynamic> _sortedVocabularies = [];
+
+  @override
+  void didUpdateWidget(Bottom oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Check if the vocabularies list has been updated.
+    if (widget.vocabularies != oldWidget.vocabularies) {
+      _updateSortedVocabularies();
+    }
+  }
+
+  void _updateSortedVocabularies() {
+    setState(() {
+      _sortedVocabularies = List.from(widget.vocabularies);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _updateSortedVocabularies(); // Use the same logic to initialize _sortedVocabularies.
+  }
+
+  void _sortVocabularies(String sortType) {
+    setState(() {
+      if (sortType == 'Alphabetically') {
+        _sortedVocabularies
+            .sort((a, b) => a["englishWord"].compareTo(b["englishWord"]));
+      } else if (sortType == 'Original') {
+        _sortedVocabularies = List.from(widget.vocabularies);
+      }
+      _currentSort = sortType;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +98,9 @@ class _BottomState extends State<Bottom> {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: widget.vocabularies.length,
+          itemCount: _sortedVocabularies.length,
           itemBuilder: (context, index) {
-            return CreateTerm(widget.vocabularies[index]["englishWord"]);
+            return CreateTerm(_sortedVocabularies[index]["englishWord"]);
           },
         ),
         const SizedBox(height: 20),
@@ -114,6 +148,7 @@ class _BottomState extends State<Bottom> {
                         setState(() {
                           _currentSort = 'Original';
                         });
+                        _sortVocabularies('Original');
                         Navigator.pop(context);
                       },
                     ),
@@ -129,6 +164,7 @@ class _BottomState extends State<Bottom> {
                         setState(() {
                           _currentSort = 'Alphabetically';
                         });
+                        _sortVocabularies('Alphabetically');
                         Navigator.pop(context);
                       },
                     ),
@@ -165,8 +201,7 @@ class _BottomState extends State<Bottom> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      backgroundColor:
-          Colors.transparent, // Đặt là transparent để có thể tùy chỉnh
+      backgroundColor: Colors.transparent,
     );
   }
 }

@@ -6,6 +6,9 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double imageSize = screenWidth * 0.4;
+
     return Container(
       width: double.infinity,
       height: 250,
@@ -15,7 +18,7 @@ class HomeHeader extends StatelessWidget {
           Container(
             width: double.infinity,
             height: 200,
-            color: const Color(0xFF4055FC), // Màu của container trên cùng
+            color: const Color(0xFF465BB4), // Màu của container trên cùng
             child: Stack(
               children: [
                 const Positioned(
@@ -48,17 +51,27 @@ class HomeHeader extends StatelessWidget {
           Positioned(
             right: 0,
             bottom: 0,
-            child: Image.asset(
-              "assets/images/discovery.jpg",
-              height: 100,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: Image.asset(
+                "assets/images/discover1.png",
+                height: 80,
+                width: imageSize,
+              ),
             ),
           ),
           Positioned(
             bottom: 0,
             left: 0,
-            child: Image.asset(
-              "assets/images/discovery.jpg",
-              height: 100,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: Image.asset(
+                "assets/images/discover1.png",
+                height: 80,
+                width: imageSize,
+              ),
             ),
           ),
         ],

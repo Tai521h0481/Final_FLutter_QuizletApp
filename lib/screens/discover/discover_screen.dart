@@ -14,29 +14,24 @@ class DiscoverScreen extends StatefulWidget {
 }
 
 class _FolderScreenState extends State<DiscoverScreen> {
-  List<dynamic> topicDetails = [];
+  List<dynamic> publicTopicDetails = [];
+  String _currentSort = 'Original';
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ModalRoute.of(context)?.settings.arguments != null) {
-        final args = ModalRoute.of(context)?.settings.arguments as Map;
-        String folderID = args['folderID'];
-        loadTopicDetails(folderID);
-      }
-    });
+    loadPublicTopicDetails();
   }
 
-  Future<void> loadTopicDetails(String id) async {
+  Future<void> loadPublicTopicDetails() async {
     final prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
 
     try {
-      Map<String, dynamic> data = await getTopicByFolderID(id, token);
-      List<dynamic> topicsFromAPI = data['topics'];
+      Map<String, dynamic> data = await getPublicTopic(token);
+      List<dynamic> topics = data['topics'];
       setState(() {
-        topicDetails = topicsFromAPI;
+        publicTopicDetails = topics;
       });
     } catch (e) {
       print("Failed to load topic details: $e");
@@ -45,54 +40,7 @@ class _FolderScreenState extends State<DiscoverScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final args = ModalRoute.of(context)?.settings.arguments as Map;
-    // String _title = args['title'];
-    // String _username = args['username'];
-    // String _profileImage = args['image'];
-    // int _sets = args['sets'];
-
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text(
-      //     'Discover',
-      //     style: TextStyle(
-      //       color: Color(0xFF444E66),
-      //       fontSize: 25,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      //   leading: IconButton(
-      //     icon: const Icon(
-      //       Icons.arrow_back,
-      //       size: 30,
-      //       color: Color(0xFF444E66),
-      //     ),
-      //     onPressed: () {
-      //       Navigator.pop(context);
-      //     },
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //         onPressed: () {},
-      //         icon: const Icon(
-      //           Icons.add,
-      //           size: 30,
-      //           color: Color(0xFF444E66),
-      //         )),
-      //     IconButton(
-      //       icon: const Icon(
-      //         Icons.more_horiz,
-      //         size: 30,
-      //         color: Color(0xFF444E66),
-      //       ),
-      //       onPressed: () {},
-      //     ),
-      //     const SizedBox(
-      //       width: 10,
-      //     )
-      //   ],
-      // ),
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(250),
         child: HomeHeader(),
@@ -104,40 +52,52 @@ class _FolderScreenState extends State<DiscoverScreen> {
             padding: const EdgeInsets.all(15.0),
             child: ListView(
               children: <Widget>[
-                // Container(
-                //   width: double.infinity,
-                //   child: Image.asset(
-                //     'assets/images/discovery.jpg',
-                //   ),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: topicDetails.length,
-                    itemBuilder: (context, index) {
-                      var topic = topicDetails[index]['topic'];
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      _currentSort,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 85, 85, 85)),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.sort,
+                      ),
+                      color: const Color(0xFF555555),
+                      onPressed: () {
+                        _showBottomSheet(context);
+                      },
+                    )
+                  ],
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: publicTopicDetails.length,
+                  itemBuilder: (context, index) {
+                    var topic = publicTopicDetails[index];
 
-                      return TopicInFolder(
-                        image: topic['ownerId']['profileImage'] ?? "",
-                        title: topic['topicNameEnglish'] ?? 'Title',
-                        words: topic['vocabularyCount'] ?? 0,
-                        name: topic['ownerId']['username'] ?? 'Name',
-                        press: () {
-                          Navigator.pushNamed(context, FlipCardScreen.routeName,
-                              arguments: {
-                                "_id": topic["_id"],
-                                "title": topic["topicNameEnglish"],
-                                'image': topic['ownerId']['profileImage'] ?? '',
-                                'username': topic['ownerId']['username'] ?? '',
-                                'terms':
-                                    topic['vocabularyCount'].toString() ?? '',
-                              });
-                        },
-                      );
-                    },
-                  ),
+                    return TopicInFolder(
+                      image: topic['ownerId']['profileImage'] ?? "",
+                      title: topic['topicNameEnglish'] ?? 'Title',
+                      words: topic['vocabularyCount'] ?? 0,
+                      name: topic['ownerId']['username'] ?? 'Name',
+                      press: () {
+                        Navigator.pushNamed(context, FlipCardScreen.routeName,
+                            arguments: {
+                              "_id": topic["_id"],
+                              "title": topic["topicNameEnglish"],
+                              'image': topic['ownerId']['profileImage'] ?? '',
+                              'username': topic['ownerId']['username'] ?? '',
+                              'terms':
+                                  topic['vocabularyCount'].toString() ?? '',
+                            });
+                      },
+                    );
+                  },
                 ),
               ],
             ),
@@ -170,6 +130,9 @@ class _FolderScreenState extends State<DiscoverScreen> {
                         style: TextStyle(color: Color(0xFF3F56FF)),
                       ),
                       onTap: () {
+                        setState(() {
+                          _currentSort = 'Original';
+                        });
                         Navigator.pop(context);
                       },
                     ),
@@ -182,6 +145,9 @@ class _FolderScreenState extends State<DiscoverScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Color(0xFF3F56FF))),
                       onTap: () {
+                        setState(() {
+                          _currentSort = 'Alphabetically';
+                        });
                         Navigator.pop(context);
                       },
                     ),
