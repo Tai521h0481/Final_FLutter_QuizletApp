@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/topic.dart';
+import 'package:shop_app/screens/discover/components/header.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 
@@ -51,127 +52,96 @@ class _FolderScreenState extends State<DiscoverScreen> {
     // int _sets = args['sets'];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Discover',
-          style: TextStyle(
-            color: Color(0xFF444E66),
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            size: 30,
-            color: Color(0xFF444E66),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.add,
-                size: 30,
-                color: Color(0xFF444E66),
-              )),
-          IconButton(
-            icon: const Icon(
-              Icons.more_horiz,
-              size: 30,
-              color: Color(0xFF444E66),
-            ),
-            onPressed: () {},
-          ),
-          const SizedBox(
-            width: 10,
-          )
-        ],
+      // appBar: AppBar(
+      //   title: const Text(
+      //     'Discover',
+      //     style: TextStyle(
+      //       color: Color(0xFF444E66),
+      //       fontSize: 25,
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //   ),
+      //   centerTitle: true,
+      //   leading: IconButton(
+      //     icon: const Icon(
+      //       Icons.arrow_back,
+      //       size: 30,
+      //       color: Color(0xFF444E66),
+      //     ),
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //         onPressed: () {},
+      //         icon: const Icon(
+      //           Icons.add,
+      //           size: 30,
+      //           color: Color(0xFF444E66),
+      //         )),
+      //     IconButton(
+      //       icon: const Icon(
+      //         Icons.more_horiz,
+      //         size: 30,
+      //         color: Color(0xFF444E66),
+      //       ),
+      //       onPressed: () {},
+      //     ),
+      //     const SizedBox(
+      //       width: 10,
+      //     )
+      //   ],
+      // ),
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(250),
+        child: HomeHeader(),
       ),
-      body: SafeArea(
-        child: ListView(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 1),
-                  SizedBox(height: 10),
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          ' sets',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        ),
-                        SizedBox(width: 10),
-                        Container(
-                          height: 30,
-                          width: 1,
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        SizedBox(width: 10),
-                        // CircleAvatar(
-                        //   radius: 18,
-                        //   backgroundImage: NetworkImage(
-                        //     _profileImage,
-                        //   ),
-                        // ),
-                        SizedBox(width: 10),
-                        Text(
-                          "_username",
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 73, 73, 73),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: topicDetails.length,
-                itemBuilder: (context, index) {
-                  var topic = topicDetails[index]['topic'];
+      body: Container(
+        color: Color(0xFFF6F7FB),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: ListView(
+              children: <Widget>[
+                // Container(
+                //   width: double.infinity,
+                //   child: Image.asset(
+                //     'assets/images/discovery.jpg',
+                //   ),
+                // ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: topicDetails.length,
+                    itemBuilder: (context, index) {
+                      var topic = topicDetails[index]['topic'];
 
-                  return TopicInFolder(
-                    image: topic['ownerId']['profileImage'] ?? "",
-                    title: topic['topicNameEnglish'] ?? 'Title',
-                    words: topic['vocabularyCount'] ?? 0,
-                    name: topic['ownerId']['username'] ?? 'Name',
-                    press: () {
-                      Navigator.pushNamed(context, FlipCardScreen.routeName,
-                          arguments: {
-                            "_id": topic["_id"],
-                            "title": topic["topicNameEnglish"],
-                            'image': topic['ownerId']['profileImage'] ?? '',
-                            'username': topic['ownerId']['username'] ?? '',
-                            'terms': topic['vocabularyCount'].toString() ?? '',
-                          });
+                      return TopicInFolder(
+                        image: topic['ownerId']['profileImage'] ?? "",
+                        title: topic['topicNameEnglish'] ?? 'Title',
+                        words: topic['vocabularyCount'] ?? 0,
+                        name: topic['ownerId']['username'] ?? 'Name',
+                        press: () {
+                          Navigator.pushNamed(context, FlipCardScreen.routeName,
+                              arguments: {
+                                "_id": topic["_id"],
+                                "title": topic["topicNameEnglish"],
+                                'image': topic['ownerId']['profileImage'] ?? '',
+                                'username': topic['ownerId']['username'] ?? '',
+                                'terms':
+                                    topic['vocabularyCount'].toString() ?? '',
+                              });
+                        },
+                      );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

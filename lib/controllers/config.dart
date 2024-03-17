@@ -16,6 +16,7 @@ String topic = baseUrl + "/topics";
 String getTopic = topic + "/";
 String getTopicById = topic + "/";
 String getTopicByFolderId = topic + "/folders/";
+String getPublicTopicUrl = topic + "/public/getPublicTopic";
 
 // vocab
 String vocab = baseUrl + "/vocabularies";
