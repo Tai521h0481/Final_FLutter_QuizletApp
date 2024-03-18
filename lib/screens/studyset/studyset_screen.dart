@@ -8,12 +8,18 @@ class StudySetScreen extends StatefulWidget {
 }
 
 class _StudySetScreenState extends State<StudySetScreen> {
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController? descriptionController;
+  List<TextEditingController> termControllers = [];
+  List<TextEditingController> definitionControllers = [];
+
   bool showDescription = false;
   List<Widget> containers = [];
   final ScrollController scrollController = ScrollController();
   List<FocusNode> focusNodes = [];
   FocusNode subjectFocusNode = FocusNode();
   FocusNode? descriptionFocusNode;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -21,6 +27,12 @@ class _StudySetScreenState extends State<StudySetScreen> {
     focusNodes = List.generate(4, (_) => FocusNode());
     containers.add(_buildContainer('Term', 'Definition', 0));
     containers.add(_buildContainer('Term', 'Definition', 1));
+    descriptionController = TextEditingController();
+    for (int i = 0; i < 2; i++) {
+      // Starting with 2 term-definition pairs
+      termControllers.add(TextEditingController());
+      definitionControllers.add(TextEditingController());
+    }
     addFocusListeners();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(subjectFocusNode);
@@ -40,7 +52,20 @@ class _StudySetScreenState extends State<StudySetScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.done),
-            onPressed: () {},
+            onPressed: () {
+              String subjectText = subjectController.text;
+              String? descriptionText = descriptionController?.text;
+              List<String> terms = termControllers.map((c) => c.text).toList();
+              List<String> definitions =
+                  definitionControllers.map((c) => c.text).toList();
+
+              print('Subject: $subjectText');
+              print('Description: $descriptionText');
+              for (int i = 0; i < terms.length; i++) {
+                print(
+                    'Term ${i + 1}: ${terms[i]} - Definition ${i + 1}: ${definitions[i]}');
+              }
+            },
           ),
           const SizedBox(width: 10),
         ],
@@ -51,7 +76,7 @@ class _StudySetScreenState extends State<StudySetScreen> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              _buildField('Subject, chapter, unit', 'Title', subjectFocusNode),
+              _buildField('Subject, chapter, unit', 'Title', subjectFocusNode, subjectController),
               if (!showDescription)
                 Align(
                   alignment: Alignment.topRight,
@@ -63,9 +88,12 @@ class _StudySetScreenState extends State<StudySetScreen> {
                 ),
               if (showDescription)
                 _buildField("What's your set about", "Description",
-                    descriptionFocusNode!),
+                    descriptionFocusNode!, descriptionController!),
               SizedBox(height: 20),
               ...containers,
+              SizedBox(
+                height: 200,
+              ),
             ],
           ),
         ),
@@ -93,8 +121,13 @@ class _StudySetScreenState extends State<StudySetScreen> {
 
   void scrollToFocus(FocusNode node) {
     final widgetIndex = focusNodes.indexOf(node);
-    final position =
-        widgetIndex >= 0 ? widgetIndex * 200.0 : 0.0; // Ứớc lượng vị trí cuộn
+    double position = 0.0;
+    if (widgetIndex >= 0) {
+      position = widgetIndex > currentIndex
+          ? widgetIndex * 200.0
+          : widgetIndex * 200.0 - 200.0;
+    }
+    currentIndex = widgetIndex;
 
     scrollController.animateTo(
       position,
@@ -113,6 +146,10 @@ class _StudySetScreenState extends State<StudySetScreen> {
   }
 
   Widget _buildContainer(String subFirst, String subSecond, int index) {
+    while (termControllers.length <= index) {
+      termControllers.add(TextEditingController());
+      definitionControllers.add(TextEditingController());
+    }
     return Column(
       children: [
         SizedBox(height: 10),
@@ -130,10 +167,10 @@ class _StudySetScreenState extends State<StudySetScreen> {
           ),
           child: Column(
             children: [
-              _buildField('', subFirst, focusNodes[index * 2]),
-              SizedBox(height: 10),
-              _buildField('', subSecond, focusNodes[index * 2 + 1]),
-              SizedBox(height: 30),
+              _buildField(
+                  '', subFirst, focusNodes[index * 2], termControllers[index]),
+              _buildField('', subSecond, focusNodes[index * 2 + 1],
+                  definitionControllers[index]),
             ],
           ),
         ),
@@ -141,13 +178,15 @@ class _StudySetScreenState extends State<StudySetScreen> {
     );
   }
 
-  Widget _buildField(String hint, String subTitle, FocusNode focusNode) {
+  Widget _buildField(String hint, String subTitle, FocusNode focusNode,
+      TextEditingController controller) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
+            controller: controller,
             decoration: InputDecoration(
               hintText: hint,
               contentPadding: const EdgeInsets.only(bottom: -5, top: 6),

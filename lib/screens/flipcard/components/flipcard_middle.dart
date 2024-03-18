@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class Middle extends StatelessWidget {
   final Widget listTile;
-  final String title;
-  Middle({required this.listTile, required this.title});
+  final String title, description;
+  Middle({required this.listTile, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -11,29 +11,35 @@ class Middle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             title,
             style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade700),
+                fontWeight: FontWeight.w900,
+                color: Colors.black,
+                fontFamily: 'Roboto'),
           ),
         ),
         listTile,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            description,
+            style: TextStyle(
+                fontSize: 15, color: Colors.grey, fontFamily: 'Roboto'),
+          ),
+        ),
         const SizedBox(height: 10),
         ListView(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           children: <Widget>[
-            buildListTile(Icons.copy_all, 'Flashcards',
-                 const Color(0xFF3F56FF)),
             buildListTile(
-                Icons.school, 'Learn', const Color(0xFF3F56FF)),
-            buildListTile(Icons.check_circle, 'Test',
-                const Color(0xFF3F56FF)),
-            buildListTile(
-                Icons.layers, 'Match', const Color(0xFF3F56FF)),
+                Icons.copy_all, 'Flashcards', const Color(0xFF3F56FF)),
+            buildListTile(Icons.school, 'Learn', const Color(0xFF3F56FF)),
+            buildListTile(Icons.check_circle, 'Test', const Color(0xFF3F56FF)),
+            buildListTile(Icons.layers, 'Match', const Color(0xFF3F56FF)),
           ],
         ),
       ],

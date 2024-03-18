@@ -36,8 +36,8 @@ class _SpecialOffersState extends State<Topics> {
   }
 
   void searchTopic(String query) {
-    final String searchQueryLowercase = query.toLowerCase();
-
+    final String searchQueryLowercase = query.toLowerCase().trim();
+    filteredTopics = topics;
     if (searchQueryLowercase.isEmpty) {
       setState(() {
         filteredTopics = topics;
@@ -93,21 +93,19 @@ class _SpecialOffersState extends State<Topics> {
               filteredTopics.length,
               (index) => SpecialOfferCard(
                 image: userInfo["profileImage"] ?? '',
-                title:
-                    filteredTopics[index]["topicNameEnglish"] ?? '',
+                title: filteredTopics[index]["topicNameEnglish"] ?? '',
                 words: filteredTopics[index]["vocabularyCount"] ?? 0,
                 name: userInfo["username"] ?? '',
                 press: () {
                   Navigator.pushNamed(context, FlipCardScreen.routeName,
                       arguments: {
                         "_id": filteredTopics[index]["_id"],
-                        "title": filteredTopics[index]
-                            ["topicNameEnglish"],
+                        "title": filteredTopics[index]["topicNameEnglish"],
                         'image': userInfo["profileImage"] ?? '',
                         'username': userInfo["username"] ?? '',
-                        'terms': filteredTopics[index]["vocabularyCount"]
-                                .toString() ??
-                            '',
+                        'description' : filteredTopics[index]["descriptionEnglish"] ?? '',
+                        'terms':
+                            filteredTopics[index]["vocabularyCount"].toString(),
                       });
                 },
               ),

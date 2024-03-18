@@ -37,8 +37,7 @@ topicsRouter.get("/public/users/:userId", authentication, checkId(Users, "userId
 // learn public topic (tested)
 topicsRouter.post("/public/learnTopic/:id", authentication, userLearnPublicTopic);
 // create topic (tested)
-topicsRouter.post("/", authentication, 
-validateInput(['topicNameEnglish', 'topicNameVietnamese', 'descriptionEnglish', 'descriptionVietnamese']), importCSV);
+topicsRouter.post("/", authentication, importCSV);
 // update topic (tested)
 topicsRouter.put("/:id", authentication, isExistId(Topic), updateTopic);
 // delete topic (tested)

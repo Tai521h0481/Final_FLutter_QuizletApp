@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/folder.dart';
-import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 import 'package:shop_app/screens/folders/folders_screen.dart';
 import 'package:shop_app/screens/home/components/special_folders.dart';
 
@@ -38,10 +36,8 @@ class _PopularProductsState extends State<Folders> {
   }
 
   void searchFolder(String query) {
-    // In ra console để kiểm tra
-    print("User is searching for: $query");
-    final String searchQueryLowercase = query.toLowerCase();
-
+    final String searchQueryLowercase = query.toLowerCase().trim();
+    filteredFolders = folders;
     if (searchQueryLowercase.isEmpty) {
       setState(() {
         filteredFolders = folders;
@@ -82,7 +78,7 @@ class _PopularProductsState extends State<Folders> {
   Widget build(BuildContext context) {
     var image = userInfo["profileImage"] ?? '';
     var name = userInfo["username"] ?? '';
-    if(filteredFolders.isEmpty){
+    if (filteredFolders.isEmpty) {
       return Container();
     }
     return Column(
@@ -91,9 +87,7 @@ class _PopularProductsState extends State<Folders> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SectionTitle(
             title: "Folders",
-            press: () {
-              
-            },
+            press: () {},
           ),
         ),
         SingleChildScrollView(
@@ -114,8 +108,8 @@ class _PopularProductsState extends State<Folders> {
                     arguments: {
                       'folderID': filteredFolders[index]["_id"],
                       'title': filteredFolders[index]["folderNameEnglish"],
-                      'username' : name,
-                      'image' : "$image",
+                      'username': name,
+                      'image': "$image",
                       'sets': filteredFolders[index]["topicCount"]
                     },
                   );

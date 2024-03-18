@@ -71,6 +71,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
     String _username = args['username'];
     String _image = args['image'];
     String _terms = args['terms'];
+    String _description = args['description'] ?? '';
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF6F7FB),
@@ -109,6 +110,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
               ),
               Middle(
                 title: _title,
+                description: _description,
                 listTile: ListTile(
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(_image),

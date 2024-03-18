@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
+import 'package:shop_app/models/Vocabulary.dart';
 import 'config.dart';
 
 Future<Map<String, dynamic>> getTopicByID(String id, String token) async {
@@ -39,6 +38,27 @@ Future<Map<String, dynamic>> getPublicTopic(String token) async {
     headers: {
       'token': '$token',
     },
+  );
+
+  if (response.statusCode == 200 || response.statusCode != 500) {
+    return json.decode(response.body);
+  } else {
+    throw Exception(
+        'Failed to load topics: Server responded with ${response.statusCode}');
+  }
+}
+
+Future<Map<String, dynamic>> createTopic(
+    String topicNameEnglish,
+    String descriptionEnglish,
+    List<Vocabulary> vocabulary,
+    bool isPublic) async {
+  var response = await http.post(
+    Uri.parse(createTopicUrl),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: json.encode({}),
   );
 
   if (response.statusCode == 200 || response.statusCode != 500) {
