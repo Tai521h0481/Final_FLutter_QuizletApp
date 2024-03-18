@@ -36,8 +36,6 @@ class _SpecialOffersState extends State<Topics> {
   }
 
   void searchTopic(String query) {
-    // In ra console để kiểm tra
-    print("User is searching for: $query");
     final String searchQueryLowercase = query.toLowerCase();
 
     if (searchQueryLowercase.isEmpty) {

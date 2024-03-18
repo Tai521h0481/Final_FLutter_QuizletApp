@@ -23,8 +23,7 @@ class _StudySetScreenState extends State<StudySetScreen> {
     containers.add(_buildContainer('Term', 'Definition', 1));
     addFocusListeners();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(
-          subjectFocusNode); // Auto focus vào field đầu tiên khi mở trang
+      FocusScope.of(context).requestFocus(subjectFocusNode);
     });
   }
 
@@ -32,7 +31,7 @@ class _StudySetScreenState extends State<StudySetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF6F7FB),
+        backgroundColor: Colors.white,
         title: const Text(
           'Create set',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
@@ -53,7 +52,6 @@ class _StudySetScreenState extends State<StudySetScreen> {
           child: Column(
             children: [
               _buildField('Subject, chapter, unit', 'Title', subjectFocusNode),
-              const SizedBox(height: 10),
               if (!showDescription)
                 Align(
                   alignment: Alignment.topRight,

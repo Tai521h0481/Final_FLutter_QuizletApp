@@ -15,13 +15,37 @@ class DiscoverScreen extends StatefulWidget {
 
 class _FolderScreenState extends State<DiscoverScreen> {
   List<dynamic> publicTopics = [];
-  List<dynamic> _sortedVocabularies = [];
+  List<dynamic> filtered = [];
   String _currentSort = 'Original';
+
+  void _handleSearchChange(String query) {
+    setState(() {
+      searchTopic(query);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     loadPublicTopicDetails();
+  }
+
+  void searchTopic(String query) {
+    final String searchQueryLowercase = query.toLowerCase();
+
+    if (searchQueryLowercase.isEmpty) {
+      setState(() {
+        filtered = publicTopics;
+      });
+    } else {
+      setState(() {
+        filtered = filtered.where((topic) {
+          final String topicNameLowercase =
+              topic["topicNameEnglish"].toLowerCase();
+          return topicNameLowercase.contains(searchQueryLowercase);
+        }).toList();
+      });
+    }
   }
 
   Future<void> loadPublicTopicDetails() async {
@@ -33,7 +57,7 @@ class _FolderScreenState extends State<DiscoverScreen> {
       List<dynamic> topics = data['topics'];
       setState(() {
         publicTopics = topics;
-        _sortedVocabularies = publicTopics;
+        filtered = topics;
       });
     } catch (e) {
       print("Failed to load topic details: $e");
@@ -43,9 +67,9 @@ class _FolderScreenState extends State<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
+      appBar: PreferredSize(
         preferredSize: Size.fromHeight(250),
-        child: HomeHeader(),
+        child: HomeHeader(onSearchChanged: _handleSearchChange),
       ),
       body: Container(
         color: Color(0xFFF6F7FB),
@@ -78,9 +102,9 @@ class _FolderScreenState extends State<DiscoverScreen> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: _sortedVocabularies.length,
+                  itemCount: filtered.length,
                   itemBuilder: (context, index) {
-                    var topic = _sortedVocabularies[index];
+                    var topic = filtered[index];
 
                     return TopicInFolder(
                       image: topic['ownerId']['profileImage'] ?? "",
@@ -195,10 +219,10 @@ class _FolderScreenState extends State<DiscoverScreen> {
   void _sortVocabularies(String sortType) {
     setState(() {
       if (sortType == 'Alphabetically') {
-        _sortedVocabularies
-            .sort((a, b) => a["topicNameEnglish"].compareTo(b["topicNameEnglish"]));
+        filtered.sort(
+            (a, b) => a["topicNameEnglish"].compareTo(b["topicNameEnglish"]));
       } else if (sortType == 'Original') {
-        _sortedVocabularies = publicTopics;
+        filtered = publicTopics;
       }
       _currentSort = sortType;
     });

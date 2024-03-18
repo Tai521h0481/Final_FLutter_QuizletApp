@@ -4,6 +4,7 @@ import 'package:shop_app/screens/achievements/components/achievement.dart';
 import 'package:shop_app/screens/discover/discover_screen.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/folders_screen.dart';
+import 'package:shop_app/screens/folders/new_folder_screen.dart';
 import 'package:shop_app/screens/library/library_screen.dart';
 import 'package:shop_app/screens/profile/components/profile_change_password.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
@@ -38,4 +39,5 @@ final Map<String, WidgetBuilder> routes = {
   AchievementScreen.routeName:(context) => const AchievementScreen(),
   DiscoverScreen.routeName:(context) => const DiscoverScreen(),
   StudySetScreen.routeName:(context) => StudySetScreen(),
+  NewFolderScreen.routeName:(context) => const NewFolderScreen(),
 };

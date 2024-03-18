@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/constants.dart';
 import 'package:shop_app/screens/discover/discover_screen.dart';
+import 'package:shop_app/screens/folders/new_folder_screen.dart';
 import 'package:shop_app/screens/home/home_screen.dart';
 import 'package:shop_app/screens/library/library_screen.dart';
 import 'package:shop_app/screens/profile/profile_screen.dart';
@@ -86,30 +87,16 @@ class _InitScreenState extends State<InitScreen> {
                   'Folder',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                onTap: () {
+                onTap: () async {
                   // Handle ADD TOPIC action
                   Navigator.pop(context);
+                  await Navigator.pushNamed(context, NewFolderScreen.routeName);
                 },
               ),
             ),
             Container(
               margin: const EdgeInsets.only(
                   left: 20, top: 5, right: 20, bottom: 30),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: kSecondaryColor.withOpacity(0.1),
-              ),
-              child: ListTile(
-                leading: const Icon(Icons.person_outline_outlined),
-                title: const Text(
-                  'Classroom',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  // Handle REMOVE action
-                  Navigator.pop(context);
-                },
-              ),
             ),
           ],
         );

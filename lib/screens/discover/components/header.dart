@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/screens/home/components/search_field.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({Key? key}) : super(key: key);
+  final Function(String)? onSearchChanged;
+
+  const HomeHeader({Key? key, this.onSearchChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +38,15 @@ class HomeHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Positioned(
+                Positioned(
                   top: 90,
                   left: 0,
                   right: 0,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: SearchField(),
+                    child: SearchField(
+                    onChanged: onSearchChanged,
+                  ),
                   ),
                 ),
               ],
