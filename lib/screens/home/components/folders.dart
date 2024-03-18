@@ -11,7 +11,8 @@ import 'package:shop_app/screens/home/components/special_folders.dart';
 import 'section_title.dart';
 
 class Folders extends StatefulWidget {
-  const Folders({super.key});
+  final String searchQuery;
+  const Folders({Key? key, required this.searchQuery}) : super(key: key);
 
   @override
   State<Folders> createState() => _PopularProductsState();
@@ -19,12 +20,41 @@ class Folders extends StatefulWidget {
 
 class _PopularProductsState extends State<Folders> {
   List<dynamic> folders = [];
+  List<dynamic> filteredFolders = [];
   Map<String, dynamic> userInfo = {};
 
   @override
   void initState() {
     super.initState();
     loadFolder();
+  }
+
+  @override
+  void didUpdateWidget(covariant Folders oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.searchQuery != oldWidget.searchQuery) {
+      searchFolder(widget.searchQuery);
+    }
+  }
+
+  void searchFolder(String query) {
+    // In ra console để kiểm tra
+    print("User is searching for: $query");
+    final String searchQueryLowercase = query.toLowerCase();
+
+    if (searchQueryLowercase.isEmpty) {
+      setState(() {
+        filteredFolders = folders;
+      });
+    } else {
+      setState(() {
+        filteredFolders = folders.where((topic) {
+          final String topicNameLowercase =
+              topic["folderNameEnglish"].toLowerCase();
+          return topicNameLowercase.contains(searchQueryLowercase);
+        }).toList();
+      });
+    }
   }
 
   Future<void> loadFolder() async {
@@ -41,6 +71,7 @@ class _PopularProductsState extends State<Folders> {
       var res = await getFolderByID(userInfo["_id"], token);
       setState(() {
         folders = res['folders'] ?? [];
+        filteredFolders = folders;
       });
     } catch (e) {
       print('Exception occurred while loading topics: $e');
@@ -51,6 +82,9 @@ class _PopularProductsState extends State<Folders> {
   Widget build(BuildContext context) {
     var image = userInfo["profileImage"] ?? '';
     var name = userInfo["username"] ?? '';
+    if(filteredFolders.isEmpty){
+      return Container();
+    }
     return Column(
       children: [
         Padding(
@@ -66,23 +100,23 @@ class _PopularProductsState extends State<Folders> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: List.generate(
-              folders.length,
+              filteredFolders.length,
               (index) => SpecialFolder(
                 image: image,
-                title: folders[index]["folderNameEnglish"] ?? '',
-                words: folders[index]["topicCount"] ?? 0,
+                title: filteredFolders[index]["folderNameEnglish"] ?? '',
+                words: filteredFolders[index]["topicCount"] ?? 0,
                 name: name,
-                sets: folders[index]["topicCount"] ?? 0,
+                sets: filteredFolders[index]["topicCount"] ?? 0,
                 press: () {
                   Navigator.pushNamed(
                     context,
                     FolderScreen.routeName,
                     arguments: {
-                      'folderID': folders[index]["_id"],
-                      'title': folders[index]["folderNameEnglish"],
+                      'folderID': filteredFolders[index]["_id"],
+                      'title': filteredFolders[index]["folderNameEnglish"],
                       'username' : name,
                       'image' : "$image",
-                      'sets': folders[index]["topicCount"]
+                      'sets': filteredFolders[index]["topicCount"]
                     },
                   );
                 },

@@ -8,7 +8,9 @@ import 'package:shop_app/screens/home/components/special_cards.dart';
 import 'section_title.dart';
 
 class Topics extends StatefulWidget {
-  const Topics({Key? key}) : super(key: key);
+  final String searchQuery;
+
+  const Topics({Key? key, required this.searchQuery}) : super(key: key);
 
   @override
   _SpecialOffersState createState() => _SpecialOffersState();
@@ -16,12 +18,41 @@ class Topics extends StatefulWidget {
 
 class _SpecialOffersState extends State<Topics> {
   List<dynamic> topics = [];
+  List<dynamic> filteredTopics = [];
   Map<String, dynamic> userInfo = {};
 
   @override
   void initState() {
     super.initState();
     loadTopics();
+  }
+
+  @override
+  void didUpdateWidget(covariant Topics oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.searchQuery != oldWidget.searchQuery) {
+      searchTopic(widget.searchQuery);
+    }
+  }
+
+  void searchTopic(String query) {
+    // In ra console để kiểm tra
+    print("User is searching for: $query");
+    final String searchQueryLowercase = query.toLowerCase();
+
+    if (searchQueryLowercase.isEmpty) {
+      setState(() {
+        filteredTopics = topics;
+      });
+    } else {
+      setState(() {
+        filteredTopics = topics.where((topic) {
+          final String topicNameLowercase =
+              topic["topicNameEnglish"].toLowerCase();
+          return topicNameLowercase.contains(searchQueryLowercase);
+        }).toList();
+      });
+    }
   }
 
   Future<void> loadTopics() async {
@@ -38,6 +69,7 @@ class _SpecialOffersState extends State<Topics> {
       setState(() {
         topics = data['user']['topicId'] ?? [];
         userInfo = data['user'] ?? {};
+        filteredTopics = topics;
       });
     } catch (e) {
       print('Exception occurred while loading topics: $e');
@@ -46,7 +78,7 @@ class _SpecialOffersState extends State<Topics> {
 
   @override
   Widget build(BuildContext context) {
-    if (topics.isEmpty) {
+    if (filteredTopics.isEmpty) {
       return NewUser();
     }
 
@@ -60,21 +92,24 @@ class _SpecialOffersState extends State<Topics> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: List.generate(
-              topics.length,
+              filteredTopics.length,
               (index) => SpecialOfferCard(
                 image: userInfo["profileImage"] ?? '',
-                title: topics[index]["topicNameEnglish"] ?? '',
-                words: topics[index]["vocabularyCount"] ?? 0,
+                title:
+                    filteredTopics[index]["topicNameEnglish"] ?? '',
+                words: filteredTopics[index]["vocabularyCount"] ?? 0,
                 name: userInfo["username"] ?? '',
                 press: () {
                   Navigator.pushNamed(context, FlipCardScreen.routeName,
                       arguments: {
-                        "_id": topics[index]["_id"],
-                        "title": topics[index]["topicNameEnglish"],
+                        "_id": filteredTopics[index]["_id"],
+                        "title": filteredTopics[index]
+                            ["topicNameEnglish"],
                         'image': userInfo["profileImage"] ?? '',
                         'username': userInfo["username"] ?? '',
-                        'terms':
-                            topics[index]["vocabularyCount"].toString() ?? '',
+                        'terms': filteredTopics[index]["vocabularyCount"]
+                                .toString() ??
+                            '',
                       });
                 },
               ),

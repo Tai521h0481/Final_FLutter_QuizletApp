@@ -14,7 +14,8 @@ class DiscoverScreen extends StatefulWidget {
 }
 
 class _FolderScreenState extends State<DiscoverScreen> {
-  List<dynamic> publicTopicDetails = [];
+  List<dynamic> publicTopics = [];
+  List<dynamic> _sortedVocabularies = [];
   String _currentSort = 'Original';
 
   @override
@@ -31,7 +32,8 @@ class _FolderScreenState extends State<DiscoverScreen> {
       Map<String, dynamic> data = await getPublicTopic(token);
       List<dynamic> topics = data['topics'];
       setState(() {
-        publicTopicDetails = topics;
+        publicTopics = topics;
+        _sortedVocabularies = publicTopics;
       });
     } catch (e) {
       print("Failed to load topic details: $e");
@@ -76,9 +78,9 @@ class _FolderScreenState extends State<DiscoverScreen> {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: publicTopicDetails.length,
+                  itemCount: _sortedVocabularies.length,
                   itemBuilder: (context, index) {
-                    var topic = publicTopicDetails[index];
+                    var topic = _sortedVocabularies[index];
 
                     return TopicInFolder(
                       image: topic['ownerId']['profileImage'] ?? "",
@@ -133,6 +135,7 @@ class _FolderScreenState extends State<DiscoverScreen> {
                         setState(() {
                           _currentSort = 'Original';
                         });
+                        _sortVocabularies('Original');
                         Navigator.pop(context);
                       },
                     ),
@@ -148,6 +151,7 @@ class _FolderScreenState extends State<DiscoverScreen> {
                         setState(() {
                           _currentSort = 'Alphabetically';
                         });
+                        _sortVocabularies('Alphabetically');
                         Navigator.pop(context);
                       },
                     ),
@@ -186,5 +190,17 @@ class _FolderScreenState extends State<DiscoverScreen> {
       ),
       backgroundColor: Colors.transparent,
     );
+  }
+
+  void _sortVocabularies(String sortType) {
+    setState(() {
+      if (sortType == 'Alphabetically') {
+        _sortedVocabularies
+            .sort((a, b) => a["topicNameEnglish"].compareTo(b["topicNameEnglish"]));
+      } else if (sortType == 'Original') {
+        _sortedVocabularies = publicTopics;
+      }
+      _currentSort = sortType;
+    });
   }
 }

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 
 class SearchField extends StatelessWidget {
+  final Function(String)? onChanged;
+
   const SearchField({
     Key? key,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -16,20 +19,19 @@ class SearchField extends StatelessWidget {
       ),
       child: Form(
         child: TextFormField(
-          onChanged: (value) {},
+          onChanged: onChanged,
           decoration: InputDecoration(
-            filled: true,
-            fillColor: kSecondaryColor.withOpacity(0.1),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            border: searchOutlineInputBorder,
-            focusedBorder: searchOutlineInputBorder,
-            enabledBorder: searchOutlineInputBorder,
-            hintText: "Topic, Folder",
-            hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: Icon(Icons.camera_alt_outlined)
-          ),
+              filled: true,
+              fillColor: kSecondaryColor.withOpacity(0.1),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              border: searchOutlineInputBorder,
+              focusedBorder: searchOutlineInputBorder,
+              enabledBorder: searchOutlineInputBorder,
+              hintText: "Topic, Folder",
+              hintStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: Icon(Icons.camera_alt_outlined)),
         ),
       ),
     );

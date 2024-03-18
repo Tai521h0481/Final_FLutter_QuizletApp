@@ -93,6 +93,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
             ),
             onPressed: () {},
           ),
+          SizedBox(width: 10),
         ],
       ),
       body: SafeArea(

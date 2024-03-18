@@ -22,7 +22,6 @@ class _BottomState extends State<Bottom> {
   @override
   void didUpdateWidget(Bottom oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Check if the vocabularies list has been updated.
     if (widget.vocabularies != oldWidget.vocabularies) {
       _updateSortedVocabularies();
     }
@@ -37,19 +36,7 @@ class _BottomState extends State<Bottom> {
   @override
   void initState() {
     super.initState();
-    _updateSortedVocabularies(); // Use the same logic to initialize _sortedVocabularies.
-  }
-
-  void _sortVocabularies(String sortType) {
-    setState(() {
-      if (sortType == 'Alphabetically') {
-        _sortedVocabularies
-            .sort((a, b) => a["englishWord"].compareTo(b["englishWord"]));
-      } else if (sortType == 'Original') {
-        _sortedVocabularies = List.from(widget.vocabularies);
-      }
-      _currentSort = sortType;
-    });
+    _updateSortedVocabularies();
   }
 
   @override
@@ -203,5 +190,17 @@ class _BottomState extends State<Bottom> {
       ),
       backgroundColor: Colors.transparent,
     );
+  }
+
+  void _sortVocabularies(String sortType) {
+    setState(() {
+      if (sortType == 'Alphabetically') {
+        _sortedVocabularies
+            .sort((a, b) => a["englishWord"].compareTo(b["englishWord"]));
+      } else if (sortType == 'Original') {
+        _sortedVocabularies = List.from(widget.vocabularies);
+      }
+      _currentSort = sortType;
+    });
   }
 }

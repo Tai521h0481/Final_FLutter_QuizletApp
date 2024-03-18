@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/library/components/folders.dart';
+import 'package:shop_app/screens/library/components/studysets.dart';
 
 class LibraryScreen extends StatefulWidget {
   static String routeName = "/library";
@@ -8,8 +10,7 @@ class LibraryScreen extends StatefulWidget {
   _LibraryScreenState createState() => _LibraryScreenState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen>
-    with SingleTickerProviderStateMixin {
+class _LibraryScreenState extends State<LibraryScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -28,8 +29,7 @@ class _LibraryScreenState extends State<LibraryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Library',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+        title: const Text('Library', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
         centerTitle: true,
         actions: [
           IconButton(
@@ -57,12 +57,10 @@ class _LibraryScreenState extends State<LibraryScreen>
                 ),
                 tabs: const [
                   Tab(
-                    child: Text('Study sets',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text('Study sets', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                   Tab(
-                    child: Text('Folders',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text('Folders', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),
@@ -73,24 +71,8 @@ class _LibraryScreenState extends State<LibraryScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          ListView.builder(
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text('Study set $index'),
-                onTap: () {},
-              );
-            },
-          ),
-          ListView.builder(
-            itemCount: 10,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text('Folder $index'),
-                onTap: () {},
-              );
-            },
-          ),
+          const StudySets(),
+          const Folders(),
         ],
       ),
     );
