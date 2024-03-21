@@ -59,7 +59,7 @@ class HomeHeader extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Image.asset(
-                "assets/images/discover1.png",
+                "assets/images/learning1.png",
                 height: 80,
                 width: imageSize,
               ),
@@ -72,7 +72,7 @@ class HomeHeader extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Image.asset(
-                "assets/images/discover1.png",
+                "assets/images/learning2.png",
                 height: 80,
                 width: imageSize,
               ),
