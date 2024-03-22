@@ -3,13 +3,13 @@ const Schema = mongoose.Schema;
 
 const TopicSchema = new Schema({
     topicNameEnglish: { type: String, required: true },
-    topicNameVietnamese: { type: String, required: true },
+    topicNameVietnamese: { type: String},
     vocabularyCount : { type : Number, default: 0 },
     isPublic : { type : Boolean, default: false },
     upVoteCount : { type : Number, default: 0 },
     downVoteCount : { type : Number, default: 0 },
-    descriptionEnglish: { type: String, required: true },
-    descriptionVietnamese: { type: String, required: true },
+    descriptionEnglish: { type: String},
+    descriptionVietnamese: { type: String},
     userId: [{ type: Schema.Types.ObjectId, ref: 'User'}],
     ownerId : { type: Schema.Types.ObjectId, ref: 'User'},
     learningStatisticsId: [{ type: Schema.Types.ObjectId, ref: 'LearningStatistics'}],

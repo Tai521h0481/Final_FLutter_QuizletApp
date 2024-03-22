@@ -1,4 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/controllers/topic.dart';
+import 'package:shop_app/controllers/user.controller.dart';
+import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 
 class StudySetScreen extends StatefulWidget {
   static String routeName = "/studyset";
@@ -20,10 +28,12 @@ class _StudySetScreenState extends State<StudySetScreen> {
   FocusNode subjectFocusNode = FocusNode();
   FocusNode? descriptionFocusNode;
   int currentIndex = 0;
+  String _token = '';
 
   @override
   void initState() {
     super.initState();
+    getToken();
     focusNodes = List.generate(4, (_) => FocusNode());
     containers.add(_buildContainer('Term', 'Definition', 0));
     containers.add(_buildContainer('Term', 'Definition', 1));
@@ -36,6 +46,42 @@ class _StudySetScreenState extends State<StudySetScreen> {
     addFocusListeners();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(subjectFocusNode);
+    });
+  }
+
+  Future<void> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    _token = prefs.getString('token') ?? '';
+  }
+
+  Future<void> callAPI() async {
+    String subjectText = subjectController.text;
+    String? descriptionText = descriptionController?.text;
+    List<Map<String, String>> termsDefinitions = [];
+
+    for (int i = 0; i < termControllers.length; i++) {
+      if (termControllers[i].text.isEmpty) {
+        break;
+      }
+      termsDefinitions.add({
+        "englishWord": termControllers[i].text,
+        "vietnameseWord": definitionControllers[i].text,
+      });
+    }
+
+    await createTopic(subjectText, descriptionText!, termsDefinitions, _token)
+        .then((value) async {
+      Map<String, dynamic> topic = value['topic'];
+      Map<String, dynamic> user = topic['ownerId'];
+      Navigator.pop(context);
+      await Navigator.pushNamed(context, FlipCardScreen.routeName, arguments: {
+        "_id": topic["_id"],
+        "title": topic["topicNameEnglish"],
+        'image': user["profileImage"] ?? '',
+        'username': user["username"] ?? '',
+        'description': topic["descriptionEnglish"] ?? '',
+        'terms': topic["vocabularyCount"].toString(),
+      });
     });
   }
 
@@ -53,18 +99,7 @@ class _StudySetScreenState extends State<StudySetScreen> {
           IconButton(
             icon: const Icon(Icons.done),
             onPressed: () {
-              String subjectText = subjectController.text;
-              String? descriptionText = descriptionController?.text;
-              List<String> terms = termControllers.map((c) => c.text).toList();
-              List<String> definitions =
-                  definitionControllers.map((c) => c.text).toList();
-
-              print('Subject: $subjectText');
-              print('Description: $descriptionText');
-              for (int i = 0; i < terms.length; i++) {
-                print(
-                    'Term ${i + 1}: ${terms[i]} - Definition ${i + 1}: ${definitions[i]}');
-              }
+              callAPI();
             },
           ),
           const SizedBox(width: 10),
@@ -76,7 +111,8 @@ class _StudySetScreenState extends State<StudySetScreen> {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              _buildField('Subject, chapter, unit', 'Title', subjectFocusNode, subjectController),
+              _buildField('Subject, chapter, unit', 'Title', subjectFocusNode,
+                  subjectController),
               if (!showDescription)
                 Align(
                   alignment: Alignment.topRight,

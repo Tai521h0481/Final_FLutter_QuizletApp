@@ -65,8 +65,7 @@ class _SpecialOffersState extends State<Topics> {
     try {
       var data = await getTopicByUserAPI(token);
       setState(() {
-        topics = data['user']['topicId'] ?? [];
-        userInfo = data['user'] ?? {};
+        topics = data['topics'] ?? [];
         filteredTopics = topics;
       });
     } catch (e) {
@@ -92,21 +91,28 @@ class _SpecialOffersState extends State<Topics> {
             children: List.generate(
               filteredTopics.length,
               (index) => SpecialOfferCard(
-                image: userInfo["profileImage"] ?? '',
-                title: filteredTopics[index]["topicNameEnglish"] ?? '',
-                words: filteredTopics[index]["vocabularyCount"] ?? 0,
-                name: userInfo["username"] ?? '',
+                image: filteredTopics[index]['ownerId']['profileImage'] ?? '',
+                title: filteredTopics[index]['topicNameEnglish'] ?? '',
+                words: filteredTopics[index]['vocabularyCount'] ?? 0,
+                name: filteredTopics[index]['ownerId']['username'] ?? '',
                 press: () {
-                  Navigator.pushNamed(context, FlipCardScreen.routeName,
-                      arguments: {
-                        "_id": filteredTopics[index]["_id"],
-                        "title": filteredTopics[index]["topicNameEnglish"],
-                        'image': userInfo["profileImage"] ?? '',
-                        'username': userInfo["username"] ?? '',
-                        'description' : filteredTopics[index]["descriptionEnglish"] ?? '',
-                        'terms':
-                            filteredTopics[index]["vocabularyCount"].toString(),
-                      });
+                  Navigator.pushNamed(
+                    context,
+                    FlipCardScreen.routeName,
+                    arguments: {
+                      "_id": filteredTopics[index]["_id"],
+                      "title": filteredTopics[index]["topicNameEnglish"],
+                      'image': filteredTopics[index]['ownerId']
+                              ['profileImage'] ??
+                          '',
+                      'username':
+                          filteredTopics[index]['ownerId']['username'] ?? '',
+                      'description':
+                          filteredTopics[index]["descriptionEnglish"] ?? '',
+                      'terms':
+                          filteredTopics[index]["vocabularyCount"].toString(),
+                    },
+                  );
                 },
               ),
             ),

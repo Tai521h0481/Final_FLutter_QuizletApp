@@ -1,11 +1,11 @@
-String IP = "52.221.210.100";
+// String IP = "52.221.210.100";
+String IP = "192.168.83.67";
 String baseUrl = "http://$IP:3001/android";
 
 String users = baseUrl + "/users";
 String register = users + "/register";
 String login = users + "/login";
 String recover_Password = users + "/recover-password";
-String getTopicByUser = users + "/get-topic-by-user";
 String updateUsername = users + "/profiles/";
 String uploadAvatarUrl = users + "/profiles/change-profile-image/";
 String changePasswordUrl = users + "/profiles/password/";
@@ -18,6 +18,8 @@ String getTopicById = topic + "/";
 String getTopicByFolderId = topic + "/folders/";
 String getPublicTopicUrl = topic + "/public/getPublicTopic";
 String createTopicUrl = topic;
+String getTopicByUser = topic + "/get-topic-user";
+String deleteTopicUrl = topic + "/";
 
 // vocab
 String vocab = baseUrl + "/vocabularies";

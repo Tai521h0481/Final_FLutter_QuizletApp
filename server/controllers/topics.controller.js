@@ -25,14 +25,13 @@ const getAllTopics = async (req, res) => {
 }
 
 const getTopicsByUserId = async (req, res) => {
-    const userId = req.params.id || req.query.id;
+    const userId = req.params.id || req.query.id || req.user.data._id;
     try {
-        const topics = await Topic.find({}).populate('ownerId').exec();
+        const topics = await Topic.find().populate('ownerId').exec();
         const topicsWithMatchingUserId = topics.filter(topic => {
             const res = topic.ownerId != null && topic.ownerId._id.equals(userId);
             return topic.userId.includes(userId) || res;
         });
-        
         if(topics.length === 0){
             res.status(404).json({error: "Topics not found"});
             return;
@@ -192,8 +191,10 @@ const importCSV = async (req, res) => {
             topic.vocabularyId.push(vocab._id);
         }
         await topic.save();
+        topic = await topic.populate('ownerId');
         res.status(200).json({ message: 'Import data successfully', topic});
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error : error.message });
     }
 }
