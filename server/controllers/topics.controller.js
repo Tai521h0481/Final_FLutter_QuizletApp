@@ -4,7 +4,7 @@ const {Users ,Topic, Vocabulary, TopicInFolder, BookmarkTopic, VocabularyStatist
 const getTopicById = async (req, res) => {
     const id = req.params.id || req.query.id;
     try {
-        const topic = await Topic.findById(id);
+        const topic = await Topic.findById(id).populate('ownerId').exec();
         res.status(200).json({topic});
     } catch (error) {
         res.status(500).json({ error : error.message });

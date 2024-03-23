@@ -1,11 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/topic.dart';
-import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 
 class StudySetScreen extends StatefulWidget {
@@ -29,6 +24,8 @@ class _StudySetScreenState extends State<StudySetScreen> {
   FocusNode? descriptionFocusNode;
   int currentIndex = 0;
   String _token = '';
+  bool isPublic = false;
+  String publicText = 'Just me';
 
   @override
   void initState() {
@@ -39,7 +36,6 @@ class _StudySetScreenState extends State<StudySetScreen> {
     containers.add(_buildContainer('Term', 'Definition', 1));
     descriptionController = TextEditingController();
     for (int i = 0; i < 2; i++) {
-      // Starting with 2 term-definition pairs
       termControllers.add(TextEditingController());
       definitionControllers.add(TextEditingController());
     }
@@ -69,8 +65,10 @@ class _StudySetScreenState extends State<StudySetScreen> {
       });
     }
 
-    await createTopic(subjectText, descriptionText!, termsDefinitions, _token)
+    await createTopic(
+            subjectText, descriptionText!, termsDefinitions, _token, isPublic)
         .then((value) async {
+      print(value['topic']['isPublic']);
       Map<String, dynamic> topic = value['topic'];
       Map<String, dynamic> user = topic['ownerId'];
       Navigator.pop(context);
@@ -119,13 +117,22 @@ class _StudySetScreenState extends State<StudySetScreen> {
                   child: TextButton(
                     onPressed: _toggleDescriptionField,
                     child: const Text('+ Description',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF4C56FF))),
                   ),
                 ),
               if (showDescription)
                 _buildField("What's your set about", "Description",
                     descriptionFocusNode!, descriptionController!),
               SizedBox(height: 20),
+              _createSwitchListTile(publicText, isPublic, (bool value) {
+                setState(() {
+                  isPublic = value;
+                  publicText = isPublic ? 'Everyone' : 'Just me';
+                });
+              }, isPublic ? Icons.public : Icons.public_off),
+              const Divider(height: 1.0, color: Color(0xFFF2F2F7)),
               ...containers,
               SizedBox(
                 height: 200,
@@ -280,5 +287,25 @@ class _StudySetScreenState extends State<StudySetScreen> {
         FocusScope.of(context).requestFocus(descriptionFocusNode);
       });
     }
+  }
+
+  SwitchListTile _createSwitchListTile(
+      String title, bool value, void Function(bool) onChanged, IconData icon) {
+    return SwitchListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+            color: const Color(0xFF4C56FF),
+            fontFamily: 'Roboto',
+            fontWeight: FontWeight.bold),
+      ),
+      value: value,
+      onChanged: onChanged,
+      secondary: Icon(icon, color: Colors.grey),
+      activeTrackColor: Colors.green,
+      inactiveThumbColor: Colors.white,
+      inactiveTrackColor: const Color(0xFFE9E9EA),
+      activeColor: Colors.white,
+    );
   }
 }

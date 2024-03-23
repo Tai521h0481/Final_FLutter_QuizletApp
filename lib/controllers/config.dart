@@ -14,12 +14,16 @@ String createAchievementUrl = users + "/achievement/";
 // topic
 String topic = baseUrl + "/topics";
 String getTopic = topic + "/";
-String getTopicById = topic + "/";
+String getTopicByIdUrl = topic + "/";
 String getTopicByFolderId = topic + "/folders/";
 String getPublicTopicUrl = topic + "/public/getPublicTopic";
 String createTopicUrl = topic;
 String getTopicByUser = topic + "/get-topic-user";
 String deleteTopicUrl = topic + "/";
+String updateTopicUrl = topic + "/";
+String updateVocabInTopicUrl = topic + "/:id/vocabularies/:vocabularyId";
+String createVocabToTopicUrl = topic + "/:id/vocabularies";
+String deleteVocabInTopicUrl = topic + "/:id/vocabularies/:vocabularyId";
 
 // vocab
 String vocab = baseUrl + "/vocabularies";
