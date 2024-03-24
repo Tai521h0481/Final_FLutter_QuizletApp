@@ -32,7 +32,7 @@ String getVocabByTopicId = vocab + "/topics/";
 //folder
 String folder = baseUrl + "/folders";
 String getFolderByUser = folder + "/users/";
-String createFolder = folder + "/";
+String createFolderUrl = folder + "/";
 String addTopicToFolder = folder + ":id/topics/:topicId";
 String editFolde = folder + "/";
 String deleteFolder = folder + "/";

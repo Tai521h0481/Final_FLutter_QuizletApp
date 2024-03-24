@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import '../../../components/custom_surfix_icon.dart';
@@ -7,7 +5,6 @@ import '../../../components/form_error.dart';
 import '../../../constants.dart';
 import '../../register_success/register_success_screen.dart';
 import '../../../controllers/user.controller.dart';
-import '../../sign_in/sign_in_screen.dart';
 import 'package:quickalert/quickalert.dart';
 
 class SignUpForm extends StatefulWidget {

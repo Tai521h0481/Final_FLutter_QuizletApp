@@ -70,7 +70,8 @@ class _ProfileChangePasswordState extends State<ProfileChangePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password'),
+        title: const Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

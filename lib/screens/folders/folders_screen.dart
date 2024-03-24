@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/topic.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
+import 'package:shop_app/screens/folders/components/empty_folder.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 
 class FolderScreen extends StatefulWidget {
@@ -51,7 +53,9 @@ class _FolderScreenState extends State<FolderScreen> {
     int _sets = args['sets'];
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF6F7FB),
       appBar: AppBar(
+        backgroundColor: const Color(0xFFF6F7FB),
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back,
@@ -146,132 +150,58 @@ class _FolderScreenState extends State<FolderScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _showBottomSheet(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Color(0xFF4454FF),
-                      shape: BeveledRectangleBorder(
-                        borderRadius: BorderRadius.circular(7.0),
+                  if (topicDetails.isNotEmpty)
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFF4454FF),
+                        shape: BeveledRectangleBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                        ),
+                      ),
+                      child: const Text(
+                        "Study this folder",
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    child: const Text(
-                      "Study this folder",
-                      style:
-                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                    ),
-                  ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: topicDetails.length,
-                itemBuilder: (context, index) {
-                  var topic = topicDetails[index]['topic'];
+            if (topicDetails.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: topicDetails.length,
+                  itemBuilder: (context, index) {
+                    var topic = topicDetails[index]['topic'];
 
-                  return TopicInFolder(
-                    image: topic['ownerId']['profileImage'] ?? "",
-                    title: topic['topicNameEnglish'] ?? 'Title',
-                    words: topic['vocabularyCount'] ?? 0,
-                    name: topic['ownerId']['username'] ?? 'Name',
-                    press: () {
-                      Navigator.pushNamed(context, FlipCardScreen.routeName,
-                          arguments: {
-                            "_id": topic["_id"],
-                            "title": topic["topicNameEnglish"],
-                            'image': topic['ownerId']['profileImage'] ?? '',
-                            'username': topic['ownerId']['username'] ?? '',
-                            'terms': topic['vocabularyCount'].toString() ?? '',
-                          });
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _showBottomSheet(BuildContext context) async {
-    return showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: const Text(
-                        'In original order',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Color(0xFF3F56FF)),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
+                    return TopicInFolder(
+                      image: topic['ownerId']['profileImage'] ?? "",
+                      title: topic['topicNameEnglish'] ?? 'Title',
+                      words: topic['vocabularyCount'] ?? 0,
+                      name: topic['ownerId']['username'] ?? 'Name',
+                      press: () {
+                        Navigator.pushNamed(context, FlipCardScreen.routeName,
+                            arguments: {
+                              "_id": topic["_id"],
+                              "title": topic["topicNameEnglish"],
+                              'image': topic['ownerId']['profileImage'] ?? '',
+                              'username': topic['ownerId']['username'] ?? '',
+                              'terms':
+                                  topic['vocabularyCount'].toString() ?? '',
+                            });
                       },
-                    ),
-                    Container(
-                        color: Colors.grey.shade300,
-                        child: const SizedBox(
-                            height: 1.0, width: double.infinity)),
-                    ListTile(
-                      title: const Text('Alphabetically',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Color(0xFF3F56FF))),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.white,
-                ),
-                child: ListTile(
-                  title: const Text(
-                    'Cancel',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF3F56FF),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18.0,
-                      letterSpacing: -1.0,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
+                    );
                   },
                 ),
               ),
-              const SizedBox(height: 30.0)
-            ],
-          ),
-        );
-      },
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+            if (topicDetails.isEmpty) const EmptyFolder(),
+          ],
+        ),
       ),
-      backgroundColor:
-          Colors.transparent,
     );
   }
 }

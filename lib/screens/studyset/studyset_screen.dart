@@ -26,7 +26,7 @@ class _StudySetScreenState extends State<StudySetScreen> {
   String _token = '';
   bool isPublic = false;
   String publicText = 'Just me';
-
+  
   @override
   void initState() {
     super.initState();
@@ -55,6 +55,8 @@ class _StudySetScreenState extends State<StudySetScreen> {
     String? descriptionText = descriptionController?.text;
     List<Map<String, String>> termsDefinitions = [];
 
+    if (subjectText.isEmpty) return;
+
     for (int i = 0; i < termControllers.length; i++) {
       if (termControllers[i].text.isEmpty) {
         break;
@@ -68,7 +70,6 @@ class _StudySetScreenState extends State<StudySetScreen> {
     await createTopic(
             subjectText, descriptionText!, termsDefinitions, _token, isPublic)
         .then((value) async {
-      print(value['topic']['isPublic']);
       Map<String, dynamic> topic = value['topic'];
       Map<String, dynamic> user = topic['ownerId'];
       Navigator.pop(context);
@@ -131,7 +132,8 @@ class _StudySetScreenState extends State<StudySetScreen> {
                   isPublic = value;
                   publicText = isPublic ? 'Everyone' : 'Just me';
                 });
-              }, isPublic ? Icons.public : Icons.public_off),
+              }, isPublic ? Icons.public : Icons.public_off,
+                  isPublic ? Color(0xFF4C56FF) : Colors.grey),
               const Divider(height: 1.0, color: Color(0xFFF2F2F7)),
               ...containers,
               SizedBox(
@@ -243,6 +245,7 @@ class _StudySetScreenState extends State<StudySetScreen> {
                 fontSize: 20,
                 color: Color.fromARGB(255, 179, 179, 179),
               ),
+              errorStyle: TextStyle(color: Colors.redAccent),
             ),
             focusNode: focusNode,
           ),
@@ -289,20 +292,18 @@ class _StudySetScreenState extends State<StudySetScreen> {
     }
   }
 
-  SwitchListTile _createSwitchListTile(
-      String title, bool value, void Function(bool) onChanged, IconData icon) {
+  SwitchListTile _createSwitchListTile(String title, bool value,
+      void Function(bool) onChanged, IconData icon, Color color) {
     return SwitchListTile(
       title: Text(
         title,
         style: TextStyle(
-            color: const Color(0xFF4C56FF),
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.bold),
+            color: color, fontFamily: 'Roboto', fontWeight: FontWeight.bold),
       ),
       value: value,
       onChanged: onChanged,
-      secondary: Icon(icon, color: Colors.grey),
-      activeTrackColor: Colors.green,
+      secondary: Icon(icon, color: color),
+      activeTrackColor: Color(0xFF4C56FF),
       inactiveThumbColor: Colors.white,
       inactiveTrackColor: const Color(0xFFE9E9EA),
       activeColor: Colors.white,

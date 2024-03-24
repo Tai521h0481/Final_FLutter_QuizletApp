@@ -4,7 +4,9 @@ const createFolder = async (req, res) => {
     const { folderNameEnglish, folderNameVietnamese } = req.body;
     const user = req.user;
     try {
-        const folder = await Folder.create({ folderNameEnglish, folderNameVietnamese, userId: user.data._id });
+        let folder = await Folder.create({ folderNameEnglish, folderNameVietnamese, userId: user.data._id });
+        const folderId = folder._id;
+        folder = await Folder.findById(folderId).populate('userId');
         res.status(200).json({ folder });
     } catch (error) {
         res.status(500).json({ error: error.message });

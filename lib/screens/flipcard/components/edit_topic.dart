@@ -371,22 +371,17 @@ class _StudySetScreenState extends State<EditTopic> {
 
   void _addNewContainer() {
     FocusNode termFocusNode = FocusNode();
-    FocusNode definitionFocusNode = FocusNode();
     TextEditingController termController = TextEditingController();
     TextEditingController definitionController = TextEditingController();
 
-    // Cập nhật danh sách termControllers, definitionControllers, và focusNodes nếu cần
-
-    // Đây là phần quan trọng: thêm mục từ vựng mới vào vocabularyItems
     vocabularyItems.add(VocabularyItem(
-      id: null, // ID mới sẽ là null
+      id: null,
       termController: termController,
       definitionController: definitionController,
       originalTerm: '',
       originalDefinition: '',
     ));
 
-    // Cập nhật UI
     setState(() {
       containers.add(_buildContainer("Term", "Definition", termFocusNode,
           termController, definitionController));

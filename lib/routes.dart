@@ -40,6 +40,6 @@ final Map<String, WidgetBuilder> routes = {
   AchievementScreen.routeName:(context) => const AchievementScreen(),
   DiscoverScreen.routeName:(context) => const DiscoverScreen(),
   StudySetScreen.routeName:(context) => StudySetScreen(),
-  NewFolderScreen.routeName:(context) => const NewFolderScreen(),
+  NewFolderScreen.routeName:(context) => NewFolderScreen(),
   EditTopic.routeName:(context) => EditTopic(),
 };

@@ -4,6 +4,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/topic.dart';
 import 'package:shop_app/controllers/user.controller.dart';
+import 'package:shop_app/screens/flipcard/components/custom_listtile.dart';
 import 'package:shop_app/screens/flipcard/components/edit_topic.dart';
 import 'package:shop_app/screens/init_screen.dart';
 import 'components/flipcard_header.dart';
@@ -129,127 +130,192 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
   }
 
   Future<void> _showBottomSheet(BuildContext context) async {
-    return showModalBottomSheet(
+    // return showModalBottomSheet(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return Padding(
+    //       padding: const EdgeInsets.all(10.0),
+    //       child: Column(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: <Widget>[
+    //           Container(
+    //             decoration: BoxDecoration(
+    //               borderRadius: BorderRadius.circular(10.0),
+    //               color: Colors.white,
+    //             ),
+    //             child: Column(
+    //               children: [
+    //                 CustomListTile(
+    //                     title: "Add to folder",
+    //                     icon: Icons.add_box_outlined,
+    //                     onTap: () {
+    //                       Navigator.pop(context);
+    //                     }),
+    //                 Container(
+    //                     color: Colors.grey.shade300,
+    //                     child: const SizedBox(
+    //                         height: 1.0, width: double.infinity)),
+    //                 CustomListTile(
+    //                     title: "Edit",
+    //                     icon: Icons.edit,
+    //                     onTap: () {
+    //                       handleEditTopic(context, topicId, title, description,
+    //                           topics['vocabularies']);
+    //                     }),
+    //                 Container(
+    //                     color: Colors.grey.shade300,
+    //                     child: const SizedBox(
+    //                         height: 1.0, width: double.infinity)),
+    //                 CustomListTile(
+    //                     title: "Delete",
+    //                     icon: Icons.delete,
+    //                     onTap: () {
+    //                       handleDeleteTopic(context, token, topicId);
+    //                     }),
+    //               ],
+    //             ),
+    //           ),
+    //           const SizedBox(height: 10.0),
+    //           Container(
+    //             decoration: BoxDecoration(
+    //               borderRadius: BorderRadius.circular(10.0),
+    //               color: Colors.white,
+    //             ),
+    //             child: ListTile(
+    //               title: const Text(
+    //                 'Cancel',
+    //                 textAlign: TextAlign.center,
+    //                 style: TextStyle(
+    //                   color: Colors.red,
+    //                   fontWeight: FontWeight.w600,
+    //                   fontSize: 18.0,
+    //                   letterSpacing: -1.0,
+    //                 ),
+    //               ),
+    //               onTap: () {
+    //                 Navigator.pop(context);
+    //               },
+    //             ),
+    //           ),
+    //           const SizedBox(height: 30.0)
+    //         ],
+    //       ),
+    //     );
+    //   },
+    //   shape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(10.0),
+    //   ),
+    //   backgroundColor: Colors.transparent,
+    // );
+
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: const Text(
-                        'Add to folder',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.green, fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    Container(
-                        color: Colors.grey.shade300,
-                        child: const SizedBox(
-                            height: 1.0, width: double.infinity)),
-                    ListTile(
-                      title: const Text('Edit',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.yellow,
-                              fontWeight: FontWeight.bold)),
-                      onTap: () async {
-                        Navigator.pop(context);
-                        await Navigator.pushNamed(context, EditTopic.routeName,
-                            arguments: {
-                              'topicId': topicId,
-                              'title': title,
-                              'description': description,
-                              'vocabularies': topics['vocabularies'],
-                            });
-                      },
-                    ),
-                    Container(
-                        color: Colors.grey.shade300,
-                        child: const SizedBox(
-                            height: 1.0, width: double.infinity)),
-                    ListTile(
-                      title: const Text('Delete',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold)),
-                      onTap: () async {
-                        await QuickAlert.show(
-                          context: context,
-                          type: QuickAlertType.confirm,
-                          text: 'Do you want to delete this topic?',
-                          confirmBtnText: 'Yes',
-                          cancelBtnText: 'No',
-                          confirmBtnColor: Color(0xFF3F56FF),
-                          onConfirmBtnTap: () async {
-                            deleteTopic(token, topicId).then((value) async {
-                              if ((value?['message'] ?? '') != '') {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text(value?['message'] ?? ''),
-                                  duration: Duration(seconds: 2),
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    InitScreen.routeName, (route) => false);
-                              } else {
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.error,
-                                  text: value['error'],
-                                );
-                              }
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10.0),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.white,
-                ),
-                child: ListTile(
-                  title: const Text(
-                    'Cancel',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFF3F56FF),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18.0,
-                      letterSpacing: -1.0,
-                    ),
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize:
+              0.4, // Kích thước ban đầu của bottom sheet (ở đây là 50% của màn hình)
+          minChildSize:
+              0.1, // Kích thước tối thiểu của bottom sheet (ở đây là 10% của màn hình)
+          maxChildSize:
+              0.8, // Kích thước tối đa của bottom sheet (ở đây là 80% của màn hình)
+          expand: false,
+          builder: (_, controller) {
+            return Container(
+              padding: EdgeInsets.all(8.0),
+              child: ListView(
+                controller: controller,
+                children: <Widget>[
+                  CustomListTile(
+                    title: "Add to folder",
+                    icon: Icons.add_box_outlined,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
+                  Divider(),
+                  CustomListTile(
+                    title: "Edit set",
+                    icon: Icons.edit,
+                    onTap: () {
+                      handleEditTopic(context, topicId, title, description,
+                          topics['vocabularies']);
+                    },
+                  ),
+                  Divider(),
+                  CustomListTile(
+                    title: "Delete set",
+                    icon: Icons.delete,
+                    onTap: () {
+                      handleDeleteTopic(context, token, topicId);
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Center(
+                        child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600]),
+                    )),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 30.0)
-            ],
-          ),
+            );
+          },
         );
       },
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      backgroundColor: Colors.transparent,
+    );
+  }
+
+  void handleEditTopic(BuildContext context, String topicId, String title,
+      String description, List<dynamic> vocabularies) async {
+    Navigator.pop(context);
+    await Navigator.pushNamed(
+      context,
+      EditTopic.routeName,
+      arguments: {
+        'topicId': topicId,
+        'title': title,
+        'description': description,
+        'vocabularies': vocabularies,
+      },
+    );
+  }
+
+  void handleDeleteTopic(
+      BuildContext context, String token, String topicId) async {
+    await QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete this topic?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Color(0xFF3F56FF),
+      onConfirmBtnTap: () async {
+        deleteTopic(token, topicId).then((value) async {
+          if ((value?['message'] ?? '') != '') {
+            SnackBar snackBar = SnackBar(
+              content: Text(value?['message'] ?? ''),
+              duration: Duration(seconds: 2),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pushNamedAndRemoveUntil(
+                context, InitScreen.routeName, (route) => false);
+          } else {
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.error,
+              text: "Failed to delete topic. Please try again.",
+            );
+          }
+        });
+      },
     );
   }
 }
