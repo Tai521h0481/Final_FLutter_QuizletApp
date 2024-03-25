@@ -74,11 +74,18 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
                 _formKey.currentState!.save();
                 KeyboardUtil.hideKeyboard(context);
                 print("Email: $email");
-                EasyLoading.show(status: 'loading...');
+                // EasyLoading.show(status: 'loading...');
+                QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.loading,
+                  title: 'Loading',
+                  text: 'Loading...',
+                );
                 try {
                   final data = await recoverPassword(email: email)
                       .timeout(const Duration(seconds: 15));
-                  EasyLoading.dismiss();
+                  // EasyLoading.dismiss();
+                  Navigator.pop(context);
                   if (data['error'] != null) {
                     QuickAlert.show(
                       context: context,
@@ -93,7 +100,8 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
                     text: data['message'],
                   );
                 } catch (e) {
-                  EasyLoading.dismiss();
+                  // EasyLoading.dismiss();
+                  Navigator.pop(context);
                   QuickAlert.show(
                     context: context,
                     type: QuickAlertType.info,

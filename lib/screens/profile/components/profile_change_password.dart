@@ -39,11 +39,17 @@ class _ProfileChangePasswordState extends State<ProfileChangePassword> {
       if (token.isNotEmpty && dataString.isNotEmpty) {
         final Map<String, dynamic> data = json.decode(dataString);
         String id = data['_id'];
-        EasyLoading.show(status: 'loading...');
+        // EasyLoading.show(status: 'loading...');
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.loading,
+          title: 'Loading',
+          text: 'Loading...',
+        );
         await changePassword(id, token, _oldPasswordController.text,
                 _newPasswordController.text)
             .then((value) {
-          EasyLoading.dismiss();
+          Navigator.pop(context);
           if ((value?['message'] ?? '') != '') {
             QuickAlert.show(
               context: context,
@@ -70,7 +76,10 @@ class _ProfileChangePasswordState extends State<ProfileChangePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+        title: const Text(
+          'Change Password',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

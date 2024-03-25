@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class SpecialFolder extends StatelessWidget {
-  
   const SpecialFolder({
     Key? key,
     required this.title,

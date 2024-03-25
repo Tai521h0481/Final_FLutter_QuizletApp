@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/controllers/folder.dart';
 import 'package:shop_app/controllers/topic.dart';
+import 'package:shop_app/screens/flipcard/components/custom_listtile.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/empty_folder.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
+import 'package:shop_app/screens/init_screen.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({super.key});
@@ -16,6 +21,7 @@ class FolderScreen extends StatefulWidget {
 
 class _FolderScreenState extends State<FolderScreen> {
   List<dynamic> topicDetails = [];
+  String _token = "";
 
   @override
   void initState() {
@@ -31,10 +37,10 @@ class _FolderScreenState extends State<FolderScreen> {
 
   Future<void> loadTopicDetails(String id) async {
     final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token') ?? '';
+    _token = prefs.getString('token') ?? '';
 
     try {
-      Map<String, dynamic> data = await getTopicByFolderID(id, token);
+      Map<String, dynamic> data = await getTopicByFolderID(id, _token);
       List<dynamic> topicsFromAPI = data['topics'];
       setState(() {
         topicDetails = topicsFromAPI;
@@ -51,6 +57,7 @@ class _FolderScreenState extends State<FolderScreen> {
     String _username = args['username'];
     String _profileImage = args['image'];
     int _sets = args['sets'];
+    String _folderId = args['folderID'];
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
@@ -80,7 +87,9 @@ class _FolderScreenState extends State<FolderScreen> {
               size: 30,
               color: Color(0xFF444E66),
             ),
-            onPressed: () {},
+            onPressed: () {
+              _showBottomSheet(context, _folderId);
+            },
           ),
           const SizedBox(
             width: 10,
@@ -202,6 +211,111 @@ class _FolderScreenState extends State<FolderScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showBottomSheet(BuildContext context, String folderId) async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize:
+              0.34, // Kích thước ban đầu của bottom sheet (ở đây là 50% của màn hình)
+          minChildSize:
+              0.1, // Kích thước tối thiểu của bottom sheet (ở đây là 10% của màn hình)
+          maxChildSize:
+              0.8, // Kích thước tối đa của bottom sheet (ở đây là 80% của màn hình)
+          expand: false,
+          builder: (_, controller) {
+            return Container(
+              padding: EdgeInsets.all(8.0),
+              child: ListView(
+                controller: controller,
+                children: <Widget>[
+                  // CustomListTile(
+                  //   title: "Add to folder",
+                  //   icon: Icons.add_box_outlined,
+                  //   onTap: () {
+                  //     // Navigator.pop(context);
+                  //   },
+                  // ),
+                  // Divider(),
+                  CustomListTile(
+                    title: "Edit folder",
+                    icon: Icons.edit_square,
+                    onTap: () {
+                      // handleEditTopic(context, topicId, title, description,
+                      //     topics['vocabularies']);
+                    },
+                  ),
+                  Divider(),
+                  CustomListTile(
+                    title: "Add sets",
+                    icon: Icons.add_to_photos,
+                    onTap: () {
+                      // handleDeleteTopic(context, token, topicId);
+                    },
+                  ),
+                  Divider(),
+                  CustomListTile(
+                    title: "Delete folder",
+                    icon: Icons.delete,
+                    onTap: () {
+                      handleDeleteFolder(context, _token, folderId);
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Center(
+                        child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600]),
+                    )),
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void handleDeleteFolder(
+      BuildContext context, String token, String folderId) async {
+    await QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      text: 'Do you want to delete this folder?',
+      confirmBtnText: 'Yes',
+      cancelBtnText: 'No',
+      confirmBtnColor: Color(0xFF3F56FF),
+      onConfirmBtnTap: () async {
+        deleteFolder(token, folderId).then((value) async {
+          if ((value?['message'] ?? '') != '') {
+            SnackBar snackBar = SnackBar(
+              content: Text(value?['message'] ?? ''),
+              duration: Duration(seconds: 2),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pushNamedAndRemoveUntil(
+                context, InitScreen.routeName, (route) => false);
+          } else {
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.error,
+              text: "Failed to delete folder. Please try again.",
+            );
+          }
+        });
+      },
     );
   }
 }
