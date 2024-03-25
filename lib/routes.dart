@@ -4,6 +4,7 @@ import 'package:shop_app/screens/achievements/components/achievement.dart';
 import 'package:shop_app/screens/discover/discover_screen.dart';
 import 'package:shop_app/screens/flipcard/components/edit_topic.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
+import 'package:shop_app/screens/folders/components/edit_folder.dart';
 import 'package:shop_app/screens/folders/folders_screen.dart';
 import 'package:shop_app/screens/folders/new_folder_screen.dart';
 import 'package:shop_app/screens/library/library_screen.dart';
@@ -42,4 +43,5 @@ final Map<String, WidgetBuilder> routes = {
   StudySetScreen.routeName:(context) => StudySetScreen(),
   NewFolderScreen.routeName:(context) => NewFolderScreen(),
   EditTopic.routeName:(context) => EditTopic(),
+  EditFolder.routeName:(context) => EditFolder(),
 };

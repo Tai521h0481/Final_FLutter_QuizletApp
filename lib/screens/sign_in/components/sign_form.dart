@@ -147,12 +147,18 @@ class _SignFormState extends State<SignForm> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         KeyboardUtil.hideKeyboard(context);
-                        EasyLoading.show(status: 'loading...');
+                        // EasyLoading.show(status: 'loading...');
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.loading,
+                          title: 'Loading',
+                          text: 'Loading...',
+                        );
                         try {
                           final data =
                               await loginAPI(email: email, password: password)
                                   .timeout(const Duration(seconds: 15));
-                          EasyLoading.dismiss();
+                          Navigator.pop(context);
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           if (data['error'] != null) {
@@ -169,7 +175,8 @@ class _SignFormState extends State<SignForm> {
                           await prefs.setString('token', data['token']);
                           Navigator.pushNamed(context, InitScreen.routeName);
                         } catch (e) {
-                          EasyLoading.dismiss();
+                          // EasyLoading.dismiss();
+                          Navigator.pop(context);
                           QuickAlert.show(
                             context: context,
                             type: QuickAlertType.info,

@@ -1,5 +1,5 @@
-// String IP = "52.221.210.100";
-String IP = "192.168.83.67";
+String IP = "52.221.210.100";
+// String IP = "192.168.83.67";
 String baseUrl = "http://$IP:3001/android";
 
 String users = baseUrl + "/users";
@@ -34,6 +34,6 @@ String folder = baseUrl + "/folders";
 String getFolderByUser = folder + "/users/";
 String createFolderUrl = folder + "/";
 String addTopicToFolder = folder + ":id/topics/:topicId";
-String editFolde = folder + "/";
-String deleteFolder = folder + "/";
+String editFolderUrl = folder + "/";
+String deleteFolderUrl = folder + "/";
 String deleteTopicInFolder = folder + ":id/topics/:topicId";

@@ -3,8 +3,6 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/topic.dart';
-import 'package:shop_app/models/NewVocabulary.dart';
-import 'package:shop_app/models/VocabularyChange.dart';
 import 'package:shop_app/models/VocabularyItem.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 
