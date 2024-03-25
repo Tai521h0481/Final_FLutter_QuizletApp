@@ -5,6 +5,7 @@ import 'package:shop_app/controllers/topic.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/empty_folder.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
+import 'package:shop_app/screens/init_screen.dart';
 
 class FolderScreen extends StatefulWidget {
   const FolderScreen({super.key});
@@ -63,7 +64,8 @@ class _FolderScreenState extends State<FolderScreen> {
             color: Color(0xFF444E66),
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamedAndRemoveUntil(
+                context, InitScreen.routeName, (route) => false);
           },
         ),
         actions: [
