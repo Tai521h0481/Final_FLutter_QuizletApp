@@ -13,6 +13,14 @@ class EditFolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map;
+    String _title = args['title'];
+    String _description = args['description'];
+    String _folderID = args['folderID'];
+
+    _titleController.text = _title;
+    _descriptionController?.text = _description;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFF6F7FB),
@@ -30,19 +38,21 @@ class EditFolder extends StatelessWidget {
                 String token = prefs.getString('token') ?? '';
                 String title = _titleController.text ?? '';
                 String description = _descriptionController?.text ?? '';
-                await createFolder(token, title, description).then((value) {
-                  Navigator.pushNamed(
-                    context,
-                    FolderScreen.routeName,
-                    arguments: {
-                      'folderID': value['folder']["_id"],
-                      'title': value['folder']["folderNameEnglish"],
-                      'username': value['folder']['userId']['username'],
-                      'image': value['folder']['userId']['profileImage'],
-                      'sets': value['folder']["topicCount"]
-                    },
-                  );
-                });
+                await updateFolder(token, _folderID, title, description)
+                    .then((value) => print(value));
+                // await createFolder(token, title, description).then((value) {
+                //   Navigator.pushNamed(
+                //     context,
+                //     FolderScreen.routeName,
+                //     arguments: {
+                //       'folderID': value['folder']["_id"],
+                //       'title': value['folder']["folderNameEnglish"],
+                //       'username': value['folder']['userId']['username'],
+                //       'image': value['folder']['userId']['profileImage'],
+                //       'sets': value['folder']["topicCount"]
+                //     },
+                //   );
+                // });
               }
             },
           ),
@@ -106,11 +116,11 @@ class EditFolder extends StatelessWidget {
                 ? (value) {
                     if (value == null || value.isEmpty) {
                       FocusScope.of(context).requestFocus(focusNode);
-                      return 'Please enter a folder title'; // This message will be shown as an error for the title field
+                      return 'Please enter a folder title';
                     }
                     return null;
                   }
-                : null, // No validation for the description field
+                : null,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),

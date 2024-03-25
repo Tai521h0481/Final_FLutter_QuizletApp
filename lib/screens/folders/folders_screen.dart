@@ -7,6 +7,7 @@ import 'package:shop_app/controllers/folder.dart';
 import 'package:shop_app/controllers/topic.dart';
 import 'package:shop_app/screens/flipcard/components/custom_listtile.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
+import 'package:shop_app/screens/folders/components/edit_folder.dart';
 import 'package:shop_app/screens/folders/components/empty_folder.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 import 'package:shop_app/screens/init_screen.dart';
@@ -88,7 +89,7 @@ class _FolderScreenState extends State<FolderScreen> {
               color: Color(0xFF444E66),
             ),
             onPressed: () {
-              _showBottomSheet(context, _folderId);
+              _showBottomSheet(context, _folderId, _title);
             },
           ),
           const SizedBox(
@@ -214,7 +215,7 @@ class _FolderScreenState extends State<FolderScreen> {
     );
   }
 
-  Future<void> _showBottomSheet(BuildContext context, String folderId) async {
+  Future<void> _showBottomSheet(BuildContext context, String folderId, String title, {String? description}) async {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -245,8 +246,13 @@ class _FolderScreenState extends State<FolderScreen> {
                     title: "Edit folder",
                     icon: Icons.edit_square,
                     onTap: () {
-                      // handleEditTopic(context, topicId, title, description,
-                      //     topics['vocabularies']);
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, EditFolder.routeName,
+                          arguments: {
+                            'folderID': folderId,
+                            'title': title,
+                            'description': description ?? '',
+                          });
                     },
                   ),
                   Divider(),
