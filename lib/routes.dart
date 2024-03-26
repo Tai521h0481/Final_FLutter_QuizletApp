@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shop_app/screens/achievements/achievement_screen.dart';
 import 'package:shop_app/screens/achievements/components/achievement.dart';
 import 'package:shop_app/screens/discover/discover_screen.dart';
+import 'package:shop_app/screens/flashcard/flashcard_screen.dart';
 import 'package:shop_app/screens/flipcard/components/edit_topic.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/edit_folder.dart';
@@ -44,4 +45,5 @@ final Map<String, WidgetBuilder> routes = {
   NewFolderScreen.routeName:(context) => NewFolderScreen(),
   EditTopic.routeName:(context) => EditTopic(),
   EditFolder.routeName:(context) => EditFolder(),
+  FlashcardsView.routeName:(context) => FlashcardsView(),
 };

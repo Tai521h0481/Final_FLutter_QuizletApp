@@ -223,7 +223,7 @@ class _FolderScreenState extends State<FolderScreen> {
       builder: (context) {
         return DraggableScrollableSheet(
           initialChildSize:
-              0.34, // Kích thước ban đầu của bottom sheet (ở đây là 50% của màn hình)
+              0.4, // Kích thước ban đầu của bottom sheet (ở đây là 50% của màn hình)
           minChildSize:
               0.1, // Kích thước tối thiểu của bottom sheet (ở đây là 10% của màn hình)
           maxChildSize:

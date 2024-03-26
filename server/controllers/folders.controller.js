@@ -17,7 +17,7 @@ const updateFolder = async (req, res) => {
     const id = req.params.id || req.query.id;
     const { folderNameEnglish, folderNameVietnamese } = req.body;
     try {
-        const folder = await Folder.findByIdAndUpdate(id, { folderNameEnglish, folderNameVietnamese }, { new: true });
+        const folder = await Folder.findByIdAndUpdate(id, { folderNameEnglish, folderNameVietnamese }, { new: true }).populate('userId').exec();
         res.status(200).json({ message: "update folder successfully", folder });
     } catch (error) {
         res.status(500).json({ error: error.message });

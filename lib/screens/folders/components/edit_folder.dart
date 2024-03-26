@@ -39,20 +39,20 @@ class EditFolder extends StatelessWidget {
                 String title = _titleController.text ?? '';
                 String description = _descriptionController?.text ?? '';
                 await updateFolder(token, _folderID, title, description)
-                    .then((value) => print(value));
-                // await createFolder(token, title, description).then((value) {
-                //   Navigator.pushNamed(
-                //     context,
-                //     FolderScreen.routeName,
-                //     arguments: {
-                //       'folderID': value['folder']["_id"],
-                //       'title': value['folder']["folderNameEnglish"],
-                //       'username': value['folder']['userId']['username'],
-                //       'image': value['folder']['userId']['profileImage'],
-                //       'sets': value['folder']["topicCount"]
-                //     },
-                //   );
-                // });
+                    .then((value) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    FolderScreen.routeName,
+                    arguments: {
+                      'folderID': value['folder']["_id"],
+                      'title': value['folder']["folderNameEnglish"],
+                      'username': value['folder']['userId']['username'],
+                      'image': value['folder']['userId']['profileImage'],
+                      'sets': value['folder']["topicCount"]
+                    },
+                    (route) => false,
+                  );
+                });
               }
             },
           ),

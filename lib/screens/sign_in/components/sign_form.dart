@@ -173,7 +173,7 @@ class _SignFormState extends State<SignForm> {
                             await prefs.setString('data', dataUser);
                           }
                           await prefs.setString('token', data['token']);
-                          Navigator.pushNamed(context, InitScreen.routeName);
+                          Navigator.pushNamedAndRemoveUntil(context, InitScreen.routeName, (route) => false,);
                         } catch (e) {
                           // EasyLoading.dismiss();
                           Navigator.pop(context);

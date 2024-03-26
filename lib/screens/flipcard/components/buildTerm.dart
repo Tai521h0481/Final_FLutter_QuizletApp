@@ -22,17 +22,17 @@ class _CreateTermState extends State<CreateTerm> {
   }
 
   Future<void> _speak(String text) async {
+    await flutterTts.setLanguage("en-US");
     await flutterTts.awaitSpeakCompletion(true);
     await flutterTts.speak(text).then((_) {
       if (mounted) {
         setState(() {
-          isVolumeOn = false; // Cập nhật trạng thái khi hoàn thành đọc
+          isVolumeOn = false;
         });
       }
     });
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Container(

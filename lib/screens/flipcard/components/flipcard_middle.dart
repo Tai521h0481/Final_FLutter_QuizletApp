@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/flashcard/flashcard_screen.dart';
 
 class Middle extends StatelessWidget {
   final Widget listTile;
@@ -36,7 +37,9 @@ class Middle extends StatelessWidget {
           shrinkWrap: true,
           children: <Widget>[
             buildListTile(
-                Icons.copy_all, 'Flashcards', const Color(0xFF3F56FF)),
+                Icons.copy_all, 'Flashcards', const Color(0xFF3F56FF), onTap: () {
+                  Navigator.pushNamed(context, FlashcardsView.routeName);
+                }),
             buildListTile(Icons.school, 'Learn', const Color(0xFF3F56FF)),
             buildListTile(Icons.check_circle, 'Test', const Color(0xFF3F56FF)),
             buildListTile(Icons.layers, 'Match', const Color(0xFF3F56FF)),
@@ -46,7 +49,7 @@ class Middle extends StatelessWidget {
     );
   }
 
-  Widget buildListTile(IconData icon, String title, Color iconColor) {
+  Widget buildListTile(IconData icon, String title, Color iconColor, {Function()? onTap}){
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       decoration: BoxDecoration(
@@ -64,7 +67,7 @@ class Middle extends StatelessWidget {
       child: ListTile(
         leading: Icon(icon, color: iconColor),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }
