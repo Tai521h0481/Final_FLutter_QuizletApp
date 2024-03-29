@@ -134,6 +134,7 @@ class CongratsScreen extends StatelessWidget {
             InkWell(
               onTap: () {
                 // Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()));
+                Navigator.pop(context);
               },
               child: Container(
                 decoration: BoxDecoration(

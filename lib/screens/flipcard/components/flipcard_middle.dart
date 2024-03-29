@@ -5,11 +5,12 @@ import 'package:shop_app/screens/quiz/quiz_page_screen.dart';
 class Middle extends StatelessWidget {
   final Widget listTile;
   final String title, description, topicId;
+  final List<dynamic> vocabularies;
   Middle(
       {required this.listTile,
       required this.title,
       required this.description,
-      required this.topicId});
+      required this.topicId, required this.vocabularies});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class Middle extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 FlashcardsView.routeName,
-                arguments: {'topicId': topicId},
+                arguments: {'topicId': topicId, 'vocabularies': vocabularies },
               );
             }),
             buildListTile(

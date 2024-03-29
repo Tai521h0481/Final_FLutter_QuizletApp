@@ -1,8 +1,10 @@
-// import 'package:flip_card/flip_card.dart';
-// import 'package:flip_card/flip_card_controller.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_tts/flutter_tts.dart';
-// import 'package:shop_app/screens/flashcard/components/congrats_screen.dart';
+import 'package:flip_card/flip_card.dart';
+import 'package:flip_card/flip_card_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/controllers/user.controller.dart';
+import 'package:shop_app/screens/flashcard/components/congrats_screen.dart';
 
 // class FlashcardsView extends StatefulWidget {
 //   static String routeName = '/flashcards';
@@ -10,46 +12,80 @@
 //   _FlashcardsViewState createState() => _FlashcardsViewState();
 // }
 
-// class _FlashcardsViewState extends State<FlashcardsView> {
-//   late FlutterTts flutterTts;
-//   final List<Map<String, String>> flashcards = [
-//     {'front': 'Cat', 'back': 'Con mèo'},
-//     {'front': 'Dog', 'back': 'Con chó'},
-//     {'front': 'Bird', 'back': 'Con chim'},
-//     // ... include all your flashcards here
-//   ];
-//   int currentIndex = 0;
-//   bool showFront = true;
-//   Offset cardPosition = Offset.zero;
-//   double cardRotation = 0.0;
-//   bool _autoplayInProgress = false;
-//   bool isVolumeOn = false;
-//   FlipCardController controllerFlipCard = FlipCardController();
+class _FlashcardsViewState extends State<FlashcardsView> {
+  late FlutterTts flutterTts;
+  // final List<Map<String, String>> flashcards = [
+  //   {'englishWord': 'Cat', 'vietnameseWord': 'Con mèo'},
+  //   {'englishWord': 'Dog', 'vietnameseWord': 'Con chó'},
+  //   {'englishWord': 'Bird', 'vietnameseWord': 'Con chim'},
+  //   // ... include all your flashcards here
+  // ];
+  int currentIndex = 0;
+  bool showFront = true;
+  Offset cardPosition = Offset.zero;
+  double cardRotation = 0.0;
+  bool _autoplayInProgress = false;
+  bool isVolumeOn = false;
+  FlipCardController controllerFlipCard = FlipCardController();
+  late String topicId;
+  // List<Map<String, String>> flashcards = [];
+  List<dynamic> flashcards = [];
+  late String token;
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     flutterTts = FlutterTts();
-//   }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadInitialData();
+  }
 
-//   @override
-//   void dispose() {
-//     flutterTts.stop();
-//     super.dispose();
-//   }
+  @override
+  void initState() {
+    super.initState();
+    flutterTts = FlutterTts();
+  }
 
-//   void _nextCard() {
-//     if (!showFront) controllerFlipCard.toggleCardWithoutAnimation();
-//     if (currentIndex + 1 == flashcards.length){
-//       Navigator.pushNamed(context, CongratsScreen.routeName);
-//     }
-//     setState(() {
-//       currentIndex = (currentIndex + 1) % flashcards.length;
-//       showFront = true;
-//       cardPosition = Offset.zero;
-//       cardRotation = 0.0;
-//     });
-//   }
+  void _loadInitialData() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map<String, dynamic> && args.containsKey("topicId")) {
+      topicId = args["topicId"];
+      _loadTopics();
+    } else {
+      print('Invalid arguments. Cannot load topics.');
+    }
+  }
+
+  Future<void> _loadTopics() async {
+    token = (await SharedPreferences.getInstance()).getString('token') ?? '';
+    if (token.isEmpty) {
+      print('Token is empty. Cannot load topics.');
+      return;
+    }
+    try {
+      await getVocabularyByTopicId(topicId, token)
+          .then((value) => flashcards = value['vocabularies']);
+    } catch (e) {
+      print('Exception occurred while loading topics: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    flutterTts.stop();
+    super.dispose();
+  }
+
+  void _nextCard() {
+    if (!showFront) controllerFlipCard.toggleCardWithoutAnimation();
+    if (currentIndex + 1 == flashcards.length) {
+      Navigator.pushNamed(context, CongratsScreen.routeName);
+    }
+    setState(() {
+      currentIndex = (currentIndex + 1) % flashcards.length;
+      showFront = true;
+      cardPosition = Offset.zero;
+      cardRotation = 0.0;
+    });
+  }
 
 //   void _previousCard() {
 //     if (!showFront) controllerFlipCard.toggleCardWithoutAnimation();
@@ -73,42 +109,42 @@
 //     });
 //   }
 
-//   Future<void> _startAutoplay() async {
-//     if (currentIndex + 1 == flashcards.length) {
-//       setState(() {
-//         currentIndex = 0;
-//         controllerFlipCard.toggleCardWithoutAnimation();
-//       });
-//     }
-//     if (_autoplayInProgress) return;
-//     _autoplayInProgress = true;
+  Future<void> _startAutoplay() async {
+    if (currentIndex + 1 == flashcards.length) {
+      setState(() {
+        currentIndex = 0;
+        controllerFlipCard.toggleCardWithoutAnimation();
+      });
+    }
+    if (_autoplayInProgress) return;
+    _autoplayInProgress = true;
 
-//     while (_autoplayInProgress && currentIndex < flashcards.length) {
-//       await _speak(flashcards[currentIndex]['front']!, true);
-
-//       await Future.delayed(Duration(milliseconds: 500));
-
-//       controllerFlipCard.toggleCard();
-//       setState(() {
-//         showFront = false;
-//       });
+    while (_autoplayInProgress && currentIndex < flashcards.length) {
+      await _speak(flashcards[currentIndex]['englishWord']!, true);
 
 //       await Future.delayed(Duration(milliseconds: 500));
 
-//       await _speak(flashcards[currentIndex]['back']!, false);
+      controllerFlipCard.toggleCard();
+      setState(() {
+        showFront = false;
+      });
 
-//       await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(Duration(milliseconds: 500));
 
-//       await Future.delayed(Duration(milliseconds: 500));
-//       if (currentIndex + 1 < flashcards.length) {
-//         _nextCard();
-//       } else {
-//         setState(() {
-//           _autoplayInProgress = false;
-//         });
-//       }
-//     }
-//   }
+      await _speak(flashcards[currentIndex]['vietnameseWord']!, false);
+
+      await Future.delayed(Duration(milliseconds: 500));
+
+      await Future.delayed(Duration(milliseconds: 500));
+      if (currentIndex + 1 < flashcards.length) {
+        _nextCard();
+      } else {
+        setState(() {
+          _autoplayInProgress = false;
+        });
+      }
+    }
+  }
 
 //   @override
 //   Widget build(BuildContext context) {
