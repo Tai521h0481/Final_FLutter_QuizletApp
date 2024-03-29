@@ -6,18 +6,13 @@ import 'package:shop_app/screens/flashcard/components/congrats_screen.dart';
 
 class FlashcardsView extends StatefulWidget {
   static String routeName = '/flashcards';
+
   @override
   _FlashcardsViewState createState() => _FlashcardsViewState();
 }
 
 class _FlashcardsViewState extends State<FlashcardsView> {
   late FlutterTts flutterTts;
-  final List<Map<String, String>> flashcards = [
-    {'front': 'Cat', 'back': 'Con mèo'},
-    {'front': 'Dog', 'back': 'Con chó'},
-    {'front': 'Bird', 'back': 'Con chim'},
-    // ... include all your flashcards here
-  ];
   int currentIndex = 0;
   bool showFront = true;
   Offset cardPosition = Offset.zero;
@@ -25,10 +20,21 @@ class _FlashcardsViewState extends State<FlashcardsView> {
   bool _autoplayInProgress = false;
   bool isVolumeOn = false;
   FlipCardController controllerFlipCard = FlipCardController();
+  List<dynamic> flashcards = [];
+  String topicId = "";
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ModalRoute.of(context)?.settings.arguments != null) {
+        final args = ModalRoute.of(context)?.settings.arguments as Map;
+        setState(() {
+          topicId = args['topicId'];
+          flashcards = args['vocabularies'];
+        });
+      }
+    });
     flutterTts = FlutterTts();
   }
 
@@ -40,7 +46,7 @@ class _FlashcardsViewState extends State<FlashcardsView> {
 
   void _nextCard() {
     if (!showFront) controllerFlipCard.toggleCardWithoutAnimation();
-    if (currentIndex + 1 == flashcards.length){
+    if (currentIndex + 1 == flashcards.length) {
       Navigator.pushNamed(context, CongratsScreen.routeName);
     }
     setState(() {
@@ -74,17 +80,13 @@ class _FlashcardsViewState extends State<FlashcardsView> {
   }
 
   Future<void> _startAutoplay() async {
-    if (currentIndex + 1 == flashcards.length) {
-      setState(() {
-        currentIndex = 0;
-        controllerFlipCard.toggleCardWithoutAnimation();
-      });
-    }
     if (_autoplayInProgress) return;
     _autoplayInProgress = true;
-
+    if (!showFront) {
+      _nextCard();
+    }
     while (_autoplayInProgress && currentIndex < flashcards.length) {
-      await _speak(flashcards[currentIndex]['front']!, true);
+      await _speak(flashcards[currentIndex]['englishWord']!, true);
 
       await Future.delayed(Duration(milliseconds: 500));
 
@@ -95,7 +97,7 @@ class _FlashcardsViewState extends State<FlashcardsView> {
 
       await Future.delayed(Duration(milliseconds: 500));
 
-      await _speak(flashcards[currentIndex]['back']!, false);
+      await _speak(flashcards[currentIndex]['vietnameseWord']!, false);
 
       await Future.delayed(Duration(milliseconds: 500));
 
@@ -105,13 +107,20 @@ class _FlashcardsViewState extends State<FlashcardsView> {
       } else {
         setState(() {
           _autoplayInProgress = false;
+          currentIndex = 0;
+          controllerFlipCard.toggleCardWithoutAnimation();
         });
+        Navigator.pushNamed(context, CongratsScreen.routeName);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (flashcards.isEmpty) {
+      return Container();
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
       appBar: AppBar(
@@ -161,9 +170,9 @@ class _FlashcardsViewState extends State<FlashcardsView> {
                         direction: FlipDirection.HORIZONTAL,
                         onFlip: () => _flipCard(),
                         front: buildFlashCard(
-                            flashcards[currentIndex]['front']!, true),
+                            flashcards[currentIndex]['englishWord']!, true),
                         back: buildFlashCard(
-                            flashcards[currentIndex]['back']!, false),
+                            flashcards[currentIndex]['vietnameseWord']!, false),
                         controller: controllerFlipCard,
                       ),
                     ),
@@ -178,6 +187,11 @@ class _FlashcardsViewState extends State<FlashcardsView> {
               IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: currentIndex > 0 ? _previousCard : null,
+              ),
+              Text(
+                _autoplayInProgress ? 'Auto-play cards is ON' : '',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
               ),
               IconButton(
                 icon: Icon(_autoplayInProgress
@@ -222,7 +236,6 @@ class _FlashcardsViewState extends State<FlashcardsView> {
     setState(() {
       showFront = !showFront;
     });
-    print("showFront: $showFront");
   }
 
   Widget buildFlashCard(String text, bool isFront) {

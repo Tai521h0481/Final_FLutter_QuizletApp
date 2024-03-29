@@ -40,7 +40,7 @@ class CongratsScreen extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  'ofsp_ce',
+                  'TNN App',
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
@@ -75,7 +75,7 @@ class CongratsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Congrats! You Win',
+                          'Congrats!',
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w700,
@@ -85,7 +85,7 @@ class CongratsScreen extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          'You earn 300 Questpoin',
+                          'You earn 300 points',
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -95,7 +95,7 @@ class CongratsScreen extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          'using flutter',
+                          'keep going',
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w400,

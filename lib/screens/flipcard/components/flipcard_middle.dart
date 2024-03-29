@@ -10,7 +10,8 @@ class Middle extends StatelessWidget {
       {required this.listTile,
       required this.title,
       required this.description,
-      required this.topicId, required this.vocabularies});
+      required this.topicId,
+      required this.vocabularies});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class Middle extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 FlashcardsView.routeName,
-                arguments: {'topicId': topicId, 'vocabularies': vocabularies },
+                arguments: {"vocabularies": vocabularies, "topicId": topicId},
               );
             }),
             buildListTile(
@@ -55,7 +56,11 @@ class Middle extends StatelessWidget {
               'Learn',
               const Color(0xFF3F56FF),
               onTap: () {
-                Navigator.pushNamed(context, QuizPage.routeName);
+                Navigator.pushNamed(
+                  context,
+                  QuizPage.routeName,
+                  arguments: {"vocabularies": vocabularies, "topicId": topicId},
+                );
               },
             ),
             buildListTile(Icons.check_circle, 'Test', const Color(0xFF3F56FF)),

@@ -59,44 +59,6 @@ class QuizPage extends StatelessWidget {
               height: 5,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: Colors.indigo.shade500,
-                        borderRadius: BorderRadius.circular(10)),
-                    padding: EdgeInsets.only(left: 10, top: 10),
-                    height: 36,
-                    width: MediaQuery.of(context).size.width,
-                    child: Text(
-                      'Search',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  Positioned(
-                      right: 0,
-                      child: Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              gradient: LinearGradient(colors: [
-                                Colors.pink,
-                                Colors.pinkAccent.shade100,
-                              ]),
-                              borderRadius: BorderRadius.circular(10)),
-                          margin: EdgeInsets.only(right: 2, top: 2),
-                          height: 34,
-                          width: 35,
-                          child: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ))),
-                ],
-              ),
-            ),
-            SizedBox(height: 5,),
-            Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
@@ -111,9 +73,9 @@ class QuizPage extends StatelessWidget {
             SizedBox(height: 5,),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
-              alignment: Alignment.topLeft,
+              alignment: Alignment.center,
               child: Text(
-                'Javascript Quiz',
+                'Quiz',
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -249,13 +211,3 @@ class QuizOption extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-

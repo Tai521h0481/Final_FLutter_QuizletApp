@@ -135,8 +135,6 @@ Future<Map<String, dynamic>> updateUser(
 
   if (response.statusCode == 200 || response.statusCode != 500) {
     return json.decode(response.body);
-    // final Map<String, dynamic> data = json.decode(response.body);
-    // return data;
   } else {
     throw Exception(
         'Failed to load topics: Server responded with ${response.statusCode}');
