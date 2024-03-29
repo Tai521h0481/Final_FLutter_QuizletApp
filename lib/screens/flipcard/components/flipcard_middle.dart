@@ -47,7 +47,7 @@ class Middle extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 FlashcardsView.routeName,
-                arguments: {'topicId': topicId, 'vocabularies': vocabularies},
+                arguments: {'topicId': topicId, 'vocabularies': vocabularies },
               );
             }),
             buildListTile(
