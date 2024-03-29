@@ -102,7 +102,8 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
                 title: args['title'],
                 description: args['description'] ?? '',
                 topicId: topicId,
-                listTile: _buildListTile(args)),
+                listTile: _buildListTile(args),
+                vocabularies: topics['vocabularies'] ?? []),
             Bottom(
                 currentPage: currentPage,
                 vocabularies: topics['vocabularies'] ?? []),
