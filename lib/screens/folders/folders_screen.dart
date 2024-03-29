@@ -165,7 +165,7 @@ class _FolderScreenState extends State<FolderScreen> {
                     ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        primary: Color(0xFF4454FF),
+                        backgroundColor: Color(0xFF4454FF),
                         shape: BeveledRectangleBorder(
                           borderRadius: BorderRadius.circular(7.0),
                         ),
@@ -221,75 +221,57 @@ class _FolderScreenState extends State<FolderScreen> {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize:
-              0.4, // Kích thước ban đầu của bottom sheet (ở đây là 50% của màn hình)
-          minChildSize:
-              0.1, // Kích thước tối thiểu của bottom sheet (ở đây là 10% của màn hình)
-          maxChildSize:
-              0.8, // Kích thước tối đa của bottom sheet (ở đây là 80% của màn hình)
-          expand: false,
-          builder: (_, controller) {
-            return Container(
-              padding: EdgeInsets.all(8.0),
-              child: ListView(
-                controller: controller,
-                children: <Widget>[
-                  // CustomListTile(
-                  //   title: "Add to folder",
-                  //   icon: Icons.add_box_outlined,
-                  //   onTap: () {
-                  //     // Navigator.pop(context);
-                  //   },
-                  // ),
-                  // Divider(),
-                  CustomListTile(
-                    title: "Edit folder",
-                    icon: Icons.edit_square,
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, EditFolder.routeName,
-                          arguments: {
-                            'folderID': folderId,
-                            'title': title,
-                            'description': description ?? '',
-                          });
-                    },
-                  ),
-                  Divider(),
-                  CustomListTile(
-                    title: "Add sets",
-                    icon: Icons.add_to_photos,
-                    onTap: () {
-                      // handleDeleteTopic(context, token, topicId);
-                    },
-                  ),
-                  Divider(),
-                  CustomListTile(
-                    title: "Delete folder",
-                    icon: Icons.delete,
-                    onTap: () {
-                      handleDeleteFolder(context, _token, folderId);
-                    },
-                  ),
-                  Divider(),
-                  ListTile(
-                    title: Center(
-                        child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[600]),
-                    )),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
+        return Container(
+          height: 280,
+          width: double.infinity,
+          padding: EdgeInsets.all(8.0),
+          child: ListView(
+            children: <Widget>[
+              CustomListTile(
+                title: "Edit folder",
+                icon: Icons.edit_square,
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, EditFolder.routeName,
+                      arguments: {
+                        'folderID': folderId,
+                        'title': title,
+                        'description': description ?? '',
+                      });
+                },
               ),
-            );
-          },
+              Divider(),
+              CustomListTile(
+                title: "Add sets",
+                icon: Icons.add_to_photos,
+                onTap: () {
+                  // handleDeleteTopic(context, token, topicId);
+                },
+              ),
+              Divider(),
+              CustomListTile(
+                title: "Delete folder",
+                icon: Icons.delete,
+                onTap: () {
+                  handleDeleteFolder(context, _token, folderId);
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Center(
+                    child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600]),
+                )),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         );
       },
     );

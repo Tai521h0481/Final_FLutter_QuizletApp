@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/screens/flashcard/flashcard_screen.dart';
+import 'package:shop_app/screens/quiz/quiz_page_screen.dart';
 
 class Middle extends StatelessWidget {
   final Widget listTile;
-  final String title, description;
-  Middle({required this.listTile, required this.title, required this.description});
+  final String title, description, topicId;
+  Middle(
+      {required this.listTile,
+      required this.title,
+      required this.description,
+      required this.topicId});
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +41,22 @@ class Middle extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           children: <Widget>[
+            buildListTile(Icons.copy_all, 'Flashcards', const Color(0xFF3F56FF),
+                onTap: () {
+              Navigator.pushNamed(
+                context,
+                FlashcardsView.routeName,
+                arguments: {'topicId': topicId},
+              );
+            }),
             buildListTile(
-                Icons.copy_all, 'Flashcards', const Color(0xFF3F56FF), onTap: () {
-                  Navigator.pushNamed(context, FlashcardsView.routeName);
-                }),
-            buildListTile(Icons.school, 'Learn', const Color(0xFF3F56FF)),
+              Icons.school,
+              'Learn',
+              const Color(0xFF3F56FF),
+              onTap: () {
+                Navigator.pushNamed(context, QuizPage.routeName);
+              },
+            ),
             buildListTile(Icons.check_circle, 'Test', const Color(0xFF3F56FF)),
             buildListTile(Icons.layers, 'Match', const Color(0xFF3F56FF)),
           ],
@@ -49,7 +65,8 @@ class Middle extends StatelessWidget {
     );
   }
 
-  Widget buildListTile(IconData icon, String title, Color iconColor, {Function()? onTap}){
+  Widget buildListTile(IconData icon, String title, Color iconColor,
+      {Function()? onTap}) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       decoration: BoxDecoration(

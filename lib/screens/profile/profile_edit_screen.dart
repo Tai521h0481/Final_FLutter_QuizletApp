@@ -266,7 +266,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   _saveChanges();
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),

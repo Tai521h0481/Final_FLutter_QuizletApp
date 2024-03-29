@@ -101,6 +101,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
             Middle(
                 title: args['title'],
                 description: args['description'] ?? '',
+                topicId: topicId,
                 listTile: _buildListTile(args)),
             Bottom(
                 currentPage: currentPage,
@@ -134,62 +135,52 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize:
-              0.4, // Kích thước ban đầu của bottom sheet (ở đây là 50% của màn hình)
-          minChildSize:
-              0.1, // Kích thước tối thiểu của bottom sheet (ở đây là 10% của màn hình)
-          maxChildSize:
-              0.8, // Kích thước tối đa của bottom sheet (ở đây là 80% của màn hình)
-          expand: false,
-          builder: (_, controller) {
-            return Container(
-              padding: EdgeInsets.all(8.0),
-              child: ListView(
-                controller: controller,
-                children: <Widget>[
-                  CustomListTile(
-                    title: "Add to folder",
-                    icon: Icons.add_box_outlined,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  Divider(),
-                  CustomListTile(
-                    title: "Edit set",
-                    icon: Icons.edit,
-                    onTap: () {
-                      handleEditTopic(context, topicId, title, description,
-                          topics['vocabularies']);
-                    },
-                  ),
-                  Divider(),
-                  CustomListTile(
-                    title: "Delete set",
-                    icon: Icons.delete,
-                    onTap: () {
-                      handleDeleteTopic(context, token, topicId);
-                    },
-                  ),
-                  Divider(),
-                  ListTile(
-                    title: Center(
-                        child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[600]),
-                    )),
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
+        return Container(
+          height: 280,
+          width: double.infinity,
+          padding: EdgeInsets.all(8.0),
+          child: ListView(
+            children: <Widget>[
+              CustomListTile(
+                title: "Add to folder",
+                icon: Icons.add_box_outlined,
+                onTap: () {
+                  Navigator.pop(context);
+                },
               ),
-            );
-          },
+              Divider(),
+              CustomListTile(
+                title: "Edit set",
+                icon: Icons.edit,
+                onTap: () {
+                  handleEditTopic(context, topicId, title, description,
+                      topics['vocabularies']);
+                },
+              ),
+              Divider(),
+              CustomListTile(
+                title: "Delete set",
+                icon: Icons.delete,
+                onTap: () {
+                  handleDeleteTopic(context, token, topicId);
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Center(
+                    child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600]),
+                )),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         );
       },
     );

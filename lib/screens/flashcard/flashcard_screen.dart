@@ -2,6 +2,9 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shop_app/controllers/user.controller.dart';
+import 'package:shop_app/screens/flashcard/components/congrats_screen.dart';
 
 class FlashcardsView extends StatefulWidget {
   static String routeName = '/flashcards';
@@ -11,12 +14,12 @@ class FlashcardsView extends StatefulWidget {
 
 class _FlashcardsViewState extends State<FlashcardsView> {
   late FlutterTts flutterTts;
-  final List<Map<String, String>> flashcards = [
-    {'front': 'Cat', 'back': 'Con mèo'},
-    {'front': 'Dog', 'back': 'Con chó'},
-    {'front': 'Bird', 'back': 'Con chim'},
-    // ... include all your flashcards here
-  ];
+  // final List<Map<String, String>> flashcards = [
+  //   {'englishWord': 'Cat', 'vietnameseWord': 'Con mèo'},
+  //   {'englishWord': 'Dog', 'vietnameseWord': 'Con chó'},
+  //   {'englishWord': 'Bird', 'vietnameseWord': 'Con chim'},
+  //   // ... include all your flashcards here
+  // ];
   int currentIndex = 0;
   bool showFront = true;
   Offset cardPosition = Offset.zero;
@@ -24,11 +27,45 @@ class _FlashcardsViewState extends State<FlashcardsView> {
   bool _autoplayInProgress = false;
   bool isVolumeOn = false;
   FlipCardController controllerFlipCard = FlipCardController();
+  late String topicId;
+  // List<Map<String, String>> flashcards = [];
+  List<dynamic> flashcards = [];
+  late String token;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadInitialData();
+  }
 
   @override
   void initState() {
     super.initState();
     flutterTts = FlutterTts();
+  }
+
+  void _loadInitialData() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map<String, dynamic> && args.containsKey("topicId")) {
+      topicId = args["topicId"];
+      _loadTopics();
+    } else {
+      print('Invalid arguments. Cannot load topics.');
+    }
+  }
+
+  Future<void> _loadTopics() async {
+    token = (await SharedPreferences.getInstance()).getString('token') ?? '';
+    if (token.isEmpty) {
+      print('Token is empty. Cannot load topics.');
+      return;
+    }
+    try {
+      await getVocabularyByTopicId(topicId, token)
+          .then((value) => flashcards = value['vocabularies']);
+    } catch (e) {
+      print('Exception occurred while loading topics: $e');
+    }
   }
 
   @override
@@ -39,6 +76,9 @@ class _FlashcardsViewState extends State<FlashcardsView> {
 
   void _nextCard() {
     if (!showFront) controllerFlipCard.toggleCardWithoutAnimation();
+    if (currentIndex + 1 == flashcards.length) {
+      Navigator.pushNamed(context, CongratsScreen.routeName);
+    }
     setState(() {
       currentIndex = (currentIndex + 1) % flashcards.length;
       showFront = true;
@@ -80,7 +120,7 @@ class _FlashcardsViewState extends State<FlashcardsView> {
     _autoplayInProgress = true;
 
     while (_autoplayInProgress && currentIndex < flashcards.length) {
-      await _speak(flashcards[currentIndex]['front']!, true);
+      await _speak(flashcards[currentIndex]['englishWord']!, true);
 
       await Future.delayed(Duration(milliseconds: 500));
 
@@ -91,7 +131,7 @@ class _FlashcardsViewState extends State<FlashcardsView> {
 
       await Future.delayed(Duration(milliseconds: 500));
 
-      await _speak(flashcards[currentIndex]['back']!, false);
+      await _speak(flashcards[currentIndex]['vietnameseWord']!, false);
 
       await Future.delayed(Duration(milliseconds: 500));
 
@@ -157,9 +197,9 @@ class _FlashcardsViewState extends State<FlashcardsView> {
                         direction: FlipDirection.HORIZONTAL,
                         onFlip: () => _flipCard(),
                         front: buildFlashCard(
-                            flashcards[currentIndex]['front']!, true),
+                            flashcards[currentIndex]['englishWord']!, true),
                         back: buildFlashCard(
-                            flashcards[currentIndex]['back']!, false),
+                            flashcards[currentIndex]['vietnameseWord']!, false),
                         controller: controllerFlipCard,
                       ),
                     ),

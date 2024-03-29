@@ -46,8 +46,7 @@ class EmptyFolder extends StatelessWidget {
             },
             child: Text('Add a set'),
             style: ElevatedButton.styleFrom(
-              primary: Colors.blue, // Set background color of the button
-              onPrimary: Colors.white, // Set text color of the button
+              foregroundColor: Colors.white, backgroundColor: Colors.blue, // Set text color of the button
               padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0), // Button padding
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shop_app/screens/achievements/achievement_screen.dart';
 import 'package:shop_app/screens/achievements/components/achievement.dart';
 import 'package:shop_app/screens/discover/discover_screen.dart';
+import 'package:shop_app/screens/flashcard/components/congrats_screen.dart';
 import 'package:shop_app/screens/flashcard/flashcard_screen.dart';
 import 'package:shop_app/screens/flipcard/components/edit_topic.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
@@ -11,6 +12,7 @@ import 'package:shop_app/screens/folders/new_folder_screen.dart';
 import 'package:shop_app/screens/library/library_screen.dart';
 import 'package:shop_app/screens/profile/components/profile_change_password.dart';
 import 'package:shop_app/screens/profile/profile_edit_screen.dart';
+import 'package:shop_app/screens/quiz/quiz_page_screen.dart';
 import 'package:shop_app/screens/studyset/studyset_screen.dart';
 
 import 'screens/forgot_password/forgot_password_screen.dart';
@@ -46,4 +48,6 @@ final Map<String, WidgetBuilder> routes = {
   EditTopic.routeName:(context) => EditTopic(),
   EditFolder.routeName:(context) => EditFolder(),
   FlashcardsView.routeName:(context) => FlashcardsView(),
+  CongratsScreen.routeName:(context) => CongratsScreen(),
+  QuizPage.routeName:(context) => QuizPage(),
 };
