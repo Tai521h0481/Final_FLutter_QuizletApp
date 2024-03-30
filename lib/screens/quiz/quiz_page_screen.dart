@@ -1,10 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
-class QuizPage extends StatelessWidget {
+import 'package:shop_app/models/QuizData.dart';
+import 'package:shop_app/screens/quiz/components/quiz_option.dart';
+
+class QuizPage extends StatefulWidget {
   static String routeName = "quiz_page";
+
+  @override
+  State<QuizPage> createState() => _QuizPageState();
+}
+
+class _QuizPageState extends State<QuizPage> {
+  QuizData generateQuizData(Map<String, dynamic> args) {
+    final vocabularies = List.from(args['vocabularies']);
+    final random = Random();
+
+    // Chọn ngẫu nhiên một câu hỏi
+    final questionIndex = random.nextInt(vocabularies.length);
+    final question = vocabularies[questionIndex];
+
+    // Tạo danh sách đáp án
+    List<String> options = [question['vietnameseWord']];
+    vocabularies
+      ..shuffle()
+      ..remove(question);
+    options.addAll(vocabularies.take(3).map((v) => v['vietnameseWord']));
+    options.shuffle();
+
+    return QuizData(
+        question: question['englishWord'],
+        options: options,
+        correctAnswer: question['vietnameseWord']);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final amount = args['vocabularies'].length;
+    final quizData = generateQuizData(args);
+
     return Scaffold(
       backgroundColor: Colors.indigo.shade700,
       body: Container(
@@ -31,7 +68,8 @@ class QuizPage extends StatelessWidget {
                         height: 30,
                         width: 30,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.indigo.shade500),
+                            shape: BoxShape.circle,
+                            color: Colors.indigo.shade500),
                       )),
                   Text(
                     'Live Quiz',
@@ -41,12 +79,7 @@ class QuizPage extends StatelessWidget {
                         fontWeight: FontWeight.w600),
                   ),
                   IconButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => ProfilePage()));
-                    },
+                    onPressed: () {},
                     icon: Icon(
                       Icons.person_pin_rounded,
                       color: Colors.pinkAccent.shade100,
@@ -54,9 +87,6 @@ class QuizPage extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 5,
             ),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
@@ -70,115 +100,75 @@ class QuizPage extends StatelessWidget {
                 'assets/images/image5.png',
               ),
             ),
-            SizedBox(height: 5,),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              alignment: Alignment.center,
-              child: Text(
-                'Quiz',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    letterSpacing: 0.5),
-              ),
+            LinearProgressIndicator(
+              // value: (currentIndex + 1) / flashcards.length,
+              value: 1 / 2,
+              backgroundColor: Colors.grey[200],
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
-            SizedBox(height: 5,),
-            Container(
-              //margin: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CircleAvatar(
-                    child: Text('1',style: TextStyle(color: Colors.white),),
-                    backgroundColor: Colors.pinkAccent.shade100,
-                  ),
-                  CircleAvatar(
-                    child: Text('2',style: TextStyle(color: Colors.white),),
-                    backgroundColor: Colors.indigo.shade500,
-                  ),
-                  CircleAvatar(
-                    child: Text('3',style: TextStyle(color: Colors.white),),
-                    backgroundColor: Colors.indigo.shade500,
-                  ),
-                  CircleAvatar(
-                    child: Text('4',style: TextStyle(color: Colors.white),),
-                    backgroundColor: Colors.indigo.shade500,
-                  ),
-                  CircleAvatar(
-                    child: Text('5',style: TextStyle(color: Colors.white),),
-                    backgroundColor: Colors.indigo.shade500,
-                  ),
-                  CircleAvatar(
-                    child: Text('6',style: TextStyle(color: Colors.white),),
-                    backgroundColor: Colors.indigo.shade500,
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 10,
             ),
-            SizedBox(height: 10,),
             Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('Where is the Correct path in Javascript located?',textAlign: TextAlign.center,style: TextStyle(
-                      color: Colors.white,fontSize: 20,fontWeight: FontWeight.w500
-                  ),),
-                  SizedBox(height: 20,),
-                  Text('Select as many as correct option',textAlign: TextAlign.center,style: TextStyle(
-                      color: Colors.white,fontSize: 12,fontWeight: FontWeight.w400
-                  ),)
+                  Text(
+                    quizData.question,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
             Container(
-                height: MediaQuery.of(context).size.height / 3,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        QuizOption(
-                          color: Colors.indigo.shade500,
-                          text: 'The <Body>',
-                        ),
-                        QuizOption(
-                          color: Colors.indigo.shade500,
-                          text: 'The <Path>',
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        QuizOption(
-                          color: Colors.indigo.shade500,
-                          text: 'Both',
-                        ),
-                        QuizOption(
-                          color: Colors.pinkAccent.shade100,
-                          text: 'Entry',
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: 16
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
-              decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.lightBlue.shade300,
-                  borderRadius: BorderRadius.circular(10)
-              ),
-              child: Center(
-                child: Text('Next',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.width,
+              child: GridView.builder(
+                itemCount: quizData.options.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: MediaQuery.of(context).size.width /
+                      (MediaQuery.of(context).size.height / 4),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) {
+                  return QuizOption(
+                    text: quizData.options[index],
+                    color: Colors.indigo.shade500,
+                    onTap: () {
+                      // showDialog(
+                      //   context: context,
+                      //   builder: (context) {
+                      //     return AlertDialog(
+                      //       title: Text('Result'),
+                      //       content: Text(
+                      //         quizData.options[index] == quizData.correctAnswer
+                      //             ? 'Correct Answer'
+                      //             : 'Wrong Answer',
+                      //       ),
+                      //       actions: [
+                      //         TextButton(
+                      //           onPressed: () {
+                      //             Navigator.pop(context);
+                      //           },
+                      //           child: Text('OK'),
+                      //         ),
+                      //       ],
+                      //     );
+                      //   },
+                      // );
+                      showCustomDialog(context);
+                    },
+                  );
+                },
               ),
             ),
           ],
@@ -186,28 +176,71 @@ class QuizPage extends StatelessWidget {
       ),
     );
   }
+
+  void showCustomDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        title: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0),
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(Icons.sentiment_dissatisfied, color: Colors.white),
+              SizedBox(width: 10),
+              Text(
+                "Study this one!",
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+        content: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                text: 'Correct answer:\n',
+                style: TextStyle(color: Colors.black),
+              ),
+              TextSpan(
+                text: 'fero, ferre, tuli, latus\n\n',
+                style: TextStyle(color: Colors.green),
+              ),
+              TextSpan(
+                text: 'You said:\n',
+                style: TextStyle(color: Colors.black),
+              ),
+              TextSpan(
+                text: 'gero, gerere, gessi, gestus',
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text(
+              'Continue',
+              style: TextStyle(color: Colors.blue),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
-class QuizOption extends StatelessWidget {
-
-  final String text;
-  final Color color;
-
-  const QuizOption({Key? key, required this.text, required this.color}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: color,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      height: 50,
-      width: MediaQuery.of(context).size.width / 2.5,
-      child: Center(
-        child: Text(text,style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
-      ),
-    );
-  }
 }

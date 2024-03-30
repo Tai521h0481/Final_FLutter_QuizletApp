@@ -26,6 +26,11 @@ class _FlashcardsViewState extends State<FlashcardsView> {
   @override
   void initState() {
     super.initState();
+    getFlashcards();
+    flutterTts = FlutterTts();
+  }
+
+  Future<void> getFlashcards() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ModalRoute.of(context)?.settings.arguments != null) {
         final args = ModalRoute.of(context)?.settings.arguments as Map;
@@ -35,7 +40,6 @@ class _FlashcardsViewState extends State<FlashcardsView> {
         });
       }
     });
-    flutterTts = FlutterTts();
   }
 
   @override

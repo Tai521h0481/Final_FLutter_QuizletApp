@@ -1,8 +1,31 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
-class CongratsScreen extends StatelessWidget {
+class CongratsScreen extends StatefulWidget {
   static String routeName = "congrats";
+
+  @override
+  _CongratsScreenState createState() => _CongratsScreenState();
+}
+
+class _CongratsScreenState extends State<CongratsScreen> {
+  final audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    playSound();
+  }
+
+  void playSound() async {
+    await audioPlayer.play(AssetSource('sounds/cheering-and-clapping.mp3'));
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
