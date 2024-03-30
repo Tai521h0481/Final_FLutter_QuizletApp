@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -13,34 +14,72 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  final audioPlayer = AudioPlayer();
+  int currentQuestionIndex = 0;
+  List<QuizData> allQuizData = [];
+  Set<int> usedQuestionIndices = {};
+
   QuizData generateQuizData(Map<String, dynamic> args) {
     final vocabularies = List.from(args['vocabularies']);
     final random = Random();
+    int questionIndex;
 
-    // Chọn ngẫu nhiên một câu hỏi
-    final questionIndex = random.nextInt(vocabularies.length);
+    do {
+      questionIndex = random.nextInt(vocabularies.length);
+    } while (usedQuestionIndices.contains(questionIndex));
+
+    usedQuestionIndices.add(questionIndex);
+
     final question = vocabularies[questionIndex];
 
-    // Tạo danh sách đáp án
     List<String> options = [question['vietnameseWord']];
-    vocabularies
-      ..shuffle()
-      ..remove(question);
-    options.addAll(vocabularies.take(3).map((v) => v['vietnameseWord']));
+    vocabularies.shuffle();
+    options.addAll(vocabularies.where((v) => v['vietnameseWord'] != question['vietnameseWord']).take(3).map((v) => v['vietnameseWord']));
     options.shuffle();
 
     return QuizData(
-        question: question['englishWord'],
-        options: options,
-        correctAnswer: question['vietnameseWord']);
+      question: question['englishWord'],
+      options: options,
+      correctAnswer: question['vietnameseWord'],
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (allQuizData.isEmpty) {
+      final args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      allQuizData = List.generate(
+          args['vocabularies'].length, (_) => generateQuizData(args));
+    }
+  }
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void goToNextQuestion() {
+    if (currentQuestionIndex < allQuizData.length - 1) {
+      setState(() {
+        currentQuestionIndex++;
+      });
+    } else {
+      // Navigate to the home screen or the desired screen when quiz is finished.
+      // Navigator.pushNamed(context, homeRouteName);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final amount = args['vocabularies'].length;
-    final quizData = generateQuizData(args);
+    final quizData = allQuizData[currentQuestionIndex];
 
     return Scaffold(
       backgroundColor: Colors.indigo.shade700,
@@ -101,8 +140,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
             ),
             LinearProgressIndicator(
-              // value: (currentIndex + 1) / flashcards.length,
-              value: 1 / 2,
+              value: (currentQuestionIndex + 1) / allQuizData.length,
               backgroundColor: Colors.grey[200],
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
             ),
@@ -144,28 +182,12 @@ class _QuizPageState extends State<QuizPage> {
                     text: quizData.options[index],
                     color: Colors.indigo.shade500,
                     onTap: () {
-                      // showDialog(
-                      //   context: context,
-                      //   builder: (context) {
-                      //     return AlertDialog(
-                      //       title: Text('Result'),
-                      //       content: Text(
-                      //         quizData.options[index] == quizData.correctAnswer
-                      //             ? 'Correct Answer'
-                      //             : 'Wrong Answer',
-                      //       ),
-                      //       actions: [
-                      //         TextButton(
-                      //           onPressed: () {
-                      //             Navigator.pop(context);
-                      //           },
-                      //           child: Text('OK'),
-                      //         ),
-                      //       ],
-                      //     );
-                      //   },
-                      // );
-                      showCustomDialog(context);
+                      if (quizData.options[index] == quizData.correctAnswer) {
+                        correctDialog(context, quizData.correctAnswer);
+                      } else {
+                        wrongDialog(context, quizData.question,
+                            quizData.options[index], quizData.correctAnswer);
+                      }
                     },
                   );
                 },
@@ -177,70 +199,160 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 
-  void showCustomDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        title: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10.0),
-              topRight: Radius.circular(10.0),
+  Future<void> correctDialog(BuildContext context, String answer) async {
+    await audioPlayer.play(AssetSource('sounds/correct.mp3'));
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          titlePadding: EdgeInsets.zero,
+          title: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(10.0),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('😃'),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    "You got it this time!",
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Row(
-            children: [
-              Icon(Icons.sentiment_dissatisfied, color: Colors.white),
-              SizedBox(width: 10),
-              Text(
-                "Study this one!",
-                style: TextStyle(color: Colors.white),
-              ),
-            ],
-          ),
-        ),
-        content: RichText(
-          text: TextSpan(
-            children: <TextSpan>[
-              TextSpan(
-                text: 'Correct answer:\n',
-                style: TextStyle(color: Colors.black),
-              ),
-              TextSpan(
-                text: 'fero, ferre, tuli, latus\n\n',
-                style: TextStyle(color: Colors.green),
-              ),
-              TextSpan(
-                text: 'You said:\n',
-                style: TextStyle(color: Colors.black),
-              ),
-              TextSpan(
-                text: 'gero, gerere, gessi, gestus',
-                style: TextStyle(color: Colors.red),
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: Text(
-              'Continue',
-              style: TextStyle(color: Colors.blue),
+          content: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: answer,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 25),
+                ),
+              ],
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
-        ],
-      );
-    },
-  );
-}
+        );
+      },
+    );
+    await Future.delayed(Duration(seconds: 1));
+    Navigator.of(context).pop();
+    await audioPlayer.stop();
+    goToNextQuestion();
+  }
 
+  Future<void> wrongDialog(BuildContext context, String question,
+      String selectedAnswer, String correctAnswer) async {
+    await audioPlayer.play(AssetSource('sounds/wrong.mp3'));
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          titlePadding: EdgeInsets.zero,
+          title: Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(10.0),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('😕'),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    "Study this one!",
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          content: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: question + "\n\n",
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 25),
+                ),
+                TextSpan(
+                  text: 'Correct answer:\n',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: correctAnswer + "\n\n",
+                  style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 25),
+                ),
+                TextSpan(
+                  text: 'You said:\n',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+                TextSpan(
+                  text: selectedAnswer,
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 25),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.blue,
+                ),
+                child: Center(
+                  child: Text(
+                    'Continue',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                goToNextQuestion();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

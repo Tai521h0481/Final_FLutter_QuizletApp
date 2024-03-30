@@ -22,10 +22,14 @@ class QuizOption extends StatelessWidget {
         ),
         height: 50,
         width: MediaQuery.of(context).size.width / 2.5,
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              textAlign: TextAlign.center,
+              text,
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
           ),
         ),
       ),
