@@ -42,7 +42,7 @@ dependencies:
   http: ^1.2.0
   flutter_easyloading: ^3.0.5
   flip_card: ^0.7.0
-  flutter_tts: ^3.8.5
+  flutter_tts: ^4.0.2
   smooth_page_indicator: ^1.1.0
   get: ^4.6.6
   line_awesome_flutter: ^2.0.0
@@ -51,7 +51,10 @@ dependencies:
   dio: ^5.4.1
   dynamic_multi_step_form: ^1.1.2
   audioplayers: 5.2.1
+<<<<<<< HEAD
+=======
   modal_bottom_sheet: ^2.1.2
+>>>>>>> d3e132472cdac2c46c0967556bee3d75109827fc
 
 dev_dependencies:
   flutter_test:
@@ -62,7 +65,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
