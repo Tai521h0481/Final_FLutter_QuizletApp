@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shop_app/screens/flashcard/components/congrats_screen.dart';
 
+import 'components/show_bottom_sheet.dart';
+
 class FlashcardsView extends StatefulWidget {
   static String routeName = '/flashcards';
 
@@ -22,6 +24,33 @@ class _FlashcardsViewState extends State<FlashcardsView> {
   FlipCardController controllerFlipCard = FlipCardController();
   List<dynamic> flashcards = [];
   String topicId = "";
+  String selectedFont = 'Term';
+  bool shuffle = false;
+  bool playAudio = false;
+
+  void updateSettings(bool newShuffle, bool newPlayAudio, String newSelectedFont) {
+    setState(() {
+      shuffle = newShuffle;
+      playAudio = newPlayAudio;
+      selectedFont = newSelectedFont;
+      if(shuffle) {
+        flashcards.shuffle();
+      }
+      if(selectedFont == 'Term') {
+        flashcards.forEach((element) {
+          final temp = element['englishWord'];
+          element['englishWord'] = element['vietnameseWord'];
+          element['vietnameseWord'] = temp;
+        });
+      } else {
+        flashcards.forEach((element) {
+          final temp = element['englishWord'];
+          element['englishWord'] = element['vietnameseWord'];
+          element['vietnameseWord'] = temp;
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -134,6 +163,19 @@ class _FlashcardsViewState extends State<FlashcardsView> {
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 3),
         ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.settings,
+                color: Colors.grey[700],
+              ),
+              onPressed: () {
+                showCustomModalBottomSheet(context, updateSettings);
+              }),
+          SizedBox(
+            width: 10,
+          )
+        ],
         centerTitle: true,
       ),
       body: Column(
