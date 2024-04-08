@@ -4,6 +4,7 @@ import 'package:shop_app/controllers/topic.dart';
 import 'package:shop_app/screens/discover/components/not_found.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
+import 'package:shop_app/utils/local/save_local.dart';
 
 class Body extends StatefulWidget {
   final String searchQuery;
@@ -52,15 +53,22 @@ class _BodyState extends State<Body> {
   }
 
   Future<void> loadPublicTopicDetails() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token') ?? '';
-
+    var storedData = await LocalStorageService().getData('discover');
+    if (storedData != null) {
+      setState(() {
+        publicTopics = storedData['topics'];
+        filtered = storedData['topics'];
+      });
+    }
+    
+    String token = await LocalStorageService().getData('token');
     try {
       Map<String, dynamic> data = await getPublicTopic(token);
       List<dynamic> topics = data['topics'];
       setState(() {
         publicTopics = topics;
         filtered = topics;
+        LocalStorageService().saveData('discover', data);
       });
     } catch (e) {
       print("Failed to load topic details: $e");

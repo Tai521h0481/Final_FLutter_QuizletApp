@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/folder.dart';
 import 'package:shop_app/screens/folders/folders_screen.dart';
 import 'package:shop_app/screens/home/components/special_folders.dart';
+import 'package:shop_app/utils/local/save_local.dart';
 
 import 'section_title.dart';
 
@@ -54,20 +55,28 @@ class _PopularProductsState extends State<Folders> {
   }
 
   Future<void> loadFolder() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token') ?? '';
-    String dataString = prefs.getString('data') ?? '';
+    var storedFolders = await LocalStorageService().getData('folders');
+    userInfo = await LocalStorageService().getData('data');
+    if (storedFolders != null) {
+      setState(() {
+        folders = storedFolders;
+        filteredFolders = folders;
+      });
+      return;
+    }
+
+    final token = await LocalStorageService().getData('token');
     if (token.isEmpty) {
       print('Token is empty. Cannot load topics.');
       return;
     }
 
     try {
-      userInfo = json.decode(dataString);
       var res = await getFolderByID(userInfo["_id"], token);
       setState(() {
         folders = res['folders'] ?? [];
         filteredFolders = folders;
+        LocalStorageService().saveData('folders', folders);
       });
     } catch (e) {
       print('Exception occurred while loading topics: $e');

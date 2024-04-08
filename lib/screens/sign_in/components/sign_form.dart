@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shop_app/screens/init_screen.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:shop_app/utils/local/save_local.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/form_error.dart';
@@ -147,7 +147,6 @@ class _SignFormState extends State<SignForm> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         KeyboardUtil.hideKeyboard(context);
-                        // EasyLoading.show(status: 'loading...');
                         QuickAlert.show(
                           context: context,
                           type: QuickAlertType.loading,
@@ -159,23 +158,10 @@ class _SignFormState extends State<SignForm> {
                               await loginAPI(email: email, password: password)
                                   .timeout(const Duration(seconds: 15));
                           Navigator.pop(context);
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          if (data['error'] != null) {
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.error,
-                              text: data['error'],
-                            );
-                            return;
-                          } else if (remember == true) {
-                            final dataUser = json.encode(data['user']);
-                            await prefs.setString('data', dataUser);
-                          }
-                          await prefs.setString('token', data['token']);
+                          LocalStorageService().saveData('token', data['token']);
+                          LocalStorageService().saveData('data', data['user']);
                           Navigator.pushNamedAndRemoveUntil(context, InitScreen.routeName, (route) => false,);
                         } catch (e) {
-                          // EasyLoading.dismiss();
                           Navigator.pop(context);
                           QuickAlert.show(
                             context: context,

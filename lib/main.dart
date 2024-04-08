@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/screens/init_screen.dart';
 import 'package:shop_app/screens/splash/splash_screen.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:shop_app/utils/local/save_local.dart';
 
 import 'routes.dart';
 import 'theme.dart';
@@ -14,8 +14,7 @@ void main() async {
 }
 
 Future<String> getInitialRoute() async {
-  final prefs = await SharedPreferences.getInstance();
-  final data = prefs.getString('data');
+  final data = await LocalStorageService().getData("data");
   return data == null ? SplashScreen.routeName : InitScreen.routeName;
 }
 

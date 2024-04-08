@@ -11,6 +11,7 @@ void showCustomModalBottomSheet(BuildContext context, Function(bool, bool, Strin
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Container(
+            width: double.infinity,
             padding: EdgeInsets.only(top: 24.0, left: 16.0, right: 16.0, bottom: 16.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -30,7 +31,7 @@ void showCustomModalBottomSheet(BuildContext context, Function(bool, bool, Strin
                     setState(() {
                       shuffle = value;
                     });
-                    callback(value, playAudio, selectedFont); // Gọi hàm callback với thay đổi của Shuffle
+                    callback(value, playAudio, selectedFont);
                   },
                   secondary: Icon(Icons.shuffle),
                 ),
@@ -41,7 +42,7 @@ void showCustomModalBottomSheet(BuildContext context, Function(bool, bool, Strin
                     setState(() {
                       playAudio = value;
                     });
-                    callback(shuffle, value, selectedFont); // Gọi hàm callback với thay đổi của Play audio
+                    callback(shuffle, value, selectedFont);
                   },
                   secondary: Icon(Icons.audiotrack),
                 ),

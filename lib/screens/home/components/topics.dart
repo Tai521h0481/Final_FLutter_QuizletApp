@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
+import 'package:shop_app/screens/folders/components/topic_factory.dart';
 import 'package:shop_app/screens/home/components/new_user.dart';
 import 'package:shop_app/screens/home/components/special_cards.dart';
+import 'package:shop_app/utils/local/save_local.dart';
 
 import 'section_title.dart';
 
@@ -23,8 +25,8 @@ class _SpecialOffersState extends State<Topics> {
 
   @override
   void initState() {
-    super.initState();
     loadTopics();
+    super.initState();
   }
 
   @override
@@ -54,9 +56,16 @@ class _SpecialOffersState extends State<Topics> {
   }
 
   Future<void> loadTopics() async {
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token') ?? '';
+    var storedTopics = await LocalStorageService().getData('topics');
+    if (storedTopics != null) {
+      setState(() {
+        topics = storedTopics;
+        filteredTopics = topics;
+      });
+      return;
+    }
 
+    final token = await LocalStorageService().getData('token');
     if (token.isEmpty) {
       print('Token is empty. Cannot load topics.');
       return;
@@ -67,6 +76,7 @@ class _SpecialOffersState extends State<Topics> {
       setState(() {
         topics = data['topics'] ?? [];
         filteredTopics = topics;
+        LocalStorageService().saveData('topics', topics);
       });
     } catch (e) {
       print('Exception occurred while loading topics: $e');
@@ -90,31 +100,32 @@ class _SpecialOffersState extends State<Topics> {
           child: Row(
             children: List.generate(
               filteredTopics.length,
-              (index) => SpecialOfferCard(
-                image: filteredTopics[index]['ownerId']['profileImage'] ?? '',
-                title: filteredTopics[index]['topicNameEnglish'] ?? '',
-                words: filteredTopics[index]['vocabularyCount'] ?? 0,
-                name: filteredTopics[index]['ownerId']['username'] ?? '',
-                press: () {
-                  Navigator.pushNamed(
-                    context,
-                    FlipCardScreen.routeName,
-                    arguments: {
-                      "_id": filteredTopics[index]["_id"],
-                      "title": filteredTopics[index]["topicNameEnglish"],
-                      'image': filteredTopics[index]['ownerId']
-                              ['profileImage'] ??
-                          '',
-                      'username':
-                          filteredTopics[index]['ownerId']['username'] ?? '',
-                      'description':
-                          filteredTopics[index]["descriptionEnglish"] ?? '',
-                      'terms':
-                          filteredTopics[index]["vocabularyCount"].toString(),
-                    },
-                  );
-                },
-              ),
+              // (index) => SpecialOfferCard(
+              //   image: filteredTopics[index]['ownerId']['profileImage'] ?? '',
+              //   title: filteredTopics[index]['topicNameEnglish'] ?? '',
+              //   words: filteredTopics[index]['vocabularyCount'] ?? 0,
+              //   name: filteredTopics[index]['ownerId']['username'] ?? '',
+              //   press: () {
+              //     Navigator.pushNamed(
+              //       context,
+              //       FlipCardScreen.routeName,
+              //       arguments: {
+              //         "_id": filteredTopics[index]["_id"],
+              //         "title": filteredTopics[index]["topicNameEnglish"],
+              //         'image': filteredTopics[index]['ownerId']
+              //                 ['profileImage'] ??
+              //             '',
+              //         'username':
+              //             filteredTopics[index]['ownerId']['username'] ?? '',
+              //         'description':
+              //             filteredTopics[index]["descriptionEnglish"] ?? '',
+              //         'terms':
+              //             filteredTopics[index]["vocabularyCount"].toString(),
+              //       },
+              //     );
+              //   },
+              // ),
+              (index) => TopicWidgetFactory.createWidget(filteredTopics[index], context),
             ),
           ),
         ),

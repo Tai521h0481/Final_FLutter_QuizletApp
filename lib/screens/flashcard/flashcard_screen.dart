@@ -28,15 +28,16 @@ class _FlashcardsViewState extends State<FlashcardsView> {
   bool shuffle = false;
   bool playAudio = false;
 
-  void updateSettings(bool newShuffle, bool newPlayAudio, String newSelectedFont) {
+  void updateSettings(
+      bool newShuffle, bool newPlayAudio, String newSelectedFont) {
     setState(() {
       shuffle = newShuffle;
       playAudio = newPlayAudio;
       selectedFont = newSelectedFont;
-      if(shuffle) {
+      if (shuffle) {
         flashcards.shuffle();
       }
-      if(selectedFont == 'Term') {
+      if (selectedFont == 'Term') {
         flashcards.forEach((element) {
           final temp = element['englishWord'];
           element['englishWord'] = element['vietnameseWord'];
@@ -54,8 +55,8 @@ class _FlashcardsViewState extends State<FlashcardsView> {
 
   @override
   void initState() {
-    super.initState();
     getFlashcards();
+    super.initState();
     flutterTts = FlutterTts();
   }
 
@@ -150,10 +151,6 @@ class _FlashcardsViewState extends State<FlashcardsView> {
 
   @override
   Widget build(BuildContext context) {
-    if (flashcards.isEmpty) {
-      return Container();
-    }
-
     return Scaffold(
       backgroundColor: const Color(0xFFF6F7FB),
       appBar: AppBar(
@@ -170,7 +167,7 @@ class _FlashcardsViewState extends State<FlashcardsView> {
                 color: Colors.grey[700],
               ),
               onPressed: () {
-                showCustomModalBottomSheet(context, updateSettings);
+                // showCustomModalBottomSheet(context, updateSettings);
               }),
           SizedBox(
             width: 10,

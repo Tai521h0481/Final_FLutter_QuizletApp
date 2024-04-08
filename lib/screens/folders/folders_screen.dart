@@ -9,6 +9,7 @@ import 'package:shop_app/screens/flipcard/components/custom_listtile.dart';
 import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/edit_folder.dart';
 import 'package:shop_app/screens/folders/components/empty_folder.dart';
+import 'package:shop_app/screens/folders/components/topic_factory.dart';
 import 'package:shop_app/screens/folders/components/topic_in_folder.dart';
 import 'package:shop_app/screens/init_screen.dart';
 
@@ -189,23 +190,7 @@ class _FolderScreenState extends State<FolderScreen> {
                   itemBuilder: (context, index) {
                     var topic = topicDetails[index]['topic'];
 
-                    return TopicInFolder(
-                      image: topic['ownerId']['profileImage'] ?? "",
-                      title: topic['topicNameEnglish'] ?? 'Title',
-                      words: topic['vocabularyCount'] ?? 0,
-                      name: topic['ownerId']['username'] ?? 'Name',
-                      press: () {
-                        Navigator.pushNamed(context, FlipCardScreen.routeName,
-                            arguments: {
-                              "_id": topic["_id"],
-                              "title": topic["topicNameEnglish"],
-                              'image': topic['ownerId']['profileImage'] ?? '',
-                              'username': topic['ownerId']['username'] ?? '',
-                              'terms':
-                                  topic['vocabularyCount'].toString() ?? '',
-                            });
-                      },
-                    );
+                    return TopicWidgetFactory.createWidget(topic, context);
                   },
                 ),
               ),
@@ -216,7 +201,9 @@ class _FolderScreenState extends State<FolderScreen> {
     );
   }
 
-  Future<void> _showBottomSheet(BuildContext context, String folderId, String title, {String? description}) async {
+  Future<void> _showBottomSheet(
+      BuildContext context, String folderId, String title,
+      {String? description}) async {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
