@@ -22,7 +22,8 @@ class TopicInFolder extends StatelessWidget {
       child: GestureDetector(
         onTap: press,
         child: SizedBox(
-          width: 300,
+          width: MediaQuery.of(context).size.width - 100,
+          // width: 300,
           height: 130,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),

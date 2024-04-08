@@ -50,11 +50,7 @@ dependencies:
   image_picker: ^1.0.7
   dio: ^5.4.1
   dynamic_multi_step_form: ^1.1.2
-  audioplayers: 5.2.1
-<<<<<<< HEAD
-=======
-  modal_bottom_sheet: ^2.1.2
->>>>>>> d3e132472cdac2c46c0967556bee3d75109827fc
+  audioplayers: ^6.0.0
 
 dev_dependencies:
   flutter_test:

@@ -22,7 +22,8 @@ class SpecialFolder extends StatelessWidget {
       child: GestureDetector(
         onTap: press,
         child: SizedBox(
-          width: 300,
+          // width: 300,
+          width: MediaQuery.of(context).size.width - 100,
           height: 100,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
