@@ -7,6 +7,7 @@ import 'package:shop_app/controllers/user.controller.dart';
 import 'package:shop_app/screens/flipcard/components/custom_listtile.dart';
 import 'package:shop_app/screens/flipcard/components/edit_topic.dart';
 import 'package:shop_app/screens/init_screen.dart';
+import 'package:shop_app/utils/local/save_local.dart';
 import 'components/flipcard_header.dart';
 import 'components/flipcard_bottom.dart';
 import 'components/flipcard_middle.dart';
@@ -34,10 +35,19 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
     _loadInitialData();
   }
 
-  void _loadInitialData() {
+  void _loadInitialData() async {
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map<String, dynamic> && args.containsKey("_id")) {
       topicId = args["_id"];
+
+      var storedTopics = await LocalStorageService().getData('topic_$topicId');
+      if (storedTopics != null) {
+        setState(() {
+          topics = storedTopics;
+        });
+        return;
+      }
+      
       _loadTopics();
     } else {
       print('Invalid arguments. Cannot load topics.');
@@ -60,6 +70,7 @@ class _FlipCardScreenState extends State<FlipCardScreen> {
 
   void _updateTopics(Map<String, dynamic> value) {
     if (mounted) setState(() => topics = value ?? {});
+    LocalStorageService().saveData('topic_$topicId', topics);
   }
 
   @override

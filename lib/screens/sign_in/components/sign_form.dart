@@ -158,6 +158,14 @@ class _SignFormState extends State<SignForm> {
                               await loginAPI(email: email, password: password)
                                   .timeout(const Duration(seconds: 15));
                           Navigator.pop(context);
+                          if(data['error'] != null) {
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              text: data['error'],
+                            );
+                            return;
+                          }
                           LocalStorageService().saveData('token', data['token']);
                           LocalStorageService().saveData('data', data['user']);
                           Navigator.pushNamedAndRemoveUntil(context, InitScreen.routeName, (route) => false,);

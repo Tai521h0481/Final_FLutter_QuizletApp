@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/controllers/folder.dart';
-import 'package:shop_app/models/Folder.dart';
-import 'package:shop_app/screens/folders/components/empty_folder.dart';
 import 'package:shop_app/screens/folders/components/folder_factory.dart';
 import 'package:shop_app/utils/local/save_local.dart';
 

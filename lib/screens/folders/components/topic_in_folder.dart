@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TopicInFolder extends StatelessWidget {
-  
   const TopicInFolder({
     Key? key,
-     required this.title,
-     required this.image,
-     required this.words,
-     required this.press,
-     required this.name,
+    required this.title,
+    required this.image,
+    required this.words,
+    required this.press,
+    required this.name,
   });
 
   final String title, image, name;
@@ -18,7 +17,7 @@ class TopicInFolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(left: 20, right: 10),
       child: GestureDetector(
         onTap: press,
         child: SizedBox(

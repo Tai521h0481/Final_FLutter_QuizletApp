@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:shop_app/screens/flashcard/components/congrats_screen.dart';
 
-import 'components/show_bottom_sheet.dart';
-
 class FlashcardsView extends StatefulWidget {
   static String routeName = '/flashcards';
 
@@ -57,10 +55,11 @@ class _FlashcardsViewState extends State<FlashcardsView> {
   void initState() {
     getFlashcards();
     super.initState();
-    flutterTts = FlutterTts();
   }
 
   Future<void> getFlashcards() async {
+    flutterTts = FlutterTts();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ModalRoute.of(context)?.settings.arguments != null) {
         final args = ModalRoute.of(context)?.settings.arguments as Map;

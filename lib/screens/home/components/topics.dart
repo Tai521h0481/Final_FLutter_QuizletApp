@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shop_app/controllers/user.controller.dart';
-import 'package:shop_app/screens/flipcard/flipcard_screen.dart';
 import 'package:shop_app/screens/folders/components/topic_factory.dart';
 import 'package:shop_app/screens/home/components/new_user.dart';
-import 'package:shop_app/screens/home/components/special_cards.dart';
 import 'package:shop_app/utils/local/save_local.dart';
 
 import 'section_title.dart';
@@ -66,11 +63,6 @@ class _SpecialOffersState extends State<Topics> {
     }
 
     final token = await LocalStorageService().getData('token');
-    if (token.isEmpty) {
-      print('Token is empty. Cannot load topics.');
-      return;
-    }
-
     try {
       var data = await getTopicByUserAPI(token);
       setState(() {
